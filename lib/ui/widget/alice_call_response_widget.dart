@@ -1,7 +1,7 @@
 import 'package:alice/model/alice_http_call.dart';
 import 'package:alice/ui/utils/alice_constants.dart';
 import 'package:alice/ui/widget/alice_base_call_details_widget.dart';
-import 'package:better_player/better_player.dart';
+// import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 
 class AliceCallResponseWidget extends StatefulWidget {
@@ -25,7 +25,7 @@ class _AliceCallResponseWidgetState
   static const _textContentType = "text";
 
   static const _kLargeOutputSize = 100000;
-  BetterPlayerController _betterPlayerController;
+  // BetterPlayerController _betterPlayerController;
   bool _showLargeBody = false;
   bool _showUnsupportedBody = false;
 
@@ -58,7 +58,7 @@ class _AliceCallResponseWidgetState
 
   @override
   void dispose() {
-    _betterPlayerController?.dispose();
+    // _betterPlayerController?.dispose();
     super.dispose();
   }
 
@@ -188,13 +188,13 @@ class _AliceCallResponseWidgetState
   }
 
   List<Widget> _buildVideoBodyRows() {
-    _betterPlayerController = BetterPlayerController(
-      const BetterPlayerConfiguration(aspectRatio: 16 / 9, fit: BoxFit.cover),
-      betterPlayerDataSource: BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network,
-        _call.uri,
-      ),
-    );
+    // _betterPlayerController = BetterPlayerController(
+    //   const BetterPlayerConfiguration(aspectRatio: 16 / 9, fit: BoxFit.cover),
+    //   betterPlayerDataSource: BetterPlayerDataSource(
+    //     BetterPlayerDataSourceType.network,
+    //     _call.uri,
+    //   ),
+    // );
 
     final List<Widget> rows = [];
     rows.add(
@@ -208,9 +208,9 @@ class _AliceCallResponseWidgetState
       ),
     );
     rows.add(const SizedBox(height: 8));
-    rows.add(
-      BetterPlayer(controller: _betterPlayerController),
-    );
+    // rows.add(
+    //   BetterPlayer(controller: _betterPlayerController),
+    // );
     rows.add(const SizedBox(height: 8));
     return rows;
   }
