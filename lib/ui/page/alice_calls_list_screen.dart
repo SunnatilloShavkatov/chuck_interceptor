@@ -186,6 +186,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
   Widget _buildCallsListWidget(List<AliceHttpCall> calls) {
     return ListView.builder(
       itemCount: calls.length,
+      reverse: true,
       itemBuilder: (context, index) {
         return AliceCallListItemWidget(calls[index], _onListItemClicked);
       },
