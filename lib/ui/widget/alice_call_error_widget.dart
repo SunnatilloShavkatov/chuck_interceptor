@@ -1,5 +1,5 @@
-import 'package:alice/model/alice_http_call.dart';
-import 'package:alice/ui/widget/alice_base_call_details_widget.dart';
+import 'package:chuck_interceptor/model/alice_http_call.dart';
+import 'package:chuck_interceptor/ui/widget/alice_base_call_details_widget.dart';
 import 'package:flutter/material.dart';
 
 class AliceCallErrorWidget extends StatefulWidget {

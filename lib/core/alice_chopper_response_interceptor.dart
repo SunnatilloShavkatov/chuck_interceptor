@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:alice/core/alice_utils.dart';
-import 'package:alice/model/alice_http_call.dart';
-import 'package:alice/model/alice_http_request.dart';
-import 'package:alice/model/alice_http_response.dart';
+import 'package:chuck_interceptor/core/alice_utils.dart';
+import 'package:chuck_interceptor/model/alice_http_call.dart';
+import 'package:chuck_interceptor/model/alice_http_request.dart';
+import 'package:chuck_interceptor/model/alice_http_response.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'package:http/http.dart';
 import 'alice_core.dart';

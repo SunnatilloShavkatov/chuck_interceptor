@@ -1,7 +1,7 @@
-import 'package:alice/helper/alice_conversion_helper.dart';
-import 'package:alice/model/alice_http_call.dart';
-import 'package:alice/model/alice_http_response.dart';
-import 'package:alice/utils/alice_constants.dart';
+import 'package:chuck_interceptor/helper/alice_conversion_helper.dart';
+import 'package:chuck_interceptor/model/alice_http_call.dart';
+import 'package:chuck_interceptor/model/alice_http_response.dart';
+import 'package:chuck_interceptor/utils/alice_constants.dart';
 import 'package:flutter/material.dart';
 
 class AliceCallListItemWidget extends StatelessWidget {

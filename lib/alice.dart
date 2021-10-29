@@ -1,13 +1,13 @@
 import 'dart:io';
-import 'package:alice/core/alice_chopper_response_interceptor.dart';
-import 'package:alice/core/alice_http_adapter.dart';
-import 'package:alice/model/alice_http_call.dart';
+import 'package:chuck_interceptor/core/alice_chopper_response_interceptor.dart';
+import 'package:chuck_interceptor/core/alice_http_adapter.dart';
+import 'package:chuck_interceptor/model/alice_http_call.dart';
 
 import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
-import 'package:alice/core/alice_core.dart';
-import 'package:alice/core/alice_dio_interceptor.dart';
-import 'package:alice/core/alice_http_client_adapter.dart';
+import 'package:chuck_interceptor/core/alice_core.dart';
+import 'package:chuck_interceptor/core/alice_dio_interceptor.dart';
+import 'package:chuck_interceptor/core/alice_http_client_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

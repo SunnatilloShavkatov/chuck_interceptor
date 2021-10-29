@@ -8,13 +8,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "19.0.0"
-  alice:
-    dependency: "direct dev"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.2.4"
   analyzer:
     dependency: transitive
     description:
@@ -127,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0-nullsafety.0"
+  chuck_interceptor:
+    dependency: "direct dev"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "0.2.4"
   cli_util:
     dependency: transitive
     description:

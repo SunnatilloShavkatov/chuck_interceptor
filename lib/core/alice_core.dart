@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:alice/core/alice_utils.dart';
-import 'package:alice/helper/alice_save_helper.dart';
-import 'package:alice/model/alice_http_error.dart';
-import 'package:alice/model/alice_http_call.dart';
-import 'package:alice/model/alice_http_response.dart';
-import 'package:alice/ui/page/alice_calls_list_screen.dart';
-import 'package:alice/utils/shake_detector.dart';
+import 'package:chuck_interceptor/core/alice_utils.dart';
+import 'package:chuck_interceptor/helper/alice_save_helper.dart';
+import 'package:chuck_interceptor/model/alice_http_error.dart';
+import 'package:chuck_interceptor/model/alice_http_call.dart';
+import 'package:chuck_interceptor/model/alice_http_response.dart';
+import 'package:chuck_interceptor/ui/page/alice_calls_list_screen.dart';
+import 'package:chuck_interceptor/utils/shake_detector.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

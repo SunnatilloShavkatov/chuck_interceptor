@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:alice/model/alice_form_data_file.dart';
-import 'package:alice/model/alice_from_data_field.dart';
+import 'alice_form_data_file.dart';
+import 'alice_from_data_field.dart';
 
 class AliceHttpRequest {
   int size = 0;
