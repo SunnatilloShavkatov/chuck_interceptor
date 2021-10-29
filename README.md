@@ -1,54 +1,54 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/jhomlala/alice/master/media/logo.png" width="250px">
+<img src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/logo.png" width="250px">
 </p>
 
-# Alice
+# ChuckInterceptor
 
 [![pub package](https://img.shields.io/pub/v/alice.svg)](https://pub.dartlang.org/packages/alice)
 [![pub package](https://img.shields.io/github/license/jhomlala/alice.svg?style=flat)](https://github.com/jhomlala/alice)
 [![pub package](https://img.shields.io/badge/platform-flutter-blue.svg)](https://github.com/jhomlala/alice)
 
-Alice is an HTTP Inspector tool for Flutter which helps debugging http requests. It catches and stores http requests and responses, which can be viewed via simple UI. It is inspired from [Chuck](https://github.com/jgilfelt/chuck) and [Chucker](https://github.com/ChuckerTeam/chucker).
+ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging http requests. It catches and stores http requests and responses, which can be viewed via simple UI. It is inspired from [Chuck](https://github.com/jgilfelt/chuck) and [Chucker](https://github.com/ChuckerTeam/chucker).
 
 <table>
   <tr>
     <td>
-		<img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/1.png">
+		<img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/1.png">
     </td>
     <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/2.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/2.png">
     </td>
     <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/3.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/3.png">
     </td>
     <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/4.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/4.png">
     </td>
      <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/5.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/5.png">
     </td>
     <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/6.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/6.png">
     </td>
   </tr>
   <tr>
     <td>
-	<img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/7.png">
+	<img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/7.png">
     </td>
     <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/8.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/8.png">
     </td>
     <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/9.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/9.png">
     </td>
     <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/10.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/10.png">
     </td>
     <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/11.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/11.png">
     </td>
      <td>
-       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/12.png">
+       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/12.png">
     </td>
   </tr>
 
@@ -91,7 +91,7 @@ $ flutter packages get
 3. Import it
 
 ```dart
-import 'package:alice/alice.dart';
+import 'package:chuck_interceptor/alice.dart';
 ```
 
 ## Usage
@@ -221,8 +221,8 @@ You can use extensions to shorten your http and http client code. This is option
 Example:
 1. Import:
 ```dart
-import 'package:alice/core/alice_http_client_extensions.dart';
-import 'package:alice/core/alice_http_extensions.dart';
+import 'package:chuck_interceptor/core/alice_http_client_extensions.dart';
+import 'package:chuck_interceptor/core/alice_http_extensions.dart';
 ```
 
 2. Use extensions:
@@ -240,7 +240,7 @@ httpClient
 
 
 ## Example
-See complete example here: https://github.com/jhomlala/alice/blob/master/example/lib/main.dart
+See complete example here: https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/example/lib/main.dart
 To run project, you need to call this command in your terminal:
 ```bash
 flutter pub run build_runner build --delete-conflicting-outputs
@@ -248,5 +248,5 @@ flutter pub run build_runner build --delete-conflicting-outputs
 You need to run this command to build Chopper generated classes. You should run this command only once,
 you don't need to run this command each time before running project (unless you modify something in Chopper endpoints).
 <p align="center">
- <img width="250px" src="https://raw.githubusercontent.com/jhomlala/alice/master/media/13.png">
+ <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/13.png">
 <p align="center">

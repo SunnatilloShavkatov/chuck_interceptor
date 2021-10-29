@@ -1,7 +1,6 @@
 name: chuck_interceptor
-description: Alice is an HTTP Inspector tool which helps debugging http requests. It catches and stores http requests and responses, which can be viewed via simple UI.
+description: chuck_interceptor is an HTTP Inspector tool which helps debugging http requests. It catches and stores http requests and responses, which can be viewed via simple UI.
 version: 0.0.1
-author: Sunnatillo Shavkatov <sunnatilloshavkatov@gmail.com>
 homepage: https://github.com/SunnatilloShavkatov/chuck_interceptor
 
 environment:
