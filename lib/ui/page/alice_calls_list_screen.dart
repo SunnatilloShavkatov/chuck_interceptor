@@ -43,7 +43,6 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
       child: Theme(
         data: ThemeData(
           brightness: widget._aliceCore.brightness,
-          canvasColor: AliceConstants.lightRed,
         ),
         child: Scaffold(
           appBar: AppBar(
@@ -105,7 +104,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
   }
 
   Widget _buildTitleWidget() {
-    return const Text("Alice - Inspector");
+    return const Text("ChuckInterceptor");
   }
 
   Widget _buildSearchField() {
@@ -162,35 +161,41 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 32),
       child: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Icon(
-            Icons.error_outline,
-            color: AliceConstants.orange,
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            "There are no calls to show",
-            style: TextStyle(fontSize: 18),
-          ),
-          const SizedBox(height: 12),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-            Text(
-              "• Check if you send any http request",
-              style: TextStyle(fontSize: 12),
-              textAlign: TextAlign.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              color: AliceConstants.orange,
             ),
-            Text(
-              "• Check your Alice configuration",
-              style: TextStyle(fontSize: 12),
-              textAlign: TextAlign.center,
+            const SizedBox(height: 6),
+            const Text(
+              "There are no calls to show",
+              style: TextStyle(fontSize: 18),
             ),
-            Text(
-              "• Check search filters",
-              style: TextStyle(fontSize: 12),
-              textAlign: TextAlign.center,
+            const SizedBox(height: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  "• Check if you send any http request",
+                  style: TextStyle(fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "• Check your ChuckInterceptor configuration",
+                  style: TextStyle(fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "• Check search filters",
+                  style: TextStyle(fontSize: 12),
+                  textAlign: TextAlign.center,
+                )
+              ],
             )
-          ])
-        ]),
+          ],
+        ),
       ),
     );
   }

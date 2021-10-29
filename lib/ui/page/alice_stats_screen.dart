@@ -1,7 +1,6 @@
 import 'package:chuck_interceptor/core/alice_core.dart';
 import 'package:chuck_interceptor/helper/alice_conversion_helper.dart';
 import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/utils/alice_constants.dart';
 import 'package:flutter/material.dart';
 
 class AliceStatsScreen extends StatelessWidget {
@@ -16,11 +15,10 @@ class AliceStatsScreen extends StatelessWidget {
       child: Theme(
         data: ThemeData(
           brightness: aliceCore.brightness,
-          splashColor: AliceConstants.lightRed,
         ),
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("ChuckInterceptor - HTTP Inspector - Stats"),
+            title: const Text("Chuck - HTTP Inspector - Stats"),
           ),
           body: Container(
             padding: const EdgeInsets.all(8),

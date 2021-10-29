@@ -54,7 +54,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(
         primaryColor: _primaryColor,
-        accentColor: _accentColor,
       ),
       navigatorKey: _alice.getNavigatorKey(),
       debugShowCheckedModeBanner: false,

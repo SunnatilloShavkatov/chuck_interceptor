@@ -1,6 +1,7 @@
 import 'package:chuck_interceptor/core/alice_core.dart';
 import 'package:chuck_interceptor/helper/alice_save_helper.dart';
 import 'package:chuck_interceptor/model/alice_http_call.dart';
+import 'package:chuck_interceptor/ui/widget/alice_call_response_widget.dart';
 import 'package:chuck_interceptor/utils/alice_constants.dart';
 import 'package:chuck_interceptor/ui/widget/alice_call_error_widget.dart';
 import 'package:chuck_interceptor/ui/widget/alice_call_overview_widget.dart';
@@ -75,12 +76,22 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
         appBar: AppBar(
           bottom: TabBar(
             indicatorColor: AliceConstants.lightRed,
-            tabs: _getTabBars(),
+            tabs: const [
+              const Tab(icon: Icon(Icons.info_outline), text: "Overview"),
+              const Tab(icon: Icon(Icons.arrow_upward), text: "Request"),
+              const Tab(icon: Icon(Icons.arrow_downward), text: "Response"),
+              const Tab(icon: Icon(Icons.warning), text: "Error"),
+            ],
           ),
-          title: const Text('ChuchInterceptor - HTTP Call Details'),
+          title: const Text('ChuckInterceptor - HTTP Call Details'),
         ),
         body: TabBarView(
-          children: _getTabBarViewList(),
+          children: [
+            AliceCallOverviewWidget(widget.call),
+            AliceCallRequestWidget(widget.call),
+            AliceCallResponseWidget(widget.call),
+            AliceCallErrorWidget(widget.call),
+          ],
         ),
       ),
     );
@@ -92,27 +103,5 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
 
   Future<String> _getSharableResponseString() async {
     return AliceSaveHelper.buildCallLog(widget.call);
-  }
-
-  List<Widget> _getTabBars() {
-    final List<Widget> widgets = [];
-    widgets.add(const Tab(icon: Icon(Icons.info_outline), text: "Overview"));
-    widgets.add(const Tab(icon: Icon(Icons.arrow_upward), text: "Request"));
-    widgets.add(const Tab(icon: Icon(Icons.arrow_downward), text: "Response"));
-    widgets.add(
-      const Tab(
-        icon: Icon(Icons.warning),
-        text: "Error",
-      ),
-    );
-    return widgets;
-  }
-
-  List<Widget> _getTabBarViewList() {
-    final List<Widget> widgets = [];
-    widgets.add(AliceCallOverviewWidget(widget.call));
-    widgets.add(AliceCallRequestWidget(widget.call));
-    widgets.add(AliceCallErrorWidget(widget.call));
-    return widgets;
   }
 }
