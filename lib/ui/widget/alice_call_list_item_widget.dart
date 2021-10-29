@@ -90,11 +90,17 @@ class AliceCallListItemWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
-            child: Text(_formatTime(call.request!.time),
-                style: const TextStyle(fontSize: 12))),
+          child: Text(
+            _formatTime(call.request!.time),
+            style: const TextStyle(fontSize: 12),
+          ),
+        ),
         Flexible(
-            child: Text(AliceConversionHelper.formatTime(call.duration),
-                style: const TextStyle(fontSize: 12))),
+          child: Text(
+            AliceConversionHelper.formatTime(call.duration),
+            style: const TextStyle(fontSize: 12),
+          ),
+        ),
         Flexible(
           child: Text(
             "${AliceConversionHelper.formatBytes(call.request!.size)} / "

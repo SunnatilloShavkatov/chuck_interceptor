@@ -35,7 +35,6 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
       child: Theme(
         data: ThemeData(
           brightness: widget.core.brightness,
-          accentColor: AliceConstants.lightRed,
         ),
         child: StreamBuilder<List<AliceHttpCall>>(
           stream: widget.core.callsSubject,
@@ -66,8 +65,10 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
           backgroundColor: AliceConstants.lightRed,
           key: const Key('share_key'),
           onPressed: () async {
-            Share.share(await _getSharableResponseString(),
-                subject: 'Request Details');
+            Share.share(
+              await _getSharableResponseString(),
+              subject: 'Request Details',
+            );
           },
           child: const Icon(Icons.share),
         ),
@@ -76,7 +77,7 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
             indicatorColor: AliceConstants.lightRed,
             tabs: _getTabBars(),
           ),
-          title: const Text('Alice - HTTP Call Details'),
+          title: const Text('ChuchInterceptor - HTTP Call Details'),
         ),
         body: TabBarView(
           children: _getTabBarViewList(),
