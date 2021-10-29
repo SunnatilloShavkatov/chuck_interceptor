@@ -1,3 +1,7 @@
+## 0.0.3
+
+* Details page bug fixed
+
 ## 0.0.2
 
 * Updated dependencies

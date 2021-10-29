@@ -1,6 +1,6 @@
 name: chuck_interceptor
 description: ChuckIntercepter is an HTTP Inspector tool which helps debugging http requests. It catches and stores http requests and responses, which can be viewed via simple UI.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/SunnatilloShavkatov/chuck_interceptor
 
 environment:
