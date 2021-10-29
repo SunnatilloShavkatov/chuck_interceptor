@@ -126,7 +126,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.4"
+    version: "0.0.1"
   cli_util:
     dependency: transitive
     description:
