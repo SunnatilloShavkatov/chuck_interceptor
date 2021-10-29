@@ -1,3 +1,31 @@
+## 0.2.4
+* Updated dependencies
+
+## 0.2.3
+* Updated dependencies
+
+## 0.2.2
+* Updated dependencies
+* Changed default sort filter of create time from ascending to descending. This will show latest HTTP calls on top of the list.
+
+## 0.2.1
+* Added directionality support (by Abdol Hussain Mozaffari https://github.com/mozaffari)
+* Updated dependencies (by https://github.com/Nyan274)
+
+## 0.2.0
+* Migrate to null safety (by https://github.com/ARIFCSE10)
+* Updated Dio interceptor
+* Updated dependencies
+
+## 0.1.12
+* Fixed query parameter issue not handled properly (by https://github.com/shreyas18jan).
+* Removed shake dependency and added sensors dependency. Shake will be detected with sensors.
+* Updated other dependencies.
+* Added maxCallsCount which handles max number of calls stored in memory.
+* Refactored notification text.
+* Added sorting in inspector UI.
+* Added additional chopper request error handling.
+
 ## 0.1.11
 * Updated dependencies
 * Lint fixes

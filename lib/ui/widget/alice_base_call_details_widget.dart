@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:alice/helper/alice_conversion_helper.dart';
-import 'package:alice/ui/utils/alice_parser.dart';
+import 'package:alice/utils/alice_parser.dart';
 import 'package:flutter/material.dart';
 
 abstract class AliceBaseCallDetailsWidgetState<T extends StatefulWidget>
@@ -9,8 +9,6 @@ abstract class AliceBaseCallDetailsWidgetState<T extends StatefulWidget>
   final JsonEncoder encoder = const JsonEncoder.withIndent('  ');
 
   Widget getListRow(String name, String value) {
-    assert(name != null, "name can't be null");
-    assert(value != null, "value can't be null");
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -36,9 +34,9 @@ abstract class AliceBaseCallDetailsWidgetState<T extends StatefulWidget>
   String formatDuration(int duration) =>
       AliceConversionHelper.formatTime(duration);
 
-  String formatBody(dynamic body, String contentType) =>
+  String formatBody(dynamic body, String? contentType) =>
       AliceParser.formatBody(body, contentType);
 
-  String getContentType(Map<String, dynamic> headers) =>
+  String? getContentType(Map<String, dynamic>? headers) =>
       AliceParser.getContentType(headers);
 }

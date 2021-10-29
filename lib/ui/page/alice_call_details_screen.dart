@@ -1,11 +1,11 @@
 import 'package:alice/core/alice_core.dart';
 import 'package:alice/helper/alice_save_helper.dart';
 import 'package:alice/model/alice_http_call.dart';
-import 'package:alice/ui/utils/alice_constants.dart';
+import 'package:alice/utils/alice_constants.dart';
 import 'package:alice/ui/widget/alice_call_error_widget.dart';
 import 'package:alice/ui/widget/alice_call_overview_widget.dart';
 import 'package:alice/ui/widget/alice_call_request_widget.dart';
-import 'package:alice/ui/widget/alice_call_response_widget.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 
@@ -13,9 +13,7 @@ class AliceCallDetailsScreen extends StatefulWidget {
   final AliceHttpCall call;
   final AliceCore core;
 
-  const AliceCallDetailsScreen(this.call, this.core)
-      : assert(call != null, "call can't be null"),
-        assert(core != null, "core can't be null");
+  const AliceCallDetailsScreen(this.call, this.core);
 
   @override
   _AliceCallDetailsScreenState createState() => _AliceCallDetailsScreenState();
@@ -32,27 +30,30 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(
+    return Directionality(
+      textDirection: widget.core.directionality ?? Directionality.of(context),
+      child: Theme(
+        data: ThemeData(
           brightness: widget.core.brightness,
-          accentColor: AliceConstants.lightRed),
-      child: StreamBuilder<List<AliceHttpCall>>(
-        stream: widget.core.callsSubject,
-        initialData: [widget.call],
-        builder: (context, callsSnapshot) {
-          if (callsSnapshot.hasData) {
-            final AliceHttpCall call = callsSnapshot.data.firstWhere(
-                (snapshotCall) => snapshotCall.id == widget.call.id,
-                orElse: () => null);
-            if (call != null) {
-              return _buildMainWidget();
+          accentColor: AliceConstants.lightRed,
+        ),
+        child: StreamBuilder<List<AliceHttpCall>>(
+          stream: widget.core.callsSubject,
+          initialData: [widget.call],
+          builder: (context, callsSnapshot) {
+            if (callsSnapshot.hasData) {
+              final AliceHttpCall? call = callsSnapshot.data!.firstWhereOrNull(
+                  (snapshotCall) => snapshotCall.id == widget.call.id);
+              if (call != null) {
+                return _buildMainWidget();
+              } else {
+                return _buildErrorWidget();
+              }
             } else {
               return _buildErrorWidget();
             }
-          } else {
-            return _buildErrorWidget();
-          }
-        },
+          },
+        ),
       ),
     );
   }
@@ -110,7 +111,6 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
     final List<Widget> widgets = [];
     widgets.add(AliceCallOverviewWidget(widget.call));
     widgets.add(AliceCallRequestWidget(widget.call));
-    widgets.add(AliceCallResponseWidget(widget.call));
     widgets.add(AliceCallErrorWidget(widget.call));
     return widgets;
   }

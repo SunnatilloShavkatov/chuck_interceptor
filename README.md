@@ -79,7 +79,7 @@ Alice is an HTTP Inspector tool for Flutter which helps debugging http requests.
 
 ```yaml
 dependencies:
-  alice: ^0.1.11
+  alice: ^0.2.4
 ```
 
 2. Install it
@@ -145,6 +145,17 @@ If you want to pass another notification icon, you can use `notificationIcon` pa
 Alice alice = Alice(..., notificationIcon: "myNotificationIconResourceName");
 ```
 
+If you want to limit max numbers of HTTP calls saved in memory, you may use `maxCallsCount` parameter.
+
+```dart
+Alice alice = Alice(..., maxCallsCount: 1000));
+```
+
+
+If you want to change the Directionality of Alice, you can use the `directionality` parameter. If the parameter is set to null, the Directionality of the app will be used.
+```dart
+Alice alice = Alice(..., directionality: TextDirection.ltr);
+```
 ### HTTP Client configuration
 If you're using Dio, you just need to add interceptor.
 
