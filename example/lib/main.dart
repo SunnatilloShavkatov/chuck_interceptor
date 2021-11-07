@@ -24,7 +24,6 @@ class _MyAppState extends State<MyApp> {
   ChopperClient? _chopper;
   late PostsService _postsService;
   Color _primaryColor = Color(0xffff5e57);
-  Color _accentColor = Color(0xffff3f34);
   Color _buttonColor = Color(0xff008000);
 
   @override

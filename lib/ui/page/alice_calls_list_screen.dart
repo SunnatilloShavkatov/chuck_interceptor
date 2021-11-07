@@ -104,7 +104,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
   }
 
   Widget _buildTitleWidget() {
-    return const Text("ChuckInterceptor");
+    return const Text("Chuck Interceptor");
   }
 
   Widget _buildSearchField() {
