@@ -83,7 +83,7 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
               const Tab(icon: Icon(Icons.warning), text: "Error"),
             ],
           ),
-          title: const Text('ChuckInterceptor - HTTP Call Details'),
+          title: const Text('Chuck Interceptor - HTTP Call Details'),
         ),
         body: TabBarView(
           children: [
