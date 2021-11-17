@@ -1,21 +1,21 @@
 name: chuck_interceptor
 description: Chuck Intercepter is an HTTP Inspector tool which helps debugging http requests. It catches and stores http requests and responses, which can be viewed via simple UI.
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/SunnatilloShavkatov/chuck_interceptor
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.12.0"
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.4
-  dio: ^4.0.1
-  flutter_local_notifications: ^9.0.2
+  dio: ^4.0.3
+  flutter_local_notifications: ^9.1.2
   rxdart: ^0.27.2
-  path_provider: ^2.0.6
-  permission_handler: ^8.2.6
+  path_provider: ^2.0.7
+  permission_handler: ^8.3.0
   package_info_plus: ^1.3.0
   open_file: ^3.2.1
   sensors: ^2.0.3
