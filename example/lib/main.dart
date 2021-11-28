@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:chuck_interceptor/alice.dart';
+import 'package:chuck_interceptor/chuck_interceptor.dart';
 import 'package:alice_example/posts_service.dart';
 import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;

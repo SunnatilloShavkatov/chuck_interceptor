@@ -91,7 +91,7 @@ $ flutter packages get
 3. Import it
 
 ```dart
-import 'package:chuck_interceptor/alice.dart';
+import 'package:chuck_interceptor/chuck_interceptor.dart';
 ```
 
 ## Usage
