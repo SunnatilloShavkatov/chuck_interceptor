@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:chuck_interceptor/chuck_interceptor.dart';
+import 'package:chuck_interceptor/chuck.dart';
 
 extension AliceHttpClientExtensions on Future<HttpClientRequest> {
   /// Intercept http client with alice. This extension method provides additional
   /// helpful method to intercept httpClientResponse.
-  Future<HttpClientResponse> interceptWithAlice(Alice alice,
+  Future<HttpClientResponse> interceptWithAlice(Chuck alice,
       {dynamic body, Map<String, dynamic>? headers}) async {
     final HttpClientRequest request = await this;
     if (body != null) {

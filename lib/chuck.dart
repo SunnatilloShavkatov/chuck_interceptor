@@ -11,7 +11,7 @@ import 'package:chuck_interceptor/core/alice_http_client_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class Alice {
+class Chuck {
   /// Should user be notified with notification if there's new request catched
   /// by Alice
   final bool showNotification;
@@ -39,7 +39,7 @@ class Alice {
   late AliceHttpAdapter _httpAdapter;
 
   /// Creates alice instance.
-  Alice({
+  Chuck({
     GlobalKey<NavigatorState>? navigatorKey,
     this.showNotification = true,
     this.showInspectorOnShake = false,

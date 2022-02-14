@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:chuck_interceptor/chuck_interceptor.dart';
+import 'package:chuck_interceptor/chuck.dart';
 import 'package:alice_example/posts_service.dart';
 import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Alice _alice;
+  late Chuck _alice;
   late Dio _dio;
   late HttpClient _httpClient;
   ChopperClient? _chopper;
@@ -28,11 +28,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    _alice = Alice(
-        showNotification: true,
-        showInspectorOnShake: true,
-        darkTheme: false,
-        maxCallsCount: 1000);
+    _alice = Chuck(
+      showNotification: true,
+      showInspectorOnShake: true,
+      darkTheme: false,
+      maxCallsCount: 1000,
+    );
     _dio = Dio(BaseOptions(
       followRedirects: false,
     ));
