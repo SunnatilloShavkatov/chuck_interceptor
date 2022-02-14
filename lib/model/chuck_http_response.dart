@@ -1,4 +1,4 @@
-class AliceHttpResponse {
+class ChuckHttpResponse {
   int? status = 0;
   int size = 0;
   DateTime time = DateTime.now();

@@ -1,21 +1,21 @@
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/ui/widget/alice_base_call_details_widget.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:flutter/material.dart';
 
-class AliceCallErrorWidget extends StatefulWidget {
-  final AliceHttpCall call;
+class ChuckCallErrorWidget extends StatefulWidget {
+  final ChuckHttpCall call;
 
-  const AliceCallErrorWidget(this.call);
+  const ChuckCallErrorWidget(this.call);
 
   @override
   State<StatefulWidget> createState() {
-    return _AliceCallErrorWidgetState();
+    return _ChuckCallErrorWidgetState();
   }
 }
 
-class _AliceCallErrorWidgetState
-    extends AliceBaseCallDetailsWidgetState<AliceCallErrorWidget> {
-  AliceHttpCall get _call => widget.call;
+class _ChuckCallErrorWidgetState
+    extends ChuckBaseCallDetailsWidgetState<ChuckCallErrorWidget> {
+  ChuckHttpCall get _call => widget.call;
 
   @override
   Widget build(BuildContext context) {

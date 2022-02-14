@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Updated dependencies
+
 ## 0.0.8
 
 * Updated dependencies

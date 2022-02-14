@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:chuck_interceptor/core/alice_core.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/model/alice_http_request.dart';
-import 'package:chuck_interceptor/model/alice_http_response.dart';
+import 'package:chuck_interceptor/core/chuck_core.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/model/chuck_http_request.dart';
+import 'package:chuck_interceptor/model/chuck_http_response.dart';
 
-class AliceHttpClientAdapter {
-  /// AliceCore instance
-  final AliceCore aliceCore;
+class ChuckHttpClientAdapter {
+  /// ChuckCore instance
+  final ChuckCore chuckCore;
 
-  /// Creates alice http client adapter
-  AliceHttpClientAdapter(this.aliceCore);
+  /// Creates Chuck http client adapter
+  ChuckHttpClientAdapter(this.chuckCore);
 
-  /// Handles httpClientRequest and creates http alice call from it
+  /// Handles httpClientRequest and creates http Chuck call from it
   void onRequest(HttpClientRequest request, {dynamic body}) {
-    final AliceHttpCall call = AliceHttpCall(request.hashCode);
+    final ChuckHttpCall call = ChuckHttpCall(request.hashCode);
     call.loading = true;
     call.client = "HttpClient (io package)";
     call.method = request.method;
@@ -31,7 +31,7 @@ class AliceHttpClientAdapter {
     if (request.uri.scheme == "https") {
       call.secure = true;
     }
-    final AliceHttpRequest httpRequest = AliceHttpRequest();
+    final ChuckHttpRequest httpRequest = ChuckHttpRequest();
     if (body == null) {
       httpRequest.size = 0;
       httpRequest.body = "";
@@ -56,14 +56,14 @@ class AliceHttpClientAdapter {
     httpRequest.cookies = request.cookies;
 
     call.request = httpRequest;
-    call.response = AliceHttpResponse();
-    aliceCore.addCall(call);
+    call.response = ChuckHttpResponse();
+    chuckCore.addCall(call);
   }
 
-  /// Handles httpClientRequest and adds response to http alice call
+  /// Handles httpClientRequest and adds response to http Chuck call
   void onResponse(HttpClientResponse response, HttpClientRequest request,
       {dynamic body}) async {
-    final AliceHttpResponse httpResponse = AliceHttpResponse();
+    final ChuckHttpResponse httpResponse = ChuckHttpResponse();
     httpResponse.status = response.statusCode;
 
     if (body != null) {
@@ -79,6 +79,6 @@ class AliceHttpClientAdapter {
       headers[header] = values.toString();
     });
     httpResponse.headers = headers;
-    aliceCore.addResponse(httpResponse, request.hashCode);
+    chuckCore.addResponse(httpResponse, request.hashCode);
   }
 }

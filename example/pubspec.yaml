@@ -1,4 +1,4 @@
-name: alice_example
+name: chuck_example
 description: Demonstrates how to use the Chuck Interceptor plugin.
 publish_to: "none"
 
@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  chopper: ^4.0.3
+  chopper: ^4.0.5
   path_provider: ^2.0.9
   connectivity_plus: ^2.2.0
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AliceConstants {
+class ChuckConstants {
   static Color red = const Color(0xffff3f34);
   static Color lightRed = const Color(0xffff5e57);
   static Color green = const Color(0xff05c46b);

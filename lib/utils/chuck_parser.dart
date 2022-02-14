@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class AliceParser {
+class ChuckParser {
   static const String _emptyBody = "Body is empty";
   static const String _unknownContentType = "Unknown";
   static const String _jsonContentTypeSmall = "content-type";

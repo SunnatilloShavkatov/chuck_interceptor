@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:chuck_interceptor/chuck.dart';
 
-extension AliceHttpClientExtensions on Future<HttpClientRequest> {
-  /// Intercept http client with alice. This extension method provides additional
+extension ChuckHttpClientExtensions on Future<HttpClientRequest> {
+  /// Intercept http client with Chuck. This extension method provides additional
   /// helpful method to intercept httpClientResponse.
-  Future<HttpClientResponse> interceptWithAlice(Chuck alice,
+  Future<HttpClientResponse> interceptWithChuck(Chuck Chuck,
       {dynamic body, Map<String, dynamic>? headers}) async {
     final HttpClientRequest request = await this;
     if (body != null) {
@@ -20,10 +20,10 @@ extension AliceHttpClientExtensions on Future<HttpClientRequest> {
         },
       );
     }
-    alice.onHttpClientRequest(request, body: body);
+    Chuck.onHttpClientRequest(request, body: body);
     final httpResponse = await request.close();
     final responseBody = await utf8.decoder.bind(httpResponse).join();
-    alice.onHttpClientResponse(httpResponse, request, body: responseBody);
+    Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     return httpResponse;
   }
 }

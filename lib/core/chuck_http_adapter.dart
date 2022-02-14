@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-import 'package:chuck_interceptor/core/alice_core.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/model/alice_http_request.dart';
-import 'package:chuck_interceptor/model/alice_http_response.dart';
+import 'package:chuck_interceptor/core/chuck_core.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/model/chuck_http_request.dart';
+import 'package:chuck_interceptor/model/chuck_http_response.dart';
 import 'package:http/http.dart' as http;
 
-class AliceHttpAdapter {
-  /// AliceCore instance
-  final AliceCore aliceCore;
+class ChuckHttpAdapter {
+  /// ChuckCore instance
+  final ChuckCore chuckCore;
 
-  /// Creates alice http adapter
-  AliceHttpAdapter(this.aliceCore);
+  /// Creates Chuck http adapter
+  ChuckHttpAdapter(this.chuckCore);
 
   /// Handles http response. It creates both request and response from http call
   void onResponse(http.Response response, {dynamic body}) {
@@ -20,7 +20,7 @@ class AliceHttpAdapter {
     }
     final request = response.request!;
 
-    final AliceHttpCall call = AliceHttpCall(response.request.hashCode);
+    final ChuckHttpCall call = ChuckHttpCall(response.request.hashCode);
     call.loading = true;
     call.client = "HttpClient (http package)";
     call.uri = request.url.toString();
@@ -36,7 +36,7 @@ class AliceHttpAdapter {
       call.secure = true;
     }
 
-    final AliceHttpRequest httpRequest = AliceHttpRequest();
+    final ChuckHttpRequest httpRequest = ChuckHttpRequest();
 
     if (response.request is http.Request) {
       // we are guaranteed` the existence of body and headers
@@ -67,7 +67,7 @@ class AliceHttpAdapter {
 
     httpRequest.queryParameters = response.request!.url.queryParameters;
 
-    final AliceHttpResponse httpResponse = AliceHttpResponse();
+    final ChuckHttpResponse httpResponse = ChuckHttpResponse();
     httpResponse.status = response.statusCode;
     httpResponse.body = response.body;
 
@@ -84,6 +84,6 @@ class AliceHttpAdapter {
 
     call.loading = false;
     call.duration = 0;
-    aliceCore.addCall(call);
+    chuckCore.addCall(call);
   }
 }

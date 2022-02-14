@@ -1,5 +1,5 @@
 ///Available sort options in inspector UI.
-enum AliceSortOption {
+enum ChuckSortOption {
   time,
   responseTime,
   responseCode,
@@ -7,18 +7,18 @@ enum AliceSortOption {
   endpoint,
 }
 
-extension AliceSortOptionsExtension on AliceSortOption {
+extension ChuckSortOptionsExtension on ChuckSortOption {
   String get name {
     switch (this) {
-      case AliceSortOption.time:
+      case ChuckSortOption.time:
         return "Create time (default)";
-      case AliceSortOption.responseTime:
+      case ChuckSortOption.responseTime:
         return "Response time";
-      case AliceSortOption.responseCode:
+      case ChuckSortOption.responseCode:
         return "Response code";
-      case AliceSortOption.responseSize:
+      case ChuckSortOption.responseSize:
         return "Response size";
-      case AliceSortOption.endpoint:
+      case ChuckSortOption.endpoint:
         return "Endpoint";
     }
   }

@@ -1,48 +1,48 @@
-import 'package:chuck_interceptor/model/alice_menu_item.dart';
-import 'package:chuck_interceptor/helper/alice_alert_helper.dart';
-import 'package:chuck_interceptor/model/alice_sort_option.dart';
-import 'package:chuck_interceptor/ui/page/alice_call_details_screen.dart';
-import 'package:chuck_interceptor/core/alice_core.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/utils/alice_constants.dart';
-import 'package:chuck_interceptor/ui/widget/alice_call_list_item_widget.dart';
+import 'package:chuck_interceptor/core/chuck_core.dart';
+import 'package:chuck_interceptor/model/chuck_menu_item.dart';
+import 'package:chuck_interceptor/helper/chuck_alert_helper.dart';
+import 'package:chuck_interceptor/model/chuck_sort_option.dart';
+import 'package:chuck_interceptor/ui/page/chuck_call_details_screen.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/utils/chuck_constants.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_call_list_item_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'alice_stats_screen.dart';
+import 'chuck_stats_screen.dart';
 
-class AliceCallsListScreen extends StatefulWidget {
-  final AliceCore _aliceCore;
+class ChuckCallsListScreen extends StatefulWidget {
+  final ChuckCore _chuckCore;
 
-  const AliceCallsListScreen(this._aliceCore);
+  const ChuckCallsListScreen(this._chuckCore);
 
   @override
-  _AliceCallsListScreenState createState() => _AliceCallsListScreenState();
+  _ChuckCallsListScreenState createState() => _ChuckCallsListScreenState();
 }
 
-class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
-  AliceCore get aliceCore => widget._aliceCore;
+class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
+  ChuckCore get chuckCore => widget._chuckCore;
   bool _searchEnabled = false;
   final TextEditingController _queryTextEditingController =
       TextEditingController();
-  final List<AliceMenuItem> _menuItems = [];
-  AliceSortOption? _sortOption = AliceSortOption.time;
+  final List<ChuckMenuItem> _menuItems = [];
+  ChuckSortOption? _sortOption = ChuckSortOption.time;
   bool _sortAscending = false;
 
-  _AliceCallsListScreenState() {
-    _menuItems.add(AliceMenuItem("Sort", Icons.sort));
-    _menuItems.add(AliceMenuItem("Delete", Icons.delete));
-    _menuItems.add(AliceMenuItem("Stats", Icons.insert_chart));
-    _menuItems.add(AliceMenuItem("Save", Icons.save));
+  _ChuckCallsListScreenState() {
+    _menuItems.add(ChuckMenuItem("Sort", Icons.sort));
+    _menuItems.add(ChuckMenuItem("Delete", Icons.delete));
+    _menuItems.add(ChuckMenuItem("Stats", Icons.insert_chart));
+    _menuItems.add(ChuckMenuItem("Save", Icons.save));
   }
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection:
-          widget._aliceCore.directionality ?? Directionality.of(context),
+          widget._chuckCore.directionality ?? Directionality.of(context),
       child: Theme(
         data: ThemeData(
-          brightness: widget._aliceCore.brightness,
+          brightness: widget._chuckCore.brightness,
         ),
         child: Scaffold(
           appBar: AppBar(
@@ -81,16 +81,16 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
   }
 
   Widget _buildMenuButton() {
-    return PopupMenuButton<AliceMenuItem>(
-      onSelected: (AliceMenuItem item) => _onMenuItemSelected(item),
+    return PopupMenuButton<ChuckMenuItem>(
+      onSelected: (ChuckMenuItem item) => _onMenuItemSelected(item),
       itemBuilder: (BuildContext context) {
-        return _menuItems.map((AliceMenuItem item) {
-          return PopupMenuItem<AliceMenuItem>(
+        return _menuItems.map((ChuckMenuItem item) {
+          return PopupMenuItem<ChuckMenuItem>(
             value: item,
             child: Row(children: [
               Icon(
                 item.iconData,
-                color: AliceConstants.lightRed,
+                color: ChuckConstants.lightRed,
               ),
               const Padding(
                 padding: EdgeInsets.only(left: 10),
@@ -104,7 +104,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
   }
 
   Widget _buildTitleWidget() {
-    return const Text("Chuck Interceptor");
+    return const Text("Chuck");
   }
 
   Widget _buildSearchField() {
@@ -113,7 +113,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
       autofocus: true,
       decoration: InputDecoration(
         hintText: "Search http request...",
-        hintStyle: TextStyle(fontSize: 16.0, color: AliceConstants.grey),
+        hintStyle: TextStyle(fontSize: 16.0, color: ChuckConstants.grey),
         border: InputBorder.none,
       ),
       style: const TextStyle(fontSize: 16.0),
@@ -121,7 +121,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
     );
   }
 
-  void _onMenuItemSelected(AliceMenuItem menuItem) {
+  void _onMenuItemSelected(ChuckMenuItem menuItem) {
     if (menuItem.title == "Sort") {
       _showSortDialog();
     }
@@ -137,10 +137,10 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
   }
 
   Widget _buildCallsListWrapper() {
-    return StreamBuilder<List<AliceHttpCall>>(
-      stream: aliceCore.callsSubject,
+    return StreamBuilder<List<ChuckHttpCall>>(
+      stream: chuckCore.callsSubject,
       builder: (context, snapshot) {
-        List<AliceHttpCall> calls = snapshot.data ?? [];
+        List<ChuckHttpCall> calls = snapshot.data ?? [];
         final String query = _queryTextEditingController.text.trim();
         if (query.isNotEmpty) {
           calls = calls
@@ -166,7 +166,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
           children: [
             Icon(
               Icons.error_outline,
-              color: AliceConstants.orange,
+              color: ChuckConstants.orange,
             ),
             const SizedBox(height: 6),
             const Text(
@@ -200,10 +200,10 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
     );
   }
 
-  Widget _buildCallsListWidget(List<AliceHttpCall> calls) {
-    final List<AliceHttpCall> callsSorted = List.of(calls);
+  Widget _buildCallsListWidget(List<ChuckHttpCall> calls) {
+    final List<ChuckHttpCall> callsSorted = List.of(calls);
     switch (_sortOption) {
-      case AliceSortOption.time:
+      case ChuckSortOption.time:
         if (_sortAscending) {
           callsSorted.sort(
               (call1, call2) => call1.createdTime.compareTo(call2.createdTime));
@@ -212,7 +212,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
               (call1, call2) => call2.createdTime.compareTo(call1.createdTime));
         }
         break;
-      case AliceSortOption.responseTime:
+      case ChuckSortOption.responseTime:
         if (_sortAscending) {
           callsSorted.sort();
           callsSorted.sort((call1, call2) =>
@@ -222,7 +222,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
               call2.response?.time.compareTo(call1.response!.time) ?? -1);
         }
         break;
-      case AliceSortOption.responseCode:
+      case ChuckSortOption.responseCode:
         if (_sortAscending) {
           callsSorted.sort((call1, call2) =>
               call1.response?.status?.compareTo(call2.response!.status!) ?? -1);
@@ -231,7 +231,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
               call2.response?.status?.compareTo(call1.response!.status!) ?? -1);
         }
         break;
-      case AliceSortOption.responseSize:
+      case ChuckSortOption.responseSize:
         if (_sortAscending) {
           callsSorted.sort((call1, call2) =>
               call1.response?.size.compareTo(call2.response!.size) ?? -1);
@@ -240,7 +240,7 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
               call2.response?.size.compareTo(call1.response!.size) ?? -1);
         }
         break;
-      case AliceSortOption.endpoint:
+      case ChuckSortOption.endpoint:
         if (_sortAscending) {
           callsSorted
               .sort((call1, call2) => call1.endpoint.compareTo(call2.endpoint));
@@ -256,22 +256,22 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
     return ListView.builder(
       itemCount: callsSorted.length,
       itemBuilder: (context, index) {
-        return AliceCallListItemWidget(callsSorted[index], _onListItemClicked);
+        return ChuckCallListItemWidget(callsSorted[index], _onListItemClicked);
       },
     );
   }
 
-  void _onListItemClicked(AliceHttpCall call) {
+  void _onListItemClicked(ChuckHttpCall call) {
     Navigator.push<void>(
-      widget._aliceCore.getContext()!,
+      widget._chuckCore.getContext()!,
       MaterialPageRoute(
-        builder: (context) => AliceCallDetailsScreen(call, widget._aliceCore),
+        builder: (context) => ChuckCallDetailsScreen(call, widget._chuckCore),
       ),
     );
   }
 
   void _showRemoveDialog() {
-    AliceAlertHelper.showAlert(
+    ChuckAlertHelper.showAlert(
       context,
       "Delete calls",
       "Do you want to delete http calls?",
@@ -283,20 +283,20 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
   }
 
   void _removeCalls() {
-    aliceCore.removeCalls();
+    chuckCore.removeCalls();
   }
 
   void _showStatsScreen() {
     Navigator.push<void>(
-      aliceCore.getContext()!,
+      chuckCore.getContext()!,
       MaterialPageRoute(
-        builder: (context) => AliceStatsScreen(widget._aliceCore),
+        builder: (context) => ChuckStatsScreen(widget._chuckCore),
       ),
     );
   }
 
   void _saveToFile() async {
-    aliceCore.saveHttpRequests(context);
+    chuckCore.saveHttpRequests(context);
   }
 
   void _updateSearchQuery(String query) {
@@ -316,13 +316,13 @@ class _AliceCallsListScreenState extends State<AliceCallsListScreen> {
             content: StatefulBuilder(builder: (context, setState) {
               return Wrap(
                 children: [
-                  ...AliceSortOption.values
-                      .map((AliceSortOption sortOption) =>
-                          RadioListTile<AliceSortOption>(
+                  ...ChuckSortOption.values
+                      .map((ChuckSortOption sortOption) =>
+                          RadioListTile<ChuckSortOption>(
                             title: Text(sortOption.name),
                             value: sortOption,
                             groupValue: _sortOption,
-                            onChanged: (AliceSortOption? value) {
+                            onChanged: (ChuckSortOption? value) {
                               setState(() {
                                 _sortOption = value;
                               });

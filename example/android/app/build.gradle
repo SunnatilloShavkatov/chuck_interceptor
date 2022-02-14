@@ -39,7 +39,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.jhomlala.alice_example"
+        applicationId "com.jhomlala.Chuck_example"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()

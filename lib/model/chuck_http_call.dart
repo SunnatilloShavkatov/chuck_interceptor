@@ -1,8 +1,8 @@
-import 'alice_http_error.dart';
-import 'alice_http_request.dart';
-import 'alice_http_response.dart';
+import 'chuck_http_error.dart';
+import 'chuck_http_request.dart';
+import 'chuck_http_response.dart';
 
-class AliceHttpCall {
+class ChuckHttpCall {
   final int id;
   late DateTime createdTime;
   String client = "";
@@ -14,16 +14,16 @@ class AliceHttpCall {
   String uri = "";
   int duration = 0;
 
-  AliceHttpRequest? request;
-  AliceHttpResponse? response;
-  AliceHttpError? error;
+  ChuckHttpRequest? request;
+  ChuckHttpResponse? response;
+  ChuckHttpError? error;
 
-  AliceHttpCall(this.id) {
+  ChuckHttpCall(this.id) {
     loading = true;
     createdTime = DateTime.now();
   }
 
-  void setResponse(AliceHttpResponse response) {
+  void setResponse(ChuckHttpResponse response) {
     this.response = response;
     loading = false;
   }

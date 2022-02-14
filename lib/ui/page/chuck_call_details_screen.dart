@@ -1,28 +1,28 @@
-import 'package:chuck_interceptor/core/alice_core.dart';
-import 'package:chuck_interceptor/helper/alice_save_helper.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/ui/widget/alice_call_response_widget.dart';
-import 'package:chuck_interceptor/utils/alice_constants.dart';
-import 'package:chuck_interceptor/ui/widget/alice_call_error_widget.dart';
-import 'package:chuck_interceptor/ui/widget/alice_call_overview_widget.dart';
-import 'package:chuck_interceptor/ui/widget/alice_call_request_widget.dart';
+import 'package:chuck_interceptor/core/chuck_core.dart';
+import 'package:chuck_interceptor/helper/chuck_save_helper.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_call_response_widget.dart';
+import 'package:chuck_interceptor/utils/chuck_constants.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_call_error_widget.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_call_overview_widget.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_call_request_widget.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 
-class AliceCallDetailsScreen extends StatefulWidget {
-  final AliceHttpCall call;
-  final AliceCore core;
+class ChuckCallDetailsScreen extends StatefulWidget {
+  final ChuckHttpCall call;
+  final ChuckCore core;
 
-  const AliceCallDetailsScreen(this.call, this.core);
+  const ChuckCallDetailsScreen(this.call, this.core);
 
   @override
-  _AliceCallDetailsScreenState createState() => _AliceCallDetailsScreenState();
+  _ChuckCallDetailsScreenState createState() => _ChuckCallDetailsScreenState();
 }
 
-class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
+class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
     with SingleTickerProviderStateMixin {
-  AliceHttpCall get call => widget.call;
+  ChuckHttpCall get call => widget.call;
 
   @override
   void initState() {
@@ -37,12 +37,12 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
         data: ThemeData(
           brightness: widget.core.brightness,
         ),
-        child: StreamBuilder<List<AliceHttpCall>>(
+        child: StreamBuilder<List<ChuckHttpCall>>(
           stream: widget.core.callsSubject,
           initialData: [widget.call],
           builder: (context, callsSnapshot) {
             if (callsSnapshot.hasData) {
-              final AliceHttpCall? call = callsSnapshot.data!.firstWhereOrNull(
+              final ChuckHttpCall? call = callsSnapshot.data!.firstWhereOrNull(
                   (snapshotCall) => snapshotCall.id == widget.call.id);
               if (call != null) {
                 return _buildMainWidget();
@@ -63,7 +63,7 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
       length: 4,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          backgroundColor: AliceConstants.lightRed,
+          backgroundColor: ChuckConstants.lightRed,
           key: const Key('share_key'),
           onPressed: () async {
             Share.share(
@@ -75,7 +75,7 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
         ),
         appBar: AppBar(
           bottom: TabBar(
-            indicatorColor: AliceConstants.lightRed,
+            indicatorColor: ChuckConstants.lightRed,
             tabs: const [
               const Tab(icon: Icon(Icons.info_outline), text: "Overview"),
               const Tab(icon: Icon(Icons.arrow_upward), text: "Request"),
@@ -87,10 +87,10 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
         ),
         body: TabBarView(
           children: [
-            AliceCallOverviewWidget(widget.call),
-            AliceCallRequestWidget(widget.call),
-            AliceCallResponseWidget(widget.call),
-            AliceCallErrorWidget(widget.call),
+            ChuckCallOverviewWidget(widget.call),
+            ChuckCallRequestWidget(widget.call),
+            ChuckCallResponseWidget(widget.call),
+            ChuckCallErrorWidget(widget.call),
           ],
         ),
       ),
@@ -102,6 +102,6 @@ class _AliceCallDetailsScreenState extends State<AliceCallDetailsScreen>
   }
 
   Future<String> _getSharableResponseString() async {
-    return AliceSaveHelper.buildCallLog(widget.call);
+    return ChuckSaveHelper.buildCallLog(widget.call);
   }
 }

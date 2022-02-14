@@ -26,7 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Flutter doctor**
 Please add flutter doctor output here.
 
-**Alice version**
+**Chuck version**
 - Version: 
 
 **Smartphone (please complete the following information):**

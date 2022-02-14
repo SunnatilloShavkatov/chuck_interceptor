@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AliceAlertHelper {
+class ChuckAlertHelper {
   ///Helper method used to open alarm with given title and description.
   static void showAlert(
     BuildContext context,

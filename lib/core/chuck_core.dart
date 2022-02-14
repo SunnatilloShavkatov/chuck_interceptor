@@ -1,20 +1,20 @@
 import 'dart:async';
 
-import 'package:chuck_interceptor/core/alice_utils.dart';
-import 'package:chuck_interceptor/helper/alice_save_helper.dart';
-import 'package:chuck_interceptor/model/alice_http_error.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/model/alice_http_response.dart';
-import 'package:chuck_interceptor/ui/page/alice_calls_list_screen.dart';
+import 'package:chuck_interceptor/core/chuck_utils.dart';
+import 'package:chuck_interceptor/helper/chuck_save_helper.dart';
+import 'package:chuck_interceptor/model/chuck_http_error.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/model/chuck_http_response.dart';
+import 'package:chuck_interceptor/ui/page/chuck_calls_list_screen.dart';
 import 'package:chuck_interceptor/utils/shake_detector.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AliceCore {
+class ChuckCore {
   /// Should user be notified with notification if there's new request catched
-  /// by Alice
+  /// by Chuck
   final bool showNotification;
 
   /// Should inspector be opened on device shake (works only with physical
@@ -25,7 +25,7 @@ class AliceCore {
   final bool darkTheme;
 
   /// Rx subject which contains all intercepted http calls
-  final BehaviorSubject<List<AliceHttpCall>> callsSubject =
+  final BehaviorSubject<List<ChuckHttpCall>> callsSubject =
       BehaviorSubject.seeded([]);
 
   /// Icon url for notification
@@ -48,8 +48,8 @@ class AliceCore {
   String? _notificationMessageShown;
   bool _notificationProcessing = false;
 
-  /// Creates alice core instance
-  AliceCore(
+  /// Creates Chuck core instance
+  ChuckCore(
     this.navigatorKey, {
     required this.showNotification,
     required this.showInspectorOnShake,
@@ -116,8 +116,8 @@ class AliceCore {
   void navigateToCallListScreen() {
     final context = getContext();
     if (context == null) {
-      AliceUtils.log(
-          "Cant start Alice HTTP Inspector. Please add NavigatorKey to your application");
+      ChuckUtils.log(
+          "Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application");
       return;
     }
     if (!_isInspectorOpened) {
@@ -125,7 +125,7 @@ class AliceCore {
       Navigator.push<void>(
         context,
         MaterialPageRoute(
-          builder: (context) => AliceCallsListScreen(this),
+          builder: (context) => ChuckCallsListScreen(this),
         ),
       ).then((onValue) => _isInspectorOpened = false);
     }
@@ -135,7 +135,7 @@ class AliceCore {
   BuildContext? getContext() => navigatorKey?.currentState?.overlay?.context;
 
   String _getNotificationMessage() {
-    final List<AliceHttpCall> calls = callsSubject.value;
+    final List<ChuckHttpCall> calls = callsSubject.value;
     final int successCalls = calls
         .where((call) =>
             call.response != null &&
@@ -190,8 +190,8 @@ class AliceCore {
 
   Future _showLocalNotification() async {
     _notificationProcessing = true;
-    const channelId = "Alice";
-    const channelName = "Alice";
+    const channelId = "Chuck";
+    const channelName = "Chuck";
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       channelId,
       channelName,
@@ -207,7 +207,7 @@ class AliceCore {
     final String? message = _notificationMessage;
     await _flutterLocalNotificationsPlugin.show(
         0,
-        "Alice (total: ${callsSubject.value.length} requests)",
+        "Chuck (total: ${callsSubject.value.length} requests)",
         message,
         platformChannelSpecifics,
         payload: "");
@@ -216,12 +216,12 @@ class AliceCore {
     return;
   }
 
-  /// Add alice http call to calls subject
-  void addCall(AliceHttpCall call) {
+  /// Add Chuck http call to calls subject
+  void addCall(ChuckHttpCall call) {
     final callsCount = callsSubject.value.length;
     if (callsCount >= maxCallsCount) {
       final originalCalls = callsSubject.value;
-      final calls = List<AliceHttpCall>.from(originalCalls);
+      final calls = List<ChuckHttpCall>.from(originalCalls);
       calls.sort(
           (call1, call2) => call1.createdTime.compareTo(call2.createdTime));
       final indexToReplace = originalCalls.indexOf(calls.first);
@@ -233,12 +233,12 @@ class AliceCore {
     }
   }
 
-  /// Add error to existing alice http call
-  void addError(AliceHttpError error, int requestId) {
-    final AliceHttpCall? selectedCall = _selectCall(requestId);
+  /// Add error to existing Chuck http call
+  void addError(ChuckHttpError error, int requestId) {
+    final ChuckHttpCall? selectedCall = _selectCall(requestId);
 
     if (selectedCall == null) {
-      AliceUtils.log("Selected call is null");
+      ChuckUtils.log("Selected call is null");
       return;
     }
 
@@ -246,12 +246,12 @@ class AliceCore {
     callsSubject.add([...callsSubject.value]);
   }
 
-  /// Add response to existing alice http call
-  void addResponse(AliceHttpResponse response, int requestId) {
-    final AliceHttpCall? selectedCall = _selectCall(requestId);
+  /// Add response to existing Chuck http call
+  void addResponse(ChuckHttpResponse response, int requestId) {
+    final ChuckHttpCall? selectedCall = _selectCall(requestId);
 
     if (selectedCall == null) {
-      AliceUtils.log("Selected call is null");
+      ChuckUtils.log("Selected call is null");
       return;
     }
     selectedCall.loading = false;
@@ -262,11 +262,11 @@ class AliceCore {
     callsSubject.add([...callsSubject.value]);
   }
 
-  /// Add alice http call to calls subject
-  void addHttpCall(AliceHttpCall aliceHttpCall) {
-    assert(aliceHttpCall.request != null, "Http call request can't be null");
-    assert(aliceHttpCall.response != null, "Http call response can't be null");
-    callsSubject.add([...callsSubject.value, aliceHttpCall]);
+  /// Add Chuck http call to calls subject
+  void addHttpCall(ChuckHttpCall ChuckHttpCall) {
+    assert(ChuckHttpCall.request != null, "Http call request can't be null");
+    assert(ChuckHttpCall.response != null, "Http call response can't be null");
+    callsSubject.add([...callsSubject.value, ChuckHttpCall]);
   }
 
   /// Remove all calls from calls subject
@@ -274,11 +274,11 @@ class AliceCore {
     callsSubject.add([]);
   }
 
-  AliceHttpCall? _selectCall(int requestId) =>
+  ChuckHttpCall? _selectCall(int requestId) =>
       callsSubject.value.firstWhereOrNull((call) => call.id == requestId);
 
   /// Save all calls to file
   void saveHttpRequests(BuildContext context) {
-    AliceSaveHelper.saveCalls(context, callsSubject.value, _brightness);
+    ChuckSaveHelper.saveCalls(context, callsSubject.value, _brightness);
   }
 }

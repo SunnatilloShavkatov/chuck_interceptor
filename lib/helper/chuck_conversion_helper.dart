@@ -1,4 +1,4 @@
-class AliceConversionHelper {
+class ChuckConversionHelper {
   static const int _kilobyteAsByte = 1000;
   static const int _megabyteAsByte = 1000000;
   static const int _secondAsMillisecond = 1000;

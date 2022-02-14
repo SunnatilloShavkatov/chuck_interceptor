@@ -1,21 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:chuck_interceptor/core/alice_utils.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/model/alice_http_request.dart';
-import 'package:chuck_interceptor/model/alice_http_response.dart';
+import 'package:chuck_interceptor/core/chuck_utils.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/model/chuck_http_request.dart';
+import 'package:chuck_interceptor/model/chuck_http_response.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'package:http/http.dart';
-import 'alice_core.dart';
+import 'chuck_core.dart';
 
-class AliceChopperInterceptor extends chopper.ResponseInterceptor
+class ChuckChopperInterceptor extends chopper.ResponseInterceptor
     with chopper.RequestInterceptor {
-  /// AliceCore instance
-  final AliceCore aliceCore;
+  /// ChuckCore instance
+  final ChuckCore chuckCore;
 
   /// Creates instance of chopper interceptor
-  AliceChopperInterceptor(this.aliceCore);
+  ChuckChopperInterceptor(this.chuckCore);
 
   /// Creates hashcode based on request
   int getRequestHashCode(BaseRequest baseRequest) {
@@ -35,12 +35,12 @@ class AliceChopperInterceptor extends chopper.ResponseInterceptor
     return hashCodeSum.hashCode;
   }
 
-  /// Handles chopper request and creates alice http call
+  /// Handles chopper request and creates Chuck http call
   @override
   FutureOr<chopper.Request> onRequest(chopper.Request request) async {
     try {
       final baseRequest = await request.toBaseRequest();
-      final AliceHttpCall call = AliceHttpCall(getRequestHashCode(baseRequest));
+      final ChuckHttpCall call = ChuckHttpCall(getRequestHashCode(baseRequest));
       String endpoint = "";
       String server = "";
       if (request.baseUrl.isEmpty) {
@@ -69,39 +69,39 @@ class AliceChopperInterceptor extends chopper.ResponseInterceptor
         call.secure = true;
       }
 
-      final AliceHttpRequest aliceHttpRequest = AliceHttpRequest();
+      final ChuckHttpRequest chuckHttpRequest = ChuckHttpRequest();
 
       if (request.body == null) {
-        aliceHttpRequest.size = 0;
-        aliceHttpRequest.body = "";
+        chuckHttpRequest.size = 0;
+        chuckHttpRequest.body = "";
       } else {
-        aliceHttpRequest.size = utf8.encode(request.body as String).length;
-        aliceHttpRequest.body = request.body;
+        chuckHttpRequest.size = utf8.encode(request.body as String).length;
+        chuckHttpRequest.body = request.body;
       }
-      aliceHttpRequest.time = DateTime.now();
-      aliceHttpRequest.headers = request.headers;
+      chuckHttpRequest.time = DateTime.now();
+      chuckHttpRequest.headers = request.headers;
 
       String? contentType = "unknown";
       if (request.headers.containsKey("Content-Type")) {
         contentType = request.headers["Content-Type"];
       }
-      aliceHttpRequest.contentType = contentType;
-      aliceHttpRequest.queryParameters = request.parameters;
+      chuckHttpRequest.contentType = contentType;
+      chuckHttpRequest.queryParameters = request.parameters;
 
-      call.request = aliceHttpRequest;
-      call.response = AliceHttpResponse();
+      call.request = chuckHttpRequest;
+      call.response = ChuckHttpResponse();
 
-      aliceCore.addCall(call);
+      chuckCore.addCall(call);
     } catch (exception) {
-      AliceUtils.log(exception.toString());
+      ChuckUtils.log(exception.toString());
     }
     return request;
   }
 
-  /// Handles chopper response and adds data to existing alice http call
+  /// Handles chopper response and adds data to existing Chuck http call
   @override
   FutureOr<chopper.Response> onResponse(chopper.Response response) {
-    final httpResponse = AliceHttpResponse();
+    final httpResponse = ChuckHttpResponse();
     httpResponse.status = response.statusCode;
     if (response.body == null) {
       httpResponse.body = "";
@@ -118,7 +118,7 @@ class AliceChopperInterceptor extends chopper.ResponseInterceptor
     });
     httpResponse.headers = headers;
 
-    aliceCore.addResponse(
+    chuckCore.addResponse(
         httpResponse, getRequestHashCode(response.base.request!));
     return response;
   }

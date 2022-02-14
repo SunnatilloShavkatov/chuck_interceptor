@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:chuck_interceptor/helper/alice_conversion_helper.dart';
-import 'package:chuck_interceptor/utils/alice_parser.dart';
+import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
+import 'package:chuck_interceptor/utils/chuck_parser.dart';
 import 'package:flutter/material.dart';
 
-abstract class AliceBaseCallDetailsWidgetState<T extends StatefulWidget>
+abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget>
     extends State<T> {
   final JsonEncoder encoder = const JsonEncoder.withIndent('  ');
 
@@ -31,14 +31,14 @@ abstract class AliceBaseCallDetailsWidgetState<T extends StatefulWidget>
     );
   }
 
-  String formatBytes(int bytes) => AliceConversionHelper.formatBytes(bytes);
+  String formatBytes(int bytes) => ChuckConversionHelper.formatBytes(bytes);
 
   String formatDuration(int duration) =>
-      AliceConversionHelper.formatTime(duration);
+      ChuckConversionHelper.formatTime(duration);
 
   String formatBody(dynamic body, String? contentType) =>
-      AliceParser.formatBody(body, contentType);
+      ChuckParser.formatBody(body, contentType);
 
   String? getContentType(Map<String, dynamic>? headers) =>
-      AliceParser.getContentType(headers);
+      ChuckParser.getContentType(headers);
 }

@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:chuck_interceptor/chuck.dart';
-import 'package:alice_example/posts_service.dart';
+import 'package:chuck_example/posts_service.dart';
 import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
-import 'package:chuck_interceptor/core/alice_http_client_extensions.dart';
-import 'package:chuck_interceptor/core/alice_http_extensions.dart';
+import 'package:chuck_interceptor/core/chuck_http_client_extensions.dart';
+import 'package:chuck_interceptor/core/chuck_http_extensions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Chuck _alice;
+  late Chuck _Chuck;
   late Dio _dio;
   late HttpClient _httpClient;
   ChopperClient? _chopper;
@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    _alice = Chuck(
+    _Chuck = Chuck(
       showNotification: true,
       showInspectorOnShake: true,
       darkTheme: false,
@@ -37,10 +37,10 @@ class _MyAppState extends State<MyApp> {
     _dio = Dio(BaseOptions(
       followRedirects: false,
     ));
-    _dio.interceptors.add(_alice.getDioInterceptor());
+    _dio.interceptors.add(_Chuck.getDioInterceptor());
     _httpClient = HttpClient();
     _chopper = ChopperClient(
-      interceptors: _alice.getChopperInterceptor(),
+      interceptors: _Chuck.getChopperInterceptor(),
     );
     _postsService = PostsService.create(_chopper);
 
@@ -55,11 +55,11 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: _primaryColor,
       ),
-      navigatorKey: _alice.getNavigatorKey(),
+      navigatorKey: _Chuck.getNavigatorKey(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Alice HTTP Inspector - Example'),
+          title: const Text('Chuck HTTP Inspector - Example'),
         ),
         body: Container(
           padding: EdgeInsets.all(16),
@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
             children: [
               const SizedBox(height: 8),
               _getTextWidget(
-                  "Welcome to example of Alice Http Inspector. Click buttons below to generate sample data."),
+                  "Welcome to example of Chuck Http Inspector. Click buttons below to generate sample data."),
               ElevatedButton(
                 child: Text("Run Dio HTTP Requests"),
                 onPressed: _runDioRequests,
@@ -182,67 +182,67 @@ class _MyAppState extends State<MyApp> {
     http
         .post(Uri.tryParse('https://jsonplaceholder.typicode.com/posts')!,
             body: body)
-        .interceptWithAlice(_alice, body: body);
+        .interceptWithChuck(_Chuck, body: body);
 
     http
         .get(Uri.tryParse('https://jsonplaceholder.typicode.com/posts')!)
-        .interceptWithAlice(_alice);
+        .interceptWithChuck(_Chuck);
 
     http
         .put(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!,
             body: body)
-        .interceptWithAlice(_alice, body: body);
+        .interceptWithChuck(_Chuck, body: body);
 
     http
         .patch(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!,
             body: body)
-        .interceptWithAlice(_alice, body: body);
+        .interceptWithChuck(_Chuck, body: body);
 
     http
         .delete(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!)
-        .interceptWithAlice(_alice, body: body);
+        .interceptWithChuck(_Chuck, body: body);
 
     http
         .get(Uri.tryParse('https://jsonplaceholder.typicode.com/test/test')!)
-        .interceptWithAlice(_alice);
+        .interceptWithChuck(_Chuck);
 
     http
         .post(Uri.tryParse('https://jsonplaceholder.typicode.com/posts')!,
             body: body)
         .then((response) {
-      _alice.onHttpResponse(response, body: body);
+      _Chuck.onHttpResponse(response, body: body);
     });
 
     http
         .get(Uri.tryParse('https://jsonplaceholder.typicode.com/posts')!)
         .then((response) {
-      _alice.onHttpResponse(response);
+      _Chuck.onHttpResponse(response);
     });
 
     http
         .put(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!,
             body: body)
         .then((response) {
-      _alice.onHttpResponse(response, body: body);
+      _Chuck.onHttpResponse(response, body: body);
     });
 
     http
         .patch(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!,
             body: body)
         .then((response) {
-      _alice.onHttpResponse(response, body: body);
+      _Chuck.onHttpResponse(response, body: body);
     });
 
     http
         .delete(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!)
         .then((response) {
-      _alice.onHttpResponse(response);
+      _Chuck.onHttpResponse(response);
     });
 
     http
         .get(Uri.tryParse('https://jsonplaceholder.typicode.com/test/test')!)
         .then((response) {
-      _alice.onHttpResponse(response);
+      _Chuck.onHttpResponse(response);
     });
 
     http
@@ -250,20 +250,20 @@ class _MyAppState extends State<MyApp> {
             Uri.tryParse(
                 'https://jsonplaceholder.typicode.com/posts?key1=value1')!,
             body: body)
-        .interceptWithAlice(_alice, body: body);
+        .interceptWithChuck(_Chuck, body: body);
 
     http
         .post(
             Uri.tryParse(
                 'https://jsonplaceholder.typicode.com/posts?key1=value1&key2=value2&key3=value3')!,
             body: body)
-        .interceptWithAlice(_alice, body: body);
+        .interceptWithChuck(_Chuck, body: body);
 
     http
         .get(Uri.tryParse(
             'https://jsonplaceholder.typicode.com/test/test?key1=value1&key2=value2&key3=value3')!)
         .then((response) {
-      _alice.onHttpResponse(response);
+      _Chuck.onHttpResponse(response);
     });
   }
 
@@ -275,70 +275,70 @@ class _MyAppState extends State<MyApp> {
     };
     _httpClient
         .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
-        .interceptWithAlice(_alice);
+        .interceptWithChuck(_Chuck);
 
     _httpClient
         .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
-        .interceptWithAlice(_alice, body: body, headers: <String, dynamic>{});
+        .interceptWithChuck(_Chuck, body: body, headers: <String, dynamic>{});
 
     _httpClient
         .putUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
-        .interceptWithAlice(_alice, body: body);
+        .interceptWithChuck(_Chuck, body: body);
 
     _httpClient
         .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/"))
-        .interceptWithAlice(_alice);
+        .interceptWithChuck(_Chuck);
 
     _httpClient
         .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
         .then((request) async {
-      _alice.onHttpClientRequest(request, body: body);
+      _Chuck.onHttpClientRequest(request, body: body);
       request.write(body);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _alice.onHttpClientResponse(httpResponse, request, body: responseBody);
+      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
     _httpClient
         .putUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
         .then((request) async {
-      _alice.onHttpClientRequest(request, body: body);
+      _Chuck.onHttpClientRequest(request, body: body);
       request.write(body);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _alice.onHttpClientResponse(httpResponse, request, body: responseBody);
+      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
     _httpClient
         .patchUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
         .then((request) async {
-      _alice.onHttpClientRequest(request, body: body);
+      _Chuck.onHttpClientRequest(request, body: body);
       request.write(body);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _alice.onHttpClientResponse(httpResponse, request, body: responseBody);
+      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
     _httpClient
         .deleteUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
         .then((request) async {
-      _alice.onHttpClientRequest(request);
+      _Chuck.onHttpClientRequest(request);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _alice.onHttpClientResponse(httpResponse, request, body: responseBody);
+      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
     _httpClient
         .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/"))
         .then((request) async {
-      _alice.onHttpClientRequest(request);
+      _Chuck.onHttpClientRequest(request);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _alice.onHttpClientResponse(httpResponse, request, body: responseBody);
+      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
   }
 
   void _runHttpInspector() {
-    _alice.showInspector();
+    _Chuck.showInspector();
   }
 }

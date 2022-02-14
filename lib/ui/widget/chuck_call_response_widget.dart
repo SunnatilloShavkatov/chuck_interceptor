@@ -1,21 +1,21 @@
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/utils/alice_constants.dart';
-import 'package:chuck_interceptor/ui/widget/alice_base_call_details_widget.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/utils/chuck_constants.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:flutter/material.dart';
 
-class AliceCallResponseWidget extends StatefulWidget {
-  final AliceHttpCall call;
+class ChuckCallResponseWidget extends StatefulWidget {
+  final ChuckHttpCall call;
 
-  const AliceCallResponseWidget(this.call);
+  const ChuckCallResponseWidget(this.call);
 
   @override
   State<StatefulWidget> createState() {
-    return _AliceCallResponseWidgetState();
+    return _ChuckCallResponseWidgetState();
   }
 }
 
-class _AliceCallResponseWidgetState
-    extends AliceBaseCallDetailsWidgetState<AliceCallResponseWidget> {
+class _ChuckCallResponseWidgetState
+    extends ChuckBaseCallDetailsWidgetState<ChuckCallResponseWidget> {
   static const _imageContentType = "image";
   static const _jsonContentType = "json";
   static const _xmlContentType = "xml";
@@ -25,7 +25,7 @@ class _AliceCallResponseWidgetState
   bool _showLargeBody = false;
   bool _showUnsupportedBody = false;
 
-  AliceHttpCall get _call => widget.call;
+  ChuckHttpCall get _call => widget.call;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +155,7 @@ class _AliceCallResponseWidgetState
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
-                MaterialStateProperty.all<Color>(AliceConstants.lightRed),
+                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
           ),
           onPressed: () {
             setState(() {
@@ -192,7 +192,7 @@ class _AliceCallResponseWidgetState
     } else {
       rows.add(getListRow(
           "Body:",
-          "Unsupported body. Alice can render video/image/text body. "
+          "Unsupported body. Chuck can render video/image/text body. "
               "Response has Content-Type: $contentType which can't be handled. "
               "If you're feeling lucky you can try button below to try render body"
               " as text, but it may fail."));
@@ -200,7 +200,7 @@ class _AliceCallResponseWidgetState
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
-                MaterialStateProperty.all<Color>(AliceConstants.lightRed),
+                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
           ),
           onPressed: () {
             setState(() {

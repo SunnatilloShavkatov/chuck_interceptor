@@ -1,6 +1,6 @@
-# alice_example
+# Chuck_example
 
-Demonstrates how to use the alice plugin.
+Demonstrates how to use the Chuck plugin.
 
 ## Getting Started
 

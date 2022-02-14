@@ -1,14 +1,14 @@
-import 'package:chuck_interceptor/helper/alice_conversion_helper.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/model/alice_http_response.dart';
-import 'package:chuck_interceptor/utils/alice_constants.dart';
+import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/model/chuck_http_response.dart';
+import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:flutter/material.dart';
 
-class AliceCallListItemWidget extends StatelessWidget {
-  final AliceHttpCall call;
+class ChuckCallListItemWidget extends StatelessWidget {
+  final ChuckHttpCall call;
   final Function itemClickAction;
 
-  const AliceCallListItemWidget(this.call, this.itemClickAction);
+  const ChuckCallListItemWidget(this.call, this.itemClickAction);
 
   @override
   Widget build(BuildContext context) {
@@ -97,14 +97,14 @@ class AliceCallListItemWidget extends StatelessWidget {
         ),
         Flexible(
           child: Text(
-            AliceConversionHelper.formatTime(call.duration),
+            ChuckConversionHelper.formatTime(call.duration),
             style: const TextStyle(fontSize: 12),
           ),
         ),
         Flexible(
           child: Text(
-            "${AliceConversionHelper.formatBytes(call.request!.size)} / "
-            "${AliceConversionHelper.formatBytes(call.response!.size)}",
+            "${ChuckConversionHelper.formatBytes(call.request!.size)} / "
+            "${ChuckConversionHelper.formatBytes(call.response!.size)}",
             style: const TextStyle(fontSize: 12),
           ),
         )
@@ -113,7 +113,7 @@ class AliceCallListItemWidget extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return Container(height: 1, color: AliceConstants.grey);
+    return Container(height: 1, color: ChuckConstants.grey);
   }
 
   String _formatTime(DateTime time) {
@@ -135,7 +135,7 @@ class AliceCallListItemWidget extends StatelessWidget {
           width: 20,
           height: 20,
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AliceConstants.lightRed),
+            valueColor: AlwaysStoppedAnimation<Color>(ChuckConstants.lightRed),
           ),
         ),
       );
@@ -165,15 +165,15 @@ class AliceCallListItemWidget extends StatelessWidget {
   Color? _getStatusTextColor(BuildContext context) {
     final int? status = call.response!.status;
     if (status == -1) {
-      return AliceConstants.red;
+      return ChuckConstants.red;
     } else if (status! < 200) {
       return Theme.of(context).textTheme.bodyText1!.color;
     } else if (status >= 200 && status < 300) {
-      return AliceConstants.green;
+      return ChuckConstants.green;
     } else if (status >= 300 && status < 400) {
-      return AliceConstants.orange;
+      return ChuckConstants.orange;
     } else if (status >= 400 && status < 600) {
-      return AliceConstants.red;
+      return ChuckConstants.red;
     } else {
       return Theme.of(context).textTheme.bodyText1!.color;
     }
@@ -181,13 +181,13 @@ class AliceCallListItemWidget extends StatelessWidget {
 
   Color? _getEndpointTextColor(BuildContext context) {
     if (call.loading) {
-      return AliceConstants.grey;
+      return ChuckConstants.grey;
     } else {
       return _getStatusTextColor(context);
     }
   }
 
-  String _getStatus(AliceHttpResponse response) {
+  String _getStatus(ChuckHttpResponse response) {
     if (response.status == -1) {
       return "ERR";
     } else if (response.status == 0) {
@@ -202,10 +202,10 @@ class AliceCallListItemWidget extends StatelessWidget {
     Color iconColor;
     if (secure) {
       iconData = Icons.lock_outline;
-      iconColor = AliceConstants.green;
+      iconColor = ChuckConstants.green;
     } else {
       iconData = Icons.lock_open;
-      iconColor = AliceConstants.red;
+      iconColor = ChuckConstants.red;
     }
     return Padding(
       padding: const EdgeInsets.only(right: 3),

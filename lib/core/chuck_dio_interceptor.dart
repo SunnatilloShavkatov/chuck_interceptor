@@ -1,25 +1,25 @@
 import 'dart:convert';
 
-import 'package:chuck_interceptor/core/alice_core.dart';
-import 'package:chuck_interceptor/model/alice_form_data_file.dart';
-import 'package:chuck_interceptor/model/alice_from_data_field.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
-import 'package:chuck_interceptor/model/alice_http_error.dart';
-import 'package:chuck_interceptor/model/alice_http_request.dart';
-import 'package:chuck_interceptor/model/alice_http_response.dart';
+import 'package:chuck_interceptor/core/chuck_core.dart';
+import 'package:chuck_interceptor/model/chuck_form_data_file.dart';
+import 'package:chuck_interceptor/model/chuck_from_data_field.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/model/chuck_http_error.dart';
+import 'package:chuck_interceptor/model/chuck_http_request.dart';
+import 'package:chuck_interceptor/model/chuck_http_response.dart';
 import 'package:dio/dio.dart';
 
-class AliceDioInterceptor extends InterceptorsWrapper {
-  /// AliceCore instance
-  final AliceCore aliceCore;
+class ChuckDioInterceptor extends InterceptorsWrapper {
+  /// ChuckCore instance
+  final ChuckCore chuckCore;
 
   /// Creates dio interceptor
-  AliceDioInterceptor(this.aliceCore);
+  ChuckDioInterceptor(this.chuckCore);
 
-  /// Handles dio request and creates alice http call based on it
+  /// Handles dio request and creates Chuck http call based on it
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final AliceHttpCall call = AliceHttpCall(options.hashCode);
+    final ChuckHttpCall call = ChuckHttpCall(options.hashCode);
 
     final Uri uri = options.uri;
     call.method = options.method;
@@ -36,7 +36,7 @@ class AliceDioInterceptor extends InterceptorsWrapper {
       call.secure = true;
     }
 
-    final AliceHttpRequest request = AliceHttpRequest();
+    final ChuckHttpRequest request = ChuckHttpRequest();
 
     final dynamic data = options.data;
     if (data == null) {
@@ -47,16 +47,16 @@ class AliceDioInterceptor extends InterceptorsWrapper {
         request.body += "Form data";
 
         if (data.fields.isNotEmpty == true) {
-          final List<AliceFormDataField> fields = [];
+          final List<ChuckFormDataField> fields = [];
           data.fields.forEach((entry) {
-            fields.add(AliceFormDataField(entry.key, entry.value));
+            fields.add(ChuckFormDataField(entry.key, entry.value));
           });
           request.formDataFields = fields;
         }
         if (data.files.isNotEmpty == true) {
-          final List<AliceFormDataFile> files = [];
+          final List<ChuckFormDataFile> files = [];
           data.files.forEach((entry) {
-            files.add(AliceFormDataFile(entry.value.filename,
+            files.add(ChuckFormDataFile(entry.value.filename,
                 entry.value.contentType.toString(), entry.value.length));
           });
 
@@ -74,16 +74,16 @@ class AliceDioInterceptor extends InterceptorsWrapper {
     request.queryParameters = options.queryParameters;
 
     call.request = request;
-    call.response = AliceHttpResponse();
+    call.response = ChuckHttpResponse();
 
-    aliceCore.addCall(call);
+    chuckCore.addCall(call);
     handler.next(options);
   }
 
-  /// Handles dio response and adds data to alice http call
+  /// Handles dio response and adds data to Chuck http call
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    final httpResponse = AliceHttpResponse();
+    final httpResponse = ChuckHttpResponse();
     httpResponse.status = response.statusCode;
 
     if (response.data == null) {
@@ -101,26 +101,26 @@ class AliceDioInterceptor extends InterceptorsWrapper {
     });
     httpResponse.headers = headers;
 
-    aliceCore.addResponse(httpResponse, response.requestOptions.hashCode);
+    chuckCore.addResponse(httpResponse, response.requestOptions.hashCode);
     handler.next(response);
   }
 
-  /// Handles error and adds data to alice http call
+  /// Handles error and adds data to Chuck http call
   @override
   void onError(DioError error, ErrorInterceptorHandler handler) {
-    final httpError = AliceHttpError();
+    final httpError = ChuckHttpError();
     httpError.error = error.toString();
     if (error is Error) {
       final basicError = error as Error;
       httpError.stackTrace = basicError.stackTrace;
     }
 
-    aliceCore.addError(httpError, error.requestOptions.hashCode);
-    final httpResponse = AliceHttpResponse();
+    chuckCore.addError(httpError, error.requestOptions.hashCode);
+    final httpResponse = ChuckHttpResponse();
     httpResponse.time = DateTime.now();
     if (error.response == null) {
       httpResponse.status = -1;
-      aliceCore.addResponse(httpResponse, error.requestOptions.hashCode);
+      chuckCore.addResponse(httpResponse, error.requestOptions.hashCode);
     } else {
       httpResponse.status = error.response!.statusCode;
 
@@ -136,7 +136,7 @@ class AliceDioInterceptor extends InterceptorsWrapper {
         headers[header] = values.toString();
       });
       httpResponse.headers = headers;
-      aliceCore.addResponse(
+      chuckCore.addResponse(
           httpResponse, error.response!.requestOptions.hashCode);
     }
     handler.next(error);

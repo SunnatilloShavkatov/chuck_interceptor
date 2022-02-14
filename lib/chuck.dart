@@ -1,19 +1,19 @@
 import 'dart:io';
-import 'package:chuck_interceptor/core/alice_chopper_response_interceptor.dart';
-import 'package:chuck_interceptor/core/alice_http_adapter.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
+import 'package:chuck_interceptor/core/chuck_chopper_response_interceptor.dart';
+import 'package:chuck_interceptor/core/chuck_http_adapter.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
 
 import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
-import 'package:chuck_interceptor/core/alice_core.dart';
-import 'package:chuck_interceptor/core/alice_dio_interceptor.dart';
-import 'package:chuck_interceptor/core/alice_http_client_adapter.dart';
+import 'package:chuck_interceptor/core/chuck_core.dart';
+import 'package:chuck_interceptor/core/chuck_dio_interceptor.dart';
+import 'package:chuck_interceptor/core/chuck_http_client_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class Chuck {
   /// Should user be notified with notification if there's new request catched
-  /// by Alice
+  /// by Chuck
   final bool showNotification;
 
   /// Should inspector be opened on device shake (works only with physical
@@ -34,11 +34,11 @@ class Chuck {
   final TextDirection? directionality;
 
   GlobalKey<NavigatorState>? _navigatorKey;
-  late AliceCore _aliceCore;
-  late AliceHttpClientAdapter _httpClientAdapter;
-  late AliceHttpAdapter _httpAdapter;
+  late ChuckCore _ChuckCore;
+  late ChuckHttpClientAdapter _httpClientAdapter;
+  late ChuckHttpAdapter _httpAdapter;
 
-  /// Creates alice instance.
+  /// Creates Chuck instance.
   Chuck({
     GlobalKey<NavigatorState>? navigatorKey,
     this.showNotification = true,
@@ -49,7 +49,7 @@ class Chuck {
     this.directionality,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
-    _aliceCore = AliceCore(
+    _ChuckCore = ChuckCore(
       _navigatorKey,
       showNotification: showNotification,
       showInspectorOnShake: showInspectorOnShake,
@@ -58,14 +58,14 @@ class Chuck {
       maxCallsCount: maxCallsCount,
       directionality: directionality,
     );
-    _httpClientAdapter = AliceHttpClientAdapter(_aliceCore);
-    _httpAdapter = AliceHttpAdapter(_aliceCore);
+    _httpClientAdapter = ChuckHttpClientAdapter(_ChuckCore);
+    _httpAdapter = ChuckHttpAdapter(_ChuckCore);
   }
 
   /// Set custom navigation key. This will help if there's route library.
   void setNavigatorKey(GlobalKey<NavigatorState> navigatorKey) {
     _navigatorKey = navigatorKey;
-    _aliceCore.navigatorKey = navigatorKey;
+    _ChuckCore.navigatorKey = navigatorKey;
   }
 
   /// Get currently used navigation key
@@ -74,8 +74,8 @@ class Chuck {
   }
 
   /// Get Dio interceptor which should be applied to Dio instance.
-  AliceDioInterceptor getDioInterceptor() {
-    return AliceDioInterceptor(_aliceCore);
+  ChuckDioInterceptor getDioInterceptor() {
+    return ChuckDioInterceptor(_ChuckCore);
   }
 
   /// Handle request from HttpClient
@@ -98,18 +98,18 @@ class Chuck {
   /// Opens Http calls inspector. This will navigate user to the new fullscreen
   /// page where all listened http calls can be viewed.
   void showInspector() {
-    _aliceCore.navigateToCallListScreen();
+    _ChuckCore.navigateToCallListScreen();
   }
 
   /// Get chopper interceptor. This should be added to Chopper instance.
   List<ResponseInterceptor> getChopperInterceptor() {
-    return [AliceChopperInterceptor(_aliceCore)];
+    return [ChuckChopperInterceptor(_ChuckCore)];
   }
 
   /// Handle generic http call. Can be used to any http client.
-  void addHttpCall(AliceHttpCall aliceHttpCall) {
-    assert(aliceHttpCall.request != null, "Http call request can't be null");
-    assert(aliceHttpCall.response != null, "Http call response can't be null");
-    _aliceCore.addCall(aliceHttpCall);
+  void addHttpCall(ChuckHttpCall ChuckHttpCall) {
+    assert(ChuckHttpCall.request != null, "Http call request can't be null");
+    assert(ChuckHttpCall.response != null, "Http call response can't be null");
+    _ChuckCore.addCall(ChuckHttpCall);
   }
 }

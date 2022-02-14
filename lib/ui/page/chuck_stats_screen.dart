@@ -1,20 +1,20 @@
-import 'package:chuck_interceptor/core/alice_core.dart';
-import 'package:chuck_interceptor/helper/alice_conversion_helper.dart';
-import 'package:chuck_interceptor/model/alice_http_call.dart';
+import 'package:chuck_interceptor/core/chuck_core.dart';
+import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
+import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:flutter/material.dart';
 
-class AliceStatsScreen extends StatelessWidget {
-  final AliceCore aliceCore;
+class ChuckStatsScreen extends StatelessWidget {
+  final ChuckCore chuckCore;
 
-  const AliceStatsScreen(this.aliceCore);
+  const ChuckStatsScreen(this.chuckCore);
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: aliceCore.directionality ?? Directionality.of(context),
+      textDirection: chuckCore.directionality ?? Directionality.of(context),
       child: Theme(
         data: ThemeData(
-          brightness: aliceCore.brightness,
+          brightness: chuckCore.brightness,
         ),
         child: Scaffold(
           appBar: AppBar(
@@ -39,15 +39,15 @@ class AliceStatsScreen extends StatelessWidget {
       _getRow("Redirection requests:", "${_getRedirectionRequests()}"),
       _getRow("Error requests:", "${_getErrorRequests()}"),
       _getRow(
-          "Bytes send:", AliceConversionHelper.formatBytes(_getBytesSent())),
+          "Bytes send:", ChuckConversionHelper.formatBytes(_getBytesSent())),
       _getRow("Bytes received:",
-          AliceConversionHelper.formatBytes(_getBytesReceived())),
+          ChuckConversionHelper.formatBytes(_getBytesReceived())),
       _getRow("Average request time:",
-          AliceConversionHelper.formatTime(_getAverageRequestTime())),
+          ChuckConversionHelper.formatTime(_getAverageRequestTime())),
       _getRow("Max request time:",
-          AliceConversionHelper.formatTime(_getMaxRequestTime())),
+          ChuckConversionHelper.formatTime(_getMaxRequestTime())),
       _getRow("Min request time:",
-          AliceConversionHelper.formatTime(_getMinRequestTime())),
+          ChuckConversionHelper.formatTime(_getMinRequestTime())),
       _getRow("Get requests:", "${_getRequests("GET")} "),
       _getRow("Post requests:", "${_getRequests("POST")} "),
       _getRow("Delete requests:", "${_getRequests("DELETE")} "),
@@ -117,7 +117,7 @@ class AliceStatsScreen extends StatelessWidget {
 
   int _getBytesSent() {
     int bytes = 0;
-    calls.forEach((AliceHttpCall call) {
+    calls.forEach((ChuckHttpCall call) {
       bytes += call.request!.size;
     });
     return bytes;
@@ -125,7 +125,7 @@ class AliceStatsScreen extends StatelessWidget {
 
   int _getBytesReceived() {
     int bytes = 0;
-    calls.forEach((AliceHttpCall call) {
+    calls.forEach((ChuckHttpCall call) {
       if (call.response != null) {
         bytes += call.response!.size;
       }
@@ -136,7 +136,7 @@ class AliceStatsScreen extends StatelessWidget {
   int _getAverageRequestTime() {
     int requestTimeSum = 0;
     int requestsWithDurationCount = 0;
-    calls.forEach((AliceHttpCall call) {
+    calls.forEach((ChuckHttpCall call) {
       if (call.duration != 0) {
         requestTimeSum = call.duration;
         requestsWithDurationCount++;
@@ -150,7 +150,7 @@ class AliceStatsScreen extends StatelessWidget {
 
   int _getMaxRequestTime() {
     int maxRequestTime = 0;
-    calls.forEach((AliceHttpCall call) {
+    calls.forEach((ChuckHttpCall call) {
       if (call.duration > maxRequestTime) {
         maxRequestTime = call.duration;
       }
@@ -163,7 +163,7 @@ class AliceStatsScreen extends StatelessWidget {
     if (calls.isEmpty) {
       minRequestTime = 0;
     } else {
-      calls.forEach((AliceHttpCall call) {
+      calls.forEach((ChuckHttpCall call) {
         if (call.duration != 0 && call.duration < minRequestTime) {
           minRequestTime = call.duration;
         }
@@ -181,5 +181,5 @@ class AliceStatsScreen extends StatelessWidget {
   int _getUnsecuredRequests() =>
       calls.where((call) => !call.secure).toList().length;
 
-  List<AliceHttpCall> get calls => aliceCore.callsSubject.value;
+  List<ChuckHttpCall> get calls => chuckCore.callsSubject.value;
 }

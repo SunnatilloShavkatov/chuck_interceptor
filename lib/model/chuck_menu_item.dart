@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class AliceMenuItem {
+class ChuckMenuItem {
   final String title;
   final IconData iconData;
 
-  AliceMenuItem(this.title, this.iconData);
+  ChuckMenuItem(this.title, this.iconData);
 }
