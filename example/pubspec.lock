@@ -126,7 +126,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.8"
+    version: "1.0.0"
   cli_util:
     dependency: transitive
     description:
@@ -264,7 +264,7 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "9.3.1"
+    version: "9.3.2"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -402,7 +402,7 @@ packages:
       name: package_info_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.3.1"
   package_info_plus_linux:
     dependency: transitive
     description:
@@ -507,7 +507,21 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.3.0"
+    version: "9.1.0"
+  permission_handler_android:
+    dependency: transitive
+    description:
+      name: permission_handler_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.0.2"
+  permission_handler_apple:
+    dependency: transitive
+    description:
+      name: permission_handler_apple
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.0.2"
   permission_handler_platform_interface:
     dependency: transitive
     description:
@@ -724,5 +738,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.14.0 <3.0.0"
-  flutter: ">=2.5.0"
+  dart: ">=2.15.0 <3.0.0"
+  flutter: ">=2.8.0"
