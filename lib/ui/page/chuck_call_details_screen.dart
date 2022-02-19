@@ -74,6 +74,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
           child: const Icon(Icons.share),
         ),
         appBar: AppBar(
+          centerTitle: false,
           bottom: TabBar(
             indicatorColor: ChuckConstants.lightRed,
             tabs: const [
@@ -83,7 +84,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
               const Tab(icon: Icon(Icons.warning), text: "Error"),
             ],
           ),
-          title: const Text('Chuck Interceptor - HTTP Call Details'),
+          title: const Text('Chuck - HTTP Call Details'),
         ),
         body: TabBarView(
           children: [
