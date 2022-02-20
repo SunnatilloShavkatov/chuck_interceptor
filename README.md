@@ -96,28 +96,28 @@ import 'package:chuck_interceptor/chuck.dart';
 
 ## Usage
 ### Chuck configuration
-1. Create Chuck instance:
+1. Create chuck instance:
 
 ```dart
-Chuck Chuck = Chuck();
+Chuck chuck = Chuck();
 ```
 
 2. Add navigator key to your application:
 
 ```dart
-MaterialApp( navigatorKey: Chuck.getNavigatorKey(), home: ...)
+MaterialApp( navigatorKey: chuck.getNavigatorKey(), home: ...)
 ```
 
 You need to add this navigator key in order to show inspector UI.
 You can use also your navigator key in Chuck:
 
 ```dart
-Chuck Chuck = Chuck(showNotification: true, navigatorKey: yourNavigatorKeyHere);
+Chuck chuck = Chuck(showNotification: true, navigatorKey: yourNavigatorKeyHere);
 ```
 
 If you need to pass navigatorKey lazily, you can use:
 ```dart
-Chuck.setNavigatorKey(yourNavigatorKeyHere);
+chuck.setNavigatorKey(yourNavigatorKeyHere);
 ```
 This is minimal configuration required to run Chuck. Can set optional settings in Chuck constructor, which are presented below. If you don't want to change anything, you can move to Http clients configuration.
 
@@ -125,43 +125,43 @@ This is minimal configuration required to run Chuck. Can set optional settings i
 
 You can set `showNotification` in Chuck constructor to show notification. Clicking on this notification will open inspector.
 ```dart
-Chuck Chuck = Chuck(..., showNotification: true);
+Chuck chuck = Chuck(..., showNotification: true);
 ```
 
 You can set `showInspectorOnShake` in Chuck constructor to open inspector by shaking your device (default disabled):
 
 ```dart
-Chuck Chuck = Chuck(..., showInspectorOnShake: true);
+Chuck chuck = Chuck(..., showInspectorOnShake: true);
 ```
 
 If you want to use dark mode just add `darkTheme` flag:
 
 ```dart
-Chuck Chuck = Chuck(..., darkTheme: true);
+Chuck chuck = Chuck(..., darkTheme: true);
 ```
 
 If you want to pass another notification icon, you can use `notificationIcon` parameter. Default value is @mipmap/ic_launcher.
 ```dart
-Chuck Chuck = Chuck(..., notificationIcon: "myNotificationIconResourceName");
+Chuck chuck = Chuck(..., notificationIcon: "myNotificationIconResourceName");
 ```
 
 If you want to limit max numbers of HTTP calls saved in memory, you may use `maxCallsCount` parameter.
 
 ```dart
-Chuck Chuck = Chuck(..., maxCallsCount: 1000));
+Chuck chuck = Chuck(..., maxCallsCount: 1000));
 ```
 
 
 If you want to change the Directionality of Chuck, you can use the `directionality` parameter. If the parameter is set to null, the Directionality of the app will be used.
 ```dart
-Chuck Chuck = Chuck(..., directionality: TextDirection.ltr);
+Chuck chuck = Chuck(..., directionality: TextDirection.ltr);
 ```
 ### HTTP Client configuration
 If you're using Dio, you just need to add interceptor.
 
 ```dart
 Dio dio = Dio();
-dio.interceptors.add(Chuck.getDioInterceptor());
+dio.interceptors.add(chuck.getDioInterceptor());
 ```
 
 
@@ -174,7 +174,7 @@ httpClient
 		Chuck.onHttpClientRequest(request);
 		var httpResponse = await request.close();
 		var responseBody = await httpResponse.transform(utf8.decoder).join();
-		Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+		chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
  });
 ```
 
@@ -182,7 +182,7 @@ If you're using http from http/http package:
 
 ```dart
 http.get('https://jsonplaceholder.typicode.com/posts').then((response) {
-    Chuck.onHttpResponse(response);
+    chuck.onHttpResponse(response);
 });
 ```
 
@@ -190,14 +190,14 @@ If you're using Chopper. you need to add interceptor:
 
 ```dart
 chopper = ChopperClient(
-    interceptors: Chuck.getChopperInterceptor(),
+    interceptors: chuck.getChopperInterceptor(),
 );
 ```
 
 If you have other HTTP client you can use generic http call interface:
 ```dart
-ChuckHttpCall ChuckHttpCall = ChuckHttpCall(id);
-Chuck.addHttpCall(ChuckHttpCall);
+ChuckHttpCall chuckHttpCall = ChuckHttpCall(id);
+chuck.addHttpCall(ChuckHttpCall);
 ```
 
 ## Show inspector manually
@@ -205,7 +205,7 @@ Chuck.addHttpCall(ChuckHttpCall);
 You may need that if you won't use shake or notification:
 
 ```dart
-Chuck.showInspector();
+chuck.showInspector();
 ```
 
 ## Saving calls
@@ -221,8 +221,8 @@ You can use extensions to shorten your http and http client code. This is option
 Example:
 1. Import:
 ```dart
-import 'package:chuck_interceptor/core/Chuck_http_client_extensions.dart';
-import 'package:chuck_interceptor/core/Chuck_http_extensions.dart';
+import 'package:chuck_interceptor/core/chuck_http_client_extensions.dart';
+import 'package:chuck_interceptor/core/chuck_http_extensions.dart';
 ```
 
 2. Use extensions:
@@ -235,7 +235,7 @@ http
 ```dart
 httpClient
     .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
-    .interceptWithChuck(Chuck, body: body, headers: Map());
+    .interceptWithChuck(chuck, body: body, headers: Map());
 ```
 
 
