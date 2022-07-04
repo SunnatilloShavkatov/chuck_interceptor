@@ -8,7 +8,7 @@ import 'package:chuck_interceptor/ui/widget/chuck_call_overview_widget.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_call_request_widget.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ChuckCallDetailsScreen extends StatefulWidget {
   final ChuckHttpCall call;
