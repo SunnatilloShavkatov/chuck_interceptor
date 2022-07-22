@@ -32,20 +32,29 @@ class ChuckSaveHelper {
       if (status.isGranted) {
         _saveToFile(context, calls, brightness);
       } else {
-        ChuckAlertHelper.showAlert(context, "Permission error",
-            "Permission not granted. Couldn't save logs.",
-            brightness: brightness);
+        ChuckAlertHelper.showAlert(
+          context,
+          "Permission error",
+          "Permission not granted. Couldn't save logs.",
+          brightness: brightness,
+        );
       }
     }
   }
 
-  static Future<String> _saveToFile(BuildContext context,
-      List<ChuckHttpCall> calls, Brightness brightness) async {
+  static Future<String> _saveToFile(
+    BuildContext context,
+    List<ChuckHttpCall> calls,
+    Brightness brightness,
+  ) async {
     try {
       if (calls.isEmpty) {
         ChuckAlertHelper.showAlert(
-            context, "Error", "There are no logs to save",
-            brightness: brightness);
+          context,
+          "Error",
+          "There are no logs to save",
+          brightness: brightness,
+        );
         return "";
       }
       final bool isAndroid = Platform.isAndroid;
@@ -65,15 +74,21 @@ class ChuckSaveHelper {
       await sink.flush();
       await sink.close();
       ChuckAlertHelper.showAlert(
-          context, "Success", "Successfully saved logs in ${file.path}",
-          secondButtonTitle: isAndroid ? "View file" : null,
-          secondButtonAction: () => isAndroid ? OpenFile.open(file.path) : null,
-          brightness: brightness);
+        context,
+        "Success",
+        "Successfully saved logs in ${file.path}",
+        secondButtonTitle: isAndroid ? "View file" : null,
+        secondButtonAction: () => isAndroid ? OpenFile.open(file.path) : null,
+        brightness: brightness,
+      );
       return file.path;
     } catch (exception) {
       ChuckAlertHelper.showAlert(
-          context, "Error", "Failed to save http calls to file",
-          brightness: brightness);
+        context,
+        "Error",
+        "Failed to save http calls to file",
+        brightness: brightness,
+      );
       ChuckUtils.log(exception.toString());
     }
 
