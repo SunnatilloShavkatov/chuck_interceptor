@@ -87,11 +87,16 @@ class ChuckCore {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final initializationSettingsAndroid =
         AndroidInitializationSettings(notificationIcon);
-    const initializationSettingsIOS = IOSInitializationSettings();
+    const initializationSettingsIOS = DarwinInitializationSettings();
     final initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    _flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: _onSelectedNotification);
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: _onSelectedNotification,
+      // onDidReceiveBackgroundNotificationResponse: _onSelectedNotification,
+    );
   }
 
   void _onCallsChanged() async {
@@ -105,8 +110,7 @@ class ChuckCore {
     }
   }
 
-  Future<void> _onSelectedNotification(String? payload) async {
-    assert(payload != null, "payload can't be null");
+  Future<void> _onSelectedNotification(NotificationResponse payload) async {
     navigateToCallListScreen();
     return;
   }
@@ -199,8 +203,9 @@ class ChuckCore {
       playSound: false,
       largeIcon: DrawableResourceAndroidBitmap(notificationIcon),
     );
-    const iOSPlatformChannelSpecifics =
-        IOSNotificationDetails(presentSound: false);
+    const iOSPlatformChannelSpecifics = DarwinNotificationDetails(
+      presentSound: false,
+    );
     final platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
