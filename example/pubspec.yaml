@@ -9,9 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  chopper: ^4.0.6
+  chopper: ^5.1.0
   path_provider: ^2.0.11
-  connectivity_plus: ^2.3.5
+  connectivity_plus: ^2.3.9
   platform: ^3.1.0
 
 dev_dependencies:

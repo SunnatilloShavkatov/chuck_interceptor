@@ -7,7 +7,6 @@ import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/utils/chuck_parser.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -78,7 +77,7 @@ class ChuckSaveHelper {
         "Success",
         "Successfully saved logs in ${file.path}",
         secondButtonTitle: isAndroid ? "View file" : null,
-        secondButtonAction: () => isAndroid ? OpenFile.open(file.path) : null,
+        secondButtonAction: () => null,
         brightness: brightness,
       );
       return file.path;

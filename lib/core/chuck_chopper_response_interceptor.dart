@@ -43,8 +43,8 @@ class ChuckChopperInterceptor extends chopper.ResponseInterceptor
       final ChuckHttpCall call = ChuckHttpCall(getRequestHashCode(baseRequest));
       String endpoint = "";
       String server = "";
-      if (request.baseUrl.isEmpty) {
-        final List<String> split = request.url.split("/");
+      if (request.path.isEmpty) {
+        final List<String> split = request.path.split("/");
         if (split.length > 2) {
           server = split[1] + split[2];
         }
@@ -57,15 +57,15 @@ class ChuckChopperInterceptor extends chopper.ResponseInterceptor
           endpoint = endpoint.substring(0, endpoint.length - 1);
         }
       } else {
-        endpoint = request.url;
-        server = request.baseUrl;
+        endpoint = request.path;
+        server = request.url.host;
       }
 
       call.method = request.method;
       call.endpoint = endpoint;
       call.server = server;
       call.client = "Chopper";
-      if (request.baseUrl.contains("https") || request.url.contains("https")) {
+      if (request.url.host.contains("https") || request.path.contains("https")) {
         call.secure = true;
       }
 
