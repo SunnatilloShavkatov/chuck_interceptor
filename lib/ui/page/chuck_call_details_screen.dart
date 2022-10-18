@@ -6,7 +6,6 @@ import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_call_error_widget.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_call_overview_widget.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_call_request_widget.dart';
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -42,7 +41,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
           initialData: [widget.call],
           builder: (context, callsSnapshot) {
             if (callsSnapshot.hasData) {
-              final ChuckHttpCall? call = callsSnapshot.data!.firstWhereOrNull(
+              final ChuckHttpCall? call = callsSnapshot.data!.firstWhere(
                   (snapshotCall) => snapshotCall.id == widget.call.id);
               if (call != null) {
                 return _buildMainWidget();

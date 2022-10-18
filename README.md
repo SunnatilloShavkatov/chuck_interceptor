@@ -1,58 +1,7 @@
-<p align="center">
-<img src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/logo.png" width="250px">
-</p>
 
 # Chuck
 
-[![pub package](https://img.shields.io/pub/v/Chuck.svg)](https://pub.dartlang.org/packages/Chuck)
-[![pub package](https://img.shields.io/github/license/jhomlala/Chuck.svg?style=flat)](https://github.com/jhomlala/Chuck)
-[![pub package](https://img.shields.io/badge/platform-flutter-blue.svg)](https://github.com/jhomlala/Chuck)
-
 ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging http requests. It catches and stores http requests and responses, which can be viewed via simple UI. It is inspired from [Chuck](https://github.com/jgilfelt/chuck) and [Chucker](https://github.com/ChuckerTeam/chucker).
-
-<table>
-  <tr>
-    <td>
-		<img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/1.png">
-    </td>
-    <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/2.png">
-    </td>
-    <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/3.png">
-    </td>
-    <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/4.png">
-    </td>
-     <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/5.png">
-    </td>
-    <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/6.png">
-    </td>
-  </tr>
-  <tr>
-    <td>
-	<img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/7.png">
-    </td>
-    <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/8.png">
-    </td>
-    <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/9.png">
-    </td>
-    <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/10.png">
-    </td>
-    <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/11.png">
-    </td>
-     <td>
-       <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/12.png">
-    </td>
-  </tr>
-
-</table>
 
 **Supported Dart http client plugins:**
 

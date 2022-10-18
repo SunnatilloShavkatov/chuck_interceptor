@@ -7,7 +7,6 @@ import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/ui/page/chuck_calls_list_screen.dart';
 import 'package:chuck_interceptor/utils/shake_detector.dart';
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
@@ -280,7 +279,7 @@ class ChuckCore {
   }
 
   ChuckHttpCall? _selectCall(int requestId) =>
-      callsSubject.value.firstWhereOrNull((call) => call.id == requestId);
+      callsSubject.value.firstWhere((call) => call.id == requestId);
 
   /// Save all calls to file
   void saveHttpRequests(BuildContext context) {

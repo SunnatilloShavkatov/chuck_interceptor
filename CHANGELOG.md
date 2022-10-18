@@ -1,6 +1,10 @@
 ## 1.0.8
 
-* open_file package remove
+* collection package remove
+
+## 1.0.8
+
+* Updated dependencies
 
 ## 1.0.7
 
