@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:chuck_interceptor/core/chuck_chopper_response_interceptor.dart';
 import 'package:chuck_interceptor/core/chuck_http_adapter.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 
-import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
 import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/core/chuck_dio_interceptor.dart';
@@ -99,11 +97,6 @@ class Chuck {
   /// page where all listened http calls can be viewed.
   void showInspector() {
     _ChuckCore.navigateToCallListScreen();
-  }
-
-  /// Get chopper interceptor. This should be added to Chopper instance.
-  List<ResponseInterceptor> getChopperInterceptor() {
-    return [ChuckChopperInterceptor(_ChuckCore)];
   }
 
   /// Handle generic http call. Can be used to any http client.

@@ -1,6 +1,10 @@
-## 1.0.8
+## 1.1.0
 
-* collection package remove
+* chopper package removed from dependencies
+
+## 1.0.9
+
+* collection package removed from dependencies
 
 ## 1.0.8
 

@@ -39,9 +39,6 @@ class _MyAppState extends State<MyApp> {
     ));
     _dio.interceptors.add(_Chuck.getDioInterceptor());
     _httpClient = HttpClient();
-    _chopper = ChopperClient(
-      interceptors: _Chuck.getChopperInterceptor(),
-    );
     _postsService = PostsService.create(_chopper);
 
     super.initState();
@@ -61,44 +58,37 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Chuck HTTP Inspector - Example'),
         ),
-        body: Container(
+        body: ListView(
           padding: EdgeInsets.all(16),
-          child: ListView(
-            children: [
-              const SizedBox(height: 8),
-              _getTextWidget(
-                  "Welcome to example of Chuck Http Inspector. Click buttons below to generate sample data."),
-              ElevatedButton(
-                child: Text("Run Dio HTTP Requests"),
-                onPressed: _runDioRequests,
-                style: _buttonStyle,
-              ),
-              ElevatedButton(
-                child: Text("Run http/http HTTP Requests"),
-                onPressed: _runHttpHttpRequests,
-                style: _buttonStyle,
-              ),
-              ElevatedButton(
-                child: Text("Run HttpClient Requests"),
-                onPressed: _runHttpHttpClientRequests,
-                style: _buttonStyle,
-              ),
-              ElevatedButton(
-                child: Text("Run Chopper HTTP Requests"),
-                onPressed: _runChopperHttpRequests,
-                style: _buttonStyle,
-              ),
-              const SizedBox(height: 24),
-              _getTextWidget(
-                  "After clicking on buttons above, you should receive notification."
-                  " Click on it to show inspector. You can also shake your device or click button below."),
-              ElevatedButton(
-                child: Text("Run HTTP Inspector"),
-                onPressed: _runHttpInspector,
-                style: _buttonStyle,
-              )
-            ],
-          ),
+          children: [
+            const SizedBox(height: 8),
+            _getTextWidget(
+                "Welcome to example of Chuck Http Inspector. Click buttons below to generate sample data."),
+            ElevatedButton(
+              child: Text("Run Dio HTTP Requests"),
+              onPressed: _runDioRequests,
+              style: _buttonStyle,
+            ),
+            ElevatedButton(
+              child: Text("Run http/http HTTP Requests"),
+              onPressed: _runHttpHttpRequests,
+              style: _buttonStyle,
+            ),
+            ElevatedButton(
+              child: Text("Run HttpClient Requests"),
+              onPressed: _runHttpHttpClientRequests,
+              style: _buttonStyle,
+            ),
+            const SizedBox(height: 24),
+            _getTextWidget(
+                "After clicking on buttons above, you should receive notification."
+                " Click on it to show inspector. You can also shake your device or click button below."),
+            ElevatedButton(
+              child: Text("Run HTTP Inspector"),
+              onPressed: _runHttpInspector,
+              style: _buttonStyle,
+            )
+          ],
         ),
       ),
     );
@@ -110,18 +100,6 @@ class _MyAppState extends State<MyApp> {
       style: TextStyle(fontSize: 14),
       textAlign: TextAlign.center,
     );
-  }
-
-  void _runChopperHttpRequests() async {
-    String body = jsonEncode(
-        <String, dynamic>{"title": "foo", "body": "bar", "userId": "1"});
-    _postsService.getPost("1");
-    _postsService.postPost(body);
-    _postsService.putPost("1", body);
-    _postsService.putPost("1231923", body);
-    _postsService.putPost("1", null);
-    _postsService.postPost(null);
-    _postsService.getPost("123456");
   }
 
   void _runDioRequests() async {
