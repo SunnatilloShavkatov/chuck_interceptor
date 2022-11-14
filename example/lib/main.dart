@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:chuck_interceptor/chuck.dart';
-import 'package:chuck_example/posts_service.dart';
-import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
 import 'package:chuck_interceptor/core/chuck_http_client_extensions.dart';
 import 'package:chuck_interceptor/core/chuck_http_extensions.dart';
@@ -21,8 +19,6 @@ class _MyAppState extends State<MyApp> {
   late Chuck _Chuck;
   late Dio _dio;
   late HttpClient _httpClient;
-  ChopperClient? _chopper;
-  late PostsService _postsService;
   Color _primaryColor = Color(0xffff5e57);
   Color _buttonColor = Color(0xff008000);
 
@@ -39,7 +35,6 @@ class _MyAppState extends State<MyApp> {
     ));
     _dio.interceptors.add(_Chuck.getDioInterceptor());
     _httpClient = HttpClient();
-    _postsService = PostsService.create(_chopper);
 
     super.initState();
   }

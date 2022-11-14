@@ -2,14 +2,13 @@
 FLUTTER_ROOT=/Users/udevs/src/flutter
 FLUTTER_APPLICATION_PATH=/Users/udevs/Projects/packages/chuck_interceptor/example
 COCOAPODS_PARALLEL_CODE_SIGN=true
-FLUTTER_TARGET=/Users/udevs/Projects/packages/chuck_interceptor/example/lib/main.dart
+FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0
 FLUTTER_BUILD_NUMBER=1.0.0
 EXCLUDED_ARCHS[sdk=iphonesimulator*]=i386
 EXCLUDED_ARCHS[sdk=iphoneos*]=armv7
-DART_DEFINES=Zmx1dHRlci5pbnNwZWN0b3Iuc3RydWN0dXJlZEVycm9ycz10cnVl,RkxVVFRFUl9XRUJfQVVUT19ERVRFQ1Q9dHJ1ZQ==
 DART_OBFUSCATION=false
 TRACK_WIDGET_CREATION=true
 TREE_SHAKE_ICONS=false
-PACKAGE_CONFIG=/Users/udevs/Projects/packages/chuck_interceptor/example/.dart_tool/package_config.json
+PACKAGE_CONFIG=.dart_tool/package_config.json
