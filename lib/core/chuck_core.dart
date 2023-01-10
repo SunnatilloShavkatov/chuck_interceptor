@@ -90,6 +90,8 @@ class ChuckCore {
     final initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
+      linux: LinuxInitializationSettings(defaultActionName: 'default'),
+      macOS: initializationSettingsIOS,
     );
     _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
