@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/Users/udevs/src/flutter
-FLUTTER_APPLICATION_PATH=/Users/udevs/Projects/packages/chuck_interceptor/example
+FLUTTER_ROOT=/Users/sunnatilloshavkatov/src/flutter
+FLUTTER_APPLICATION_PATH=/Users/sunnatilloshavkatov/Projects/packages/chuck_interceptor/example
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build
