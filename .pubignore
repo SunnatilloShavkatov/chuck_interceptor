@@ -6,3 +6,6 @@
 
 build/
 .idea/
+example/.flutter-plugins-dependencies
+example/ios/Flutter/Generated.xcconfig
+example/ios/Flutter/flutter_export_environment.sh

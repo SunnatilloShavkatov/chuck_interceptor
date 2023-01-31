@@ -167,7 +167,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
     if (status == -1) {
       return ChuckConstants.red;
     } else if (status! < 200) {
-      return Theme.of(context).textTheme.bodyText1!.color;
+      return Theme.of(context).textTheme.bodyLarge!.color;
     } else if (status >= 200 && status < 300) {
       return ChuckConstants.green;
     } else if (status >= 300 && status < 400) {
@@ -175,7 +175,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
     } else if (status >= 400 && status < 600) {
       return ChuckConstants.red;
     } else {
-      return Theme.of(context).textTheme.bodyText1!.color;
+      return Theme.of(context).textTheme.bodyLarge!.color;
     }
   }
 

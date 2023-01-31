@@ -1,3 +1,7 @@
+## 1.1.3
+
+* migration Flutter sdk 3.7.0
+
 ## 1.1.2
 
 * bug fixed
