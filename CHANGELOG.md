@@ -1,3 +1,7 @@
+## 1.1.4
+
+* Updated dependencies
+
 ## 1.1.3
 
 * migration Flutter sdk 3.7.0

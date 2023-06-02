@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:chuck_interceptor/chuck.dart';
-import 'package:http/http.dart' as http;
 import 'package:chuck_interceptor/core/chuck_http_client_extensions.dart';
-import 'package:chuck_interceptor/core/chuck_http_extensions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -58,15 +56,11 @@ class _MyAppState extends State<MyApp> {
           children: [
             const SizedBox(height: 8),
             _getTextWidget(
-                "Welcome to example of Chuck Http Inspector. Click buttons below to generate sample data."),
+              "Welcome to example of Chuck Http Inspector. Click buttons below to generate sample data.",
+            ),
             ElevatedButton(
               child: Text("Run Dio HTTP Requests"),
               onPressed: _runDioRequests,
-              style: _buttonStyle,
-            ),
-            ElevatedButton(
-              child: Text("Run http/http HTTP Requests"),
-              onPressed: _runHttpHttpRequests,
               style: _buttonStyle,
             ),
             ElevatedButton(
@@ -76,8 +70,9 @@ class _MyAppState extends State<MyApp> {
             ),
             const SizedBox(height: 24),
             _getTextWidget(
-                "After clicking on buttons above, you should receive notification."
-                " Click on it to show inspector. You can also shake your device or click button below."),
+              "After clicking on buttons above, you should receive notification."
+              " Click on it to show inspector. You can also shake your device or click button below.",
+            ),
             ElevatedButton(
               child: Text("Run HTTP Inspector"),
               onPressed: _runHttpInspector,
@@ -144,100 +139,6 @@ class _MyAppState extends State<MyApp> {
         data: formData);
 
     _dio.get<void>("http://dummy.restapiexample.com/api/v1/employees");
-  }
-
-  void _runHttpHttpRequests() async {
-    Map<String, String> body = <String, String>{
-      "title": "foo",
-      "body": "bar",
-      "userId": "1"
-    };
-    http
-        .post(Uri.tryParse('https://jsonplaceholder.typicode.com/posts')!,
-            body: body)
-        .interceptWithChuck(_Chuck, body: body);
-
-    http
-        .get(Uri.tryParse('https://jsonplaceholder.typicode.com/posts')!)
-        .interceptWithChuck(_Chuck);
-
-    http
-        .put(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!,
-            body: body)
-        .interceptWithChuck(_Chuck, body: body);
-
-    http
-        .patch(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!,
-            body: body)
-        .interceptWithChuck(_Chuck, body: body);
-
-    http
-        .delete(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!)
-        .interceptWithChuck(_Chuck, body: body);
-
-    http
-        .get(Uri.tryParse('https://jsonplaceholder.typicode.com/test/test')!)
-        .interceptWithChuck(_Chuck);
-
-    http
-        .post(Uri.tryParse('https://jsonplaceholder.typicode.com/posts')!,
-            body: body)
-        .then((response) {
-      _Chuck.onHttpResponse(response, body: body);
-    });
-
-    http
-        .get(Uri.tryParse('https://jsonplaceholder.typicode.com/posts')!)
-        .then((response) {
-      _Chuck.onHttpResponse(response);
-    });
-
-    http
-        .put(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!,
-            body: body)
-        .then((response) {
-      _Chuck.onHttpResponse(response, body: body);
-    });
-
-    http
-        .patch(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!,
-            body: body)
-        .then((response) {
-      _Chuck.onHttpResponse(response, body: body);
-    });
-
-    http
-        .delete(Uri.tryParse('https://jsonplaceholder.typicode.com/posts/1')!)
-        .then((response) {
-      _Chuck.onHttpResponse(response);
-    });
-
-    http
-        .get(Uri.tryParse('https://jsonplaceholder.typicode.com/test/test')!)
-        .then((response) {
-      _Chuck.onHttpResponse(response);
-    });
-
-    http
-        .post(
-            Uri.tryParse(
-                'https://jsonplaceholder.typicode.com/posts?key1=value1')!,
-            body: body)
-        .interceptWithChuck(_Chuck, body: body);
-
-    http
-        .post(
-            Uri.tryParse(
-                'https://jsonplaceholder.typicode.com/posts?key1=value1&key2=value2&key3=value3')!,
-            body: body)
-        .interceptWithChuck(_Chuck, body: body);
-
-    http
-        .get(Uri.tryParse(
-            'https://jsonplaceholder.typicode.com/test/test?key1=value1&key2=value2&key3=value3')!)
-        .then((response) {
-      _Chuck.onHttpResponse(response);
-    });
   }
 
   void _runHttpHttpClientRequests() {

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:chuck_interceptor/core/chuck_http_adapter.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/core/chuck_dio_interceptor.dart';
 import 'package:chuck_interceptor/core/chuck_http_client_adapter.dart';
@@ -88,10 +87,10 @@ class Chuck {
     _httpClientAdapter.onResponse(response, request, body: body);
   }
 
-  /// Handle both request and response from http package
-  void onHttpResponse(http.Response response, {dynamic body}) {
-    _httpAdapter.onResponse(response, body: body);
-  }
+  // /// Handle both request and response from http package
+  // void onHttpResponse(http.Response response, {dynamic body}) {
+  //   _httpAdapter.onResponse(response, body: body);
+  // }
 
   /// Opens Http calls inspector. This will navigate user to the new fullscreen
   /// page where all listened http calls can be viewed.

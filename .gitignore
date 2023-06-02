@@ -56,3 +56,4 @@ app.*.map.json
 example/.flutter-plugins-dependencies
 example/ios/Flutter/Generated.xcconfig
 example/ios/Flutter/flutter_export_environment.sh
+/pubspec.lock
