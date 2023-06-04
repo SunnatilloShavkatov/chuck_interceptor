@@ -7,6 +7,7 @@ import 'package:chuck_interceptor/core/chuck_dio_interceptor.dart';
 import 'package:chuck_interceptor/core/chuck_http_client_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
 
 class Chuck {
   /// Should user be notified with notification if there's new request catched
@@ -87,10 +88,10 @@ class Chuck {
     _httpClientAdapter.onResponse(response, request, body: body);
   }
 
-  // /// Handle both request and response from http package
-  // void onHttpResponse(http.Response response, {dynamic body}) {
-  //   _httpAdapter.onResponse(response, body: body);
-  // }
+  /// Handle both request and response from http package
+  void onHttpResponse(http.Response response, {dynamic body}) {
+    _httpAdapter.onResponse(response, body: body);
+  }
 
   /// Opens Http calls inspector. This will navigate user to the new fullscreen
   /// page where all listened http calls can be viewed.

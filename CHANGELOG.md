@@ -1,3 +1,7 @@
+## 2.0.0
+
+* flutter 2.10.0 support, dart 3 support
+
 ## 1.1.4
 
 * Updated dependencies
