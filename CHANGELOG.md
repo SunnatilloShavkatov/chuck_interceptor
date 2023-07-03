@@ -1,5 +1,9 @@
 ## 2.0.0+1
 
+* Updated dependencies
+
+## 2.0.0+1
+
 * http bug fixed
 
 ## 2.0.0
