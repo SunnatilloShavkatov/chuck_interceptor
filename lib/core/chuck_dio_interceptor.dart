@@ -82,7 +82,7 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
 
   /// Handles dio response and adds data to Chuck http call
   @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
+  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
     final httpResponse = ChuckHttpResponse();
     httpResponse.status = response.statusCode;
 
@@ -107,7 +107,7 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
 
   /// Handles error and adds data to Chuck http call
   @override
-  void onError(DioError error, ErrorInterceptorHandler handler) {
+  void onError(DioException error, ErrorInterceptorHandler handler) {
     final httpError = ChuckHttpError();
     httpError.error = error.toString();
     if (error is Error) {

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 class ChuckUtils {
   static void log(String logMessage) {
     if (!kReleaseMode) {
-      // ignore: avoid_print
       print(logMessage);
     }
   }

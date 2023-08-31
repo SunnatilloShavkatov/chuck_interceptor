@@ -42,7 +42,7 @@ class ChuckCore {
   Brightness _brightness = Brightness.light;
   bool _isInspectorOpened = false;
   ShakeDetector? _shakeDetector;
-  StreamSubscription? _callsSubscription;
+  StreamSubscription<dynamic>? _callsSubscription;
   String? _notificationMessage;
   String? _notificationMessageShown;
   bool _notificationProcessing = false;
@@ -193,7 +193,7 @@ class ChuckCore {
     return notificationMessageString;
   }
 
-  Future _showLocalNotification() async {
+  Future<void> _showLocalNotification() async {
     _notificationProcessing = true;
     const channelId = "Chuck";
     const channelName = "Chuck";
