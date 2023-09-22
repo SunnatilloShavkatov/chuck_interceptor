@@ -60,7 +60,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
 
   Widget _buildMainWidget() {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: ChuckConstants.lightRed,
