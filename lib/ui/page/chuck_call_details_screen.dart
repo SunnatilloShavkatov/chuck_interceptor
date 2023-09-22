@@ -1,6 +1,7 @@
 import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/helper/chuck_save_helper.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_call_response_preview_widget.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_call_response_widget.dart';
 import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_call_error_widget.dart';
@@ -80,6 +81,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
               const Tab(icon: Icon(Icons.info_outline), text: "Overview"),
               const Tab(icon: Icon(Icons.arrow_upward), text: "Request"),
               const Tab(icon: Icon(Icons.arrow_downward), text: "Response"),
+              const Tab(icon: Icon(Icons.preview), text: "Response Preview"),
               const Tab(icon: Icon(Icons.warning), text: "Error"),
             ],
           ),
@@ -90,6 +92,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
             ChuckCallOverviewWidget(widget.call),
             ChuckCallRequestWidget(widget.call),
             ChuckCallResponseWidget(widget.call),
+            ChuckCallResponsePreviewWidget(call),
             ChuckCallErrorWidget(widget.call),
           ],
         ),

@@ -6,10 +6,10 @@ import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:flutter/material.dart';
 
-class ChuckCallResponseWidget extends StatefulWidget {
+class ChuckCallResponsePreviewWidget extends StatefulWidget {
   final ChuckHttpCall call;
 
-  const ChuckCallResponseWidget(this.call);
+  const ChuckCallResponsePreviewWidget(this.call);
 
   @override
   State<StatefulWidget> createState() {
@@ -18,7 +18,7 @@ class ChuckCallResponseWidget extends StatefulWidget {
 }
 
 class _ChuckCallResponseWidgetState
-    extends ChuckBaseCallDetailsWidgetState<ChuckCallResponseWidget> {
+    extends ChuckBaseCallDetailsWidgetState<ChuckCallResponsePreviewWidget> {
   static const _imageContentType = "image";
   static const _jsonContentType = "json";
   static const _xmlContentType = "xml";
@@ -133,7 +133,7 @@ class _ChuckCallResponseWidgetState
                 child: CircularProgressIndicator(
                   value: loadingProgress.expectedTotalBytes != null
                       ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
+                      loadingProgress.expectedTotalBytes!
                       : null,
                 ),
               );
@@ -158,7 +158,7 @@ class _ChuckCallResponseWidgetState
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
-                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
+            MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
           ),
           onPressed: () {
             setState(() {
@@ -178,8 +178,15 @@ class _ChuckCallResponseWidgetState
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
     final bodyContent =
-        formatBody(_call.response!.body, getContentType(headers));
-    rows.add(getListRow("Body:", bodyContent));
+    formatBody(_call.response!.body, getContentType(headers));
+    //rows.add(getListRow("Body:", bodyContent));
+    if(bodyContent.contains("{") && bodyContent.contains("}")){
+      rows.add(getListRow("Body:", ""));
+      rows.add(JsonViewer(jsonDecode(bodyContent)));
+    } else {
+      rows.add(getListRow("Body:", bodyContent));
+    }
+
     return rows;
   }
 
@@ -190,7 +197,7 @@ class _ChuckCallResponseWidgetState
 
     if (_showUnsupportedBody) {
       final bodyContent =
-          formatBody(_call.response!.body, getContentType(headers));
+      formatBody(_call.response!.body, getContentType(headers));
       rows.add(getListRow("Body:", bodyContent));
     } else {
       rows.add(getListRow(
@@ -203,7 +210,7 @@ class _ChuckCallResponseWidgetState
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
-                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
+            MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
           ),
           onPressed: () {
             setState(() {
@@ -222,7 +229,7 @@ class _ChuckCallResponseWidgetState
     if (_call.request?.headers != null) {
       requestHeaders.addAll(
         _call.request!.headers.map(
-          (String key, dynamic value) {
+              (String key, dynamic value) {
             return MapEntry(key, value.toString());
           },
         ),
@@ -239,7 +246,7 @@ class _ChuckCallResponseWidgetState
 
   bool _isTextResponse() {
     final String responseContentTypeLowerCase =
-        _getContentTypeOfResponse()!.toLowerCase();
+    _getContentTypeOfResponse()!.toLowerCase();
 
     return responseContentTypeLowerCase.contains(_jsonContentType) ||
         responseContentTypeLowerCase.contains(_xmlContentType) ||
