@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_json_viewer.dart';
 import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:flutter/material.dart';
@@ -176,7 +179,14 @@ class _ChuckCallResponseWidgetState
     final headers = _call.response!.headers;
     final bodyContent =
         formatBody(_call.response!.body, getContentType(headers));
-    rows.add(getListRow("Body:", bodyContent));
+    //rows.add(getListRow("Body:", bodyContent));
+    if(bodyContent.contains("{") && bodyContent.contains("}")){
+      rows.add(getListRow("Body:", ""));
+      rows.add(JsonViewer(jsonDecode(bodyContent)));
+    } else {
+      rows.add(getListRow("Body:", bodyContent));
+    }
+
     return rows;
   }
 
