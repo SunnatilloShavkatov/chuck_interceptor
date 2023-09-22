@@ -81,7 +81,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
               const Tab(icon: Icon(Icons.info_outline), text: "Overview"),
               const Tab(icon: Icon(Icons.arrow_upward), text: "Request"),
               const Tab(icon: Icon(Icons.arrow_downward), text: "Response"),
-              const Tab(icon: Icon(Icons.preview), text: "Response Preview"),
+              const Tab(icon: Icon(Icons.preview), text: "Preview"),
               const Tab(icon: Icon(Icons.warning), text: "Error"),
             ],
           ),
