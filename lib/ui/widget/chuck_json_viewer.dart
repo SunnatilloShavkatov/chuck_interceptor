@@ -143,14 +143,14 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Expanded(
         child: Text(
           entry.value.toString(),
-          style: const TextStyle(color: Colors.teal),
+          style: const TextStyle(color: Colors.blueAccent),
         ),
       );
     } else if (entry.value is String) {
       return Expanded(
         child: Text(
           "\"${entry.value}\"",
-          style: const TextStyle(color: Colors.redAccent),
+          style: const TextStyle(color: Colors.green),
         ),
       );
     } else if (entry.value is bool) {
