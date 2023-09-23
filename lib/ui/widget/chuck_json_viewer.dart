@@ -2,8 +2,6 @@ library flutter_json_widget;
 
 import 'package:flutter/material.dart';
 
-Color _previewStringColor = Color(0xff122e16);
-
 class JsonViewer extends StatefulWidget {
   final dynamic jsonObj;
 
@@ -145,27 +143,27 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Expanded(
         child: Text(
           entry.value.toString(),
-          style: const TextStyle(color: Colors.blueAccent),
+          style: const TextStyle(color: Color(0xff6491b3)),
         ),
       );
     } else if (entry.value is String) {
       return Expanded(
         child: Text(
           "\"${entry.value}\"",
-          style: TextStyle(color: _previewStringColor),
+          style: const TextStyle(color: Color(0xff6a8759)),
         ),
       );
     } else if (entry.value is bool) {
       return Expanded(
           child: Text(
             entry.value.toString(),
-            style: const TextStyle(color: Colors.purple),
+            style: const TextStyle(color: Color(0xffca7832)),
           ));
     } else if (entry.value is double) {
       return Expanded(
           child: Text(
             entry.value.toString(),
-            style: const TextStyle(color: Colors.teal),
+            style: const TextStyle(color: Color(0xff6491b3)),
           ));
     } else if (entry.value is List) {
       if (entry.value.isEmpty) {
@@ -325,28 +323,28 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       return Expanded(
         child: Text(
           content.toString(),
-          style: const TextStyle(color: Colors.teal),
+          style: const TextStyle(color: Color(0xff6491b3)),
         ),
       );
     } else if (content is String) {
       return Expanded(
         child: Text(
           "\"$content\"",
-          style: TextStyle(color: _previewStringColor),
+          style: const TextStyle(color: Color(0xff6a8759)),
         ),
       );
     } else if (content is bool) {
       return Expanded(
         child: Text(
           content.toString(),
-          style: const TextStyle(color: Colors.purple),
+          style: const TextStyle(color: Color(0xffca7832)),
         ),
       );
     } else if (content is double) {
       return Expanded(
           child: Text(
             content.toString(),
-            style: const TextStyle(color: Colors.teal),
+            style: const TextStyle(color: Color(0xff6491b3)),
           ));
     } else if (content is List) {
       if (content.isEmpty) {
