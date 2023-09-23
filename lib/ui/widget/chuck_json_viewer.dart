@@ -75,7 +75,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           (ex && ink)
               ? InkWell(
               child: Text(entry.key,
-                  style: TextStyle(color: Colors.purple[900])),
+                  style: TextStyle(color: Colors.black)),
               onTap: () {
                 setState(() {
                   openFlag[entry.key] = !(openFlag[entry.key] ?? false);
@@ -85,7 +85,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
               style: TextStyle(
                   color: entry.value == null
                       ? Colors.grey
-                      : Colors.purple[900])),
+                      : Colors.black)),
           const Text(
             ':',
             style: TextStyle(color: Colors.grey),
@@ -284,7 +284,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
               : Text('[$i]',
               style: TextStyle(
                   color:
-                  content == null ? Colors.grey : Colors.purple[900])),
+                  content == null ? Colors.grey : Colors.black)),
           const Text(
             ':',
             style: TextStyle(color: Colors.grey),
@@ -304,7 +304,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
 
   getInkWell(int index) {
     return InkWell(
-        child: Text('[$index]', style: TextStyle(color: Colors.purple[900])),
+        child: Text('[$index]', style: TextStyle(color: Colors.black)),
         onTap: () {
           setState(() {
             openFlag[index] = !(openFlag[index]);
