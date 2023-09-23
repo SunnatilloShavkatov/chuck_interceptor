@@ -19,7 +19,7 @@ class _JsonViewerState extends State<JsonViewer> {
 
   static getContentWidget(dynamic content) {
     if (content == null) {
-      return const Text('{}');
+      return const SelectableText('{}');
     } else if (content is List) {
       return JsonArrayViewer(content, notRoot: false);
     } else {
@@ -74,19 +74,19 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           ),
           (ex && ink)
               ? InkWell(
-              child: Text(entry.key,
+              child: SelectableText(entry.key,
                   style: TextStyle(color: Colors.black)),
               onTap: () {
                 setState(() {
                   openFlag[entry.key] = !(openFlag[entry.key] ?? false);
                 });
               })
-              : Text(entry.key,
+              : SelectableText(entry.key,
               style: TextStyle(
                   color: entry.value == null
                       ? Colors.grey
                       : Colors.black)),
-          const Text(
+          const SelectableText(
             ':',
             style: TextStyle(color: Colors.grey),
           ),
@@ -134,7 +134,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
   getValueWidget(MapEntry<String, dynamic> entry) {
     if (entry.value == null) {
       return const Expanded(
-        child: Text(
+        child: SelectableText(
           'undefined',
           style: TextStyle(color: Colors.grey),
         ),
@@ -167,13 +167,13 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           ));
     } else if (entry.value is List) {
       if (entry.value.isEmpty) {
-        return const Text(
+        return const SelectableText(
           'Array[0]',
           style: TextStyle(color: Colors.grey),
         );
       } else {
         return InkWell(
-            child: Text(
+            child: SelectableText(
               'Array<${getTypeName(entry.value[0])}>[${entry.value.length}]',
               style: const TextStyle(color: Colors.grey),
             ),
@@ -185,7 +185,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       }
     }
     return InkWell(
-        child: const Text(
+        child: const SelectableText(
           'Object',
           style: TextStyle(color: Colors.grey),
         ),
@@ -281,11 +281,11 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           ),
           (ex && ink)
               ? getInkWell(i)
-              : Text('[$i]',
+              : SelectableText('[$i]',
               style: TextStyle(
                   color:
                   content == null ? Colors.grey : Colors.black)),
-          const Text(
+          const SelectableText(
             ':',
             style: TextStyle(color: Colors.grey),
           ),
@@ -304,7 +304,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
 
   getInkWell(int index) {
     return InkWell(
-        child: Text('[$index]', style: TextStyle(color: Colors.black)),
+        child: SelectableText('[$index]', style: TextStyle(color: Colors.black)),
         onTap: () {
           setState(() {
             openFlag[index] = !(openFlag[index]);
@@ -315,7 +315,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
   getValueWidget(dynamic content, int index) {
     if (content == null) {
       return const Expanded(
-          child: Text(
+          child: SelectableText(
             'undefined',
             style: TextStyle(color: Colors.grey),
           ));
@@ -348,13 +348,13 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           ));
     } else if (content is List) {
       if (content.isEmpty) {
-        return const Text(
+        return const SelectableText(
           'Array[0]',
           style: TextStyle(color: Colors.grey),
         );
       } else {
         return InkWell(
-            child: Text(
+            child: SelectableText(
               'Array<${JsonObjectViewerState.getTypeName(content)}>[${content.length}]',
               style: const TextStyle(color: Colors.grey),
             ),
@@ -366,7 +366,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       }
     }
     return InkWell(
-        child: const Text(
+        child: const SelectableText(
           'Object',
           style: TextStyle(color: Colors.grey),
         ),
