@@ -2,6 +2,8 @@ library flutter_json_widget;
 
 import 'package:flutter/material.dart';
 
+Color _previewStringColor = Color(0xff122e16);
+
 class JsonViewer extends StatefulWidget {
   final dynamic jsonObj;
 
@@ -150,7 +152,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Expanded(
         child: Text(
           "\"${entry.value}\"",
-          style: const TextStyle(color: Colors.green),
+          style: TextStyle(color: _previewStringColor),
         ),
       );
     } else if (entry.value is bool) {
@@ -330,7 +332,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       return Expanded(
         child: Text(
           "\"$content\"",
-          style: const TextStyle(color: Colors.redAccent),
+          style: TextStyle(color: _previewStringColor),
         ),
       );
     } else if (content is bool) {

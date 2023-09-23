@@ -19,7 +19,6 @@ class _MyAppState extends State<MyApp> {
   late HttpClient _httpClient;
   Color _primaryColor = Color(0xffff5e57);
   Color _buttonColor = Color(0xff008000);
-
   @override
   void initState() {
     _Chuck = Chuck(
