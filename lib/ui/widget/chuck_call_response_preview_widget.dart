@@ -34,8 +34,6 @@ class _ChuckCallResponseWidgetState
   Widget build(BuildContext context) {
     final List<Widget> rows = [];
     if (!_call.loading) {
-      rows.addAll(_buildGeneralDataRows());
-      rows.addAll(_buildHeadersRows());
       rows.addAll(_buildBodyRows());
 
       return Container(
@@ -181,7 +179,6 @@ class _ChuckCallResponseWidgetState
     formatBody(_call.response!.body, getContentType(headers));
     //rows.add(getListRow("Body:", bodyContent));
     if(bodyContent.contains("{") && bodyContent.contains("}")){
-      rows.add(getListRow("Body:", ""));
       rows.add(JsonViewer(jsonDecode(bodyContent)));
     } else {
       rows.add(getListRow("Body:", bodyContent));
