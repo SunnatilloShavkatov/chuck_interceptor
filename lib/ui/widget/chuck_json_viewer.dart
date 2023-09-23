@@ -56,7 +56,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
 
   _getList() {
     List<Widget> list = [];
-    for (MapEntry entry in widget.jsonObj.entries) {
+    for (MapEntry<String, dynamic> entry in widget.jsonObj.entries) {
       bool ex = isExtensible(entry.value);
       bool ink = isInkWell(entry.value);
       list.add(Row(
@@ -131,7 +131,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
     return true;
   }
 
-  getValueWidget(MapEntry entry) {
+  getValueWidget(MapEntry<String, dynamic> entry) {
     if (entry.value == null) {
       return const Expanded(
         child: Text(
@@ -141,27 +141,27 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       );
     } else if (entry.value is int) {
       return Expanded(
-        child: Text(
+        child: SelectableText(
           entry.value.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
         ),
       );
     } else if (entry.value is String) {
       return Expanded(
-        child: Text(
+        child: SelectableText(
           "\"${entry.value}\"",
           style: const TextStyle(color: Color(0xff6a8759)),
         ),
       );
     } else if (entry.value is bool) {
       return Expanded(
-          child: Text(
+          child: SelectableText(
             entry.value.toString(),
             style: const TextStyle(color: Color(0xffca7832)),
           ));
     } else if (entry.value is double) {
       return Expanded(
-          child: Text(
+          child: SelectableText(
             entry.value.toString(),
             style: const TextStyle(color: Color(0xff6491b3)),
           ));
@@ -321,28 +321,28 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           ));
     } else if (content is int) {
       return Expanded(
-        child: Text(
+        child: SelectableText(
           content.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
         ),
       );
     } else if (content is String) {
       return Expanded(
-        child: Text(
+        child: SelectableText(
           "\"$content\"",
           style: const TextStyle(color: Color(0xff6a8759)),
         ),
       );
     } else if (content is bool) {
       return Expanded(
-        child: Text(
+        child: SelectableText(
           content.toString(),
           style: const TextStyle(color: Color(0xffca7832)),
         ),
       );
     } else if (content is double) {
       return Expanded(
-          child: Text(
+          child: SelectableText(
             content.toString(),
             style: const TextStyle(color: Color(0xff6491b3)),
           ));
