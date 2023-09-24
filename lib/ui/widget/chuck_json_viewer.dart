@@ -47,7 +47,9 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Container(
         padding: const EdgeInsets.only(left: 14.0),
         child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, children: _getList()),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _getList(),
+        ),
       );
     }
     return Column(
@@ -59,51 +61,66 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
     for (MapEntry<String, dynamic> entry in widget.jsonObj.entries) {
       bool ex = isExtensible(entry.value);
       bool ink = isInkWell(entry.value);
-      list.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ex
-              ? (openFlag[entry.key] ?? false)
-                  ? InkWell(
-                      onTap: () {
-                        setState(() {
-                          openFlag[entry.key] = !(openFlag[entry.key] ?? false);
-                        });
-                      },
-                      child: Icon(Icons.arrow_drop_down,
-                          size: 14, color: Colors.grey[700]),
-                    )
-                  : InkWell(
-                      onTap: () {
-                        setState(() {
-                          openFlag[entry.key] = !(openFlag[entry.key] ?? false);
-                        });
-                      },
-                      child: Icon(
-                        Icons.arrow_right,
-                        size: 14,
-                        color: Colors.grey[700],
-                      ),
-                    )
-              : const Icon(
-                  Icons.arrow_right,
-                  color: Color.fromARGB(0, 0, 0, 0),
-                  size: 14,
-                ),
-          (ex && ink)
-              ? SelectableText(entry.key, style: TextStyle(color: Colors.black))
-              : SelectableText(entry.key,
-                  style: TextStyle(
-                      color: entry.value == null ? Colors.grey : Colors.black)),
-          const SelectableText(
-            ':',
-            style: TextStyle(color: Colors.grey),
-          ),
-          const SizedBox(width: 3),
-          getValueWidget(entry)
-        ],
-      ));
-      list.add(const SizedBox(height: 4));
+      list.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            ex
+                ? (openFlag[entry.key] ?? false)
+                    ? InkWell(
+                        onTap: () {
+                          setState(() {
+                            openFlag[entry.key] =
+                                !(openFlag[entry.key] ?? false);
+                          });
+                        },
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          size: 14,
+                          color: Colors.grey[700],
+                        ),
+                      )
+                    : InkWell(
+                        onTap: () {
+                          setState(() {
+                            openFlag[entry.key] =
+                                !(openFlag[entry.key] ?? false);
+                          });
+                        },
+                        child: Icon(
+                          Icons.arrow_right,
+                          size: 14,
+                          color: Colors.grey[700],
+                        ),
+                      )
+                : const Icon(
+                    Icons.arrow_right,
+                    color: Color.fromARGB(0, 0, 0, 0),
+                    size: 14,
+                  ),
+            (ex && ink)
+                ? SelectableText(
+                    entry.key,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
+                : SelectableText(
+                    entry.key,
+                    style: TextStyle(
+                      color: entry.value == null ? Colors.grey : Colors.black,
+                    ),
+                  ),
+            const SelectableText(
+              ':',
+              style: TextStyle(color: Colors.grey),
+            ),
+            Padding(padding: EdgeInsets.only(left: 3)),
+            getValueWidget(entry)
+          ],
+        ),
+      );
+      list.add(Padding(padding: EdgeInsets.only(top: 4)));
       if (openFlag[entry.key] ?? false) {
         list.add(getContentWidget(entry.value));
       }
@@ -303,12 +320,12 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
               ':',
               style: TextStyle(color: Colors.grey),
             ),
-            const SizedBox(width: 3),
+            Padding(padding: EdgeInsets.only(left: 3)),
             getValueWidget(content, i)
           ],
         ),
       );
-      list.add(const SizedBox(height: 4));
+      list.add(Padding(padding: EdgeInsets.only(top: 4)));
       if (openFlag[i]) {
         list.add(JsonObjectViewerState.getContentWidget(content));
       }
