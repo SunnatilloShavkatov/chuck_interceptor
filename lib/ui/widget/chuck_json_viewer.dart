@@ -93,10 +93,17 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                           color: Colors.grey[700],
                         ),
                       )
-                : const Icon(
-                    Icons.arrow_right,
-                    color: Color.fromARGB(0, 0, 0, 0),
-                    size: 14,
+                : InkWell(
+                    onTap: () {
+                      setState(() {
+                        openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+                      });
+                    },
+                    child: const Icon(
+                      Icons.arrow_right,
+                      color: Color.fromARGB(0, 0, 0, 0),
+                      size: 14,
+                    ),
                   ),
             (ex && ink)
                 ? SelectableText(
@@ -181,16 +188,18 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       );
     } else if (entry.value is bool) {
       return Expanded(
-          child: SelectableText(
-        entry.value.toString(),
-        style: const TextStyle(color: Color(0xffca7832)),
-      ));
+        child: SelectableText(
+          entry.value.toString(),
+          style: const TextStyle(color: Color(0xffca7832)),
+        ),
+      );
     } else if (entry.value is double) {
       return Expanded(
-          child: SelectableText(
-        entry.value.toString(),
-        style: const TextStyle(color: Color(0xff6491b3)),
-      ));
+        child: SelectableText(
+          entry.value.toString(),
+          style: const TextStyle(color: Color(0xff6491b3)),
+        ),
+      );
     } else if (entry.value is List) {
       if (entry.value.isEmpty) {
         return const SelectableText(
@@ -267,7 +276,9 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       );
     }
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start, children: _getList());
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _getList(),
+    );
   }
 
   @override
@@ -306,16 +317,26 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                         child: Icon(Icons.arrow_right,
                             size: 14, color: Colors.grey[700]),
                       ))
-                : const Icon(
-                    Icons.arrow_right,
-                    color: Color.fromARGB(0, 0, 0, 0),
-                    size: 14,
+                : InkWell(
+                    onTap: () {
+                      setState(() {
+                        openFlag[i] = !(openFlag[i]);
+                      });
+                    },
+                    child: const Icon(
+                      Icons.arrow_right,
+                      color: Color.fromARGB(0, 0, 0, 0),
+                      size: 14,
+                    ),
                   ),
             (ex && ink)
                 ? getInkWell(i)
-                : SelectableText('[$i]',
+                : SelectableText(
+                    '[$i]',
                     style: TextStyle(
-                        color: content == null ? Colors.grey : Colors.black)),
+                      color: content == null ? Colors.grey : Colors.black,
+                    ),
+                  ),
             const SelectableText(
               ':',
               style: TextStyle(color: Colors.grey),
@@ -341,10 +362,11 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
   getValueWidget(dynamic content, int index) {
     if (content == null) {
       return const Expanded(
-          child: SelectableText(
-        'undefined',
-        style: TextStyle(color: Colors.grey),
-      ));
+        child: SelectableText(
+          'undefined',
+          style: TextStyle(color: Colors.grey),
+        ),
+      );
     } else if (content is int) {
       return Expanded(
         child: SelectableText(
@@ -368,10 +390,11 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       );
     } else if (content is double) {
       return Expanded(
-          child: SelectableText(
-        content.toString(),
-        style: const TextStyle(color: Color(0xff6491b3)),
-      ));
+        child: SelectableText(
+          content.toString(),
+          style: const TextStyle(color: Color(0xff6491b3)),
+        ),
+      );
     } else if (content is List) {
       if (content.isEmpty) {
         return const SelectableText(
