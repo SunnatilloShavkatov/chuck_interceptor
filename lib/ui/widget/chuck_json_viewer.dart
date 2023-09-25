@@ -53,7 +53,9 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       );
     }
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start, children: _getList());
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _getList(),
+    );
   }
 
   _getList() {
@@ -409,7 +411,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       }
     }
     return const SelectableText(
-      'Object',
+      'Objectkkk',
       style: TextStyle(color: Colors.grey),
     );
   }
