@@ -307,8 +307,11 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                             openFlag[i] = !(openFlag[i]);
                           });
                         },
-                        child: Icon(Icons.arrow_drop_down,
-                            size: 14, color: Colors.grey[700]),
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          size: 14,
+                          color: Colors.grey[700],
+                        ),
                       )
                     : InkWell(
                         onTap: () {
@@ -316,8 +319,11 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                             openFlag[i] = !(openFlag[i]);
                           });
                         },
-                        child: Icon(Icons.arrow_right,
-                            size: 14, color: Colors.grey[700]),
+                        child: Icon(
+                          Icons.arrow_right,
+                          size: 14,
+                          color: Colors.grey[700],
+                        ),
                       ))
                 : InkWell(
                     onTap: () {
@@ -410,9 +416,16 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         );
       }
     }
-    return const SelectableText(
-      'Objectkkk',
-      style: TextStyle(color: Colors.grey),
+    return InkWell(
+      onTap: (){
+        setState(() {
+          openFlag[index] = !openFlag[index];
+        });
+      },
+      child: const Text(
+        'Object',
+        style: TextStyle(color: Colors.grey),
+      ),
     );
   }
 }
