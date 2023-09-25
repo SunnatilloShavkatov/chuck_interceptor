@@ -293,7 +293,6 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
 
   _getList() {
     List<Widget> list = [];
-    int i = 0;
     for(int i = 0; i < widget.jsonArray.length; i++){
       final content = widget.jsonArray[i];
       bool ex = JsonObjectViewerState.isExtensible(content);
