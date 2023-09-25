@@ -418,7 +418,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         );
       }
     }
-    return const Text(
+    return const SelectableText(
       'Object',
       style: TextStyle(color: Colors.grey),
     );
