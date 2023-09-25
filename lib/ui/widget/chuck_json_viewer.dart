@@ -294,7 +294,8 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
   _getList() {
     List<Widget> list = [];
     int i = 0;
-    for (dynamic content in widget.jsonArray) {
+    for(int i = 0; i < widget.jsonArray.length; i++){
+      final content = widget.jsonArray[i];
       bool ex = JsonObjectViewerState.isExtensible(content);
       bool ink = JsonObjectViewerState.isInkWell(content);
       list.add(
@@ -303,53 +304,50 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           children: <Widget>[
             ex
                 ? ((openFlag[i])
-                    ? InkWell(
-                        onTap: () {
-                          log("dddddd => $i");
-                          setState(() {
-                            openFlag[i] = !(openFlag[i]);
-                          });
-                        },
-                        child: Icon(
-                          Icons.arrow_drop_down,
-                          size: 14,
-                          color: Colors.grey[700],
-                        ),
-                      )
-                    : InkWell(
-                        onTap: () {
-                          log("dddddd => $i");
-                          setState(() {
-                            openFlag[i] = !(openFlag[i]);
-                          });
-                        },
-                        child: Icon(
-                          Icons.arrow_right,
-                          size: 14,
-                          color: Colors.grey[700],
-                        ),
-                      ))
+                ? InkWell(
+              onTap: () {
+                setState(() {
+                  openFlag[i] = !(openFlag[i]);
+                });
+              },
+              child: Icon(
+                Icons.arrow_drop_down,
+                size: 14,
+                color: Colors.grey[700],
+              ),
+            )
                 : InkWell(
-                    onTap: () {
-                      log("dddddd => $i");
-                      setState(() {
-                        openFlag[i] = !(openFlag[i]);
-                      });
-                    },
-                    child: const Icon(
-                      Icons.arrow_right,
-                      color: Color.fromARGB(0, 0, 0, 0),
-                      size: 14,
-                    ),
-                  ),
+              onTap: () {
+                setState(() {
+                  openFlag[i] = !(openFlag[i]);
+                });
+              },
+              child: Icon(
+                Icons.arrow_right,
+                size: 14,
+                color: Colors.grey[700],
+              ),
+            ))
+                : InkWell(
+              onTap: () {
+                setState(() {
+                  openFlag[i] = !(openFlag[i]);
+                });
+              },
+              child: const Icon(
+                Icons.arrow_right,
+                color: Color.fromARGB(0, 0, 0, 0),
+                size: 14,
+              ),
+            ),
             (ex && ink)
                 ? getInkWell(i)
                 : SelectableText(
-                    '[$i]',
-                    style: TextStyle(
-                      color: content == null ? Colors.grey : Colors.black,
-                    ),
-                  ),
+              '[$i]',
+              style: TextStyle(
+                color: content == null ? Colors.grey : Colors.black,
+              ),
+            ),
             const SelectableText(
               ':',
               style: TextStyle(color: Colors.grey),
@@ -363,8 +361,75 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       if (openFlag[i]) {
         list.add(JsonObjectViewerState.getContentWidget(content));
       }
-      i++;
     }
+    // for (dynamic content in widget.jsonArray) {
+    //   bool ex = JsonObjectViewerState.isExtensible(content);
+    //   bool ink = JsonObjectViewerState.isInkWell(content);
+    //   list.add(
+    //     Row(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: <Widget>[
+    //         ex
+    //             ? ((openFlag[i])
+    //                 ? InkWell(
+    //                     onTap: () {
+    //                       setState(() {
+    //                         openFlag[i] = !(openFlag[i]);
+    //                       });
+    //                     },
+    //                     child: Icon(
+    //                       Icons.arrow_drop_down,
+    //                       size: 14,
+    //                       color: Colors.grey[700],
+    //                     ),
+    //                   )
+    //                 : InkWell(
+    //                     onTap: () {
+    //                       setState(() {
+    //                         openFlag[i] = !(openFlag[i]);
+    //                       });
+    //                     },
+    //                     child: Icon(
+    //                       Icons.arrow_right,
+    //                       size: 14,
+    //                       color: Colors.grey[700],
+    //                     ),
+    //                   ))
+    //             : InkWell(
+    //                 onTap: () {
+    //                   setState(() {
+    //                     openFlag[i] = !(openFlag[i]);
+    //                   });
+    //                 },
+    //                 child: const Icon(
+    //                   Icons.arrow_right,
+    //                   color: Color.fromARGB(0, 0, 0, 0),
+    //                   size: 14,
+    //                 ),
+    //               ),
+    //         (ex && ink)
+    //             ? getInkWell(i)
+    //             : SelectableText(
+    //                 '[$i]',
+    //                 style: TextStyle(
+    //                   color: content == null ? Colors.grey : Colors.black,
+    //                 ),
+    //               ),
+    //         const SelectableText(
+    //           ':',
+    //           style: TextStyle(color: Colors.grey),
+    //         ),
+    //         Padding(padding: EdgeInsets.only(left: 3)),
+    //         getValueWidget(content, i)
+    //       ],
+    //     ),
+    //   );
+    //   list.add(Padding(padding: EdgeInsets.only(top: 4)));
+    //   if (openFlag[i]) {
+    //     list.add(JsonObjectViewerState.getContentWidget(content));
+    //   }
+    //   i++;
+    // }
     return list;
   }
 
