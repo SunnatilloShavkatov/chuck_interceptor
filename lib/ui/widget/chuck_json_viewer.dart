@@ -1,7 +1,5 @@
 library flutter_json_widget;
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 class JsonViewer extends StatefulWidget {
