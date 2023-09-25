@@ -1,5 +1,7 @@
 library flutter_json_widget;
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class JsonViewer extends StatefulWidget {
@@ -303,6 +305,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                 ? ((openFlag[i])
                     ? InkWell(
                         onTap: () {
+                          log("dddddd => $i");
                           setState(() {
                             openFlag[i] = !(openFlag[i]);
                           });
@@ -315,6 +318,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                       )
                     : InkWell(
                         onTap: () {
+                          log("dddddd => $i");
                           setState(() {
                             openFlag[i] = !(openFlag[i]);
                           });
@@ -327,6 +331,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                       ))
                 : InkWell(
                     onTap: () {
+                      log("dddddd => $i");
                       setState(() {
                         openFlag[i] = !(openFlag[i]);
                       });
