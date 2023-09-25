@@ -419,7 +419,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
     return InkWell(
       onTap: (){
         setState(() {
-          openFlag[index] = !openFlag[index];
+          openFlag[index] =  !openFlag[index];
         });
       },
       child: const Text(
