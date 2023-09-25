@@ -204,20 +204,41 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       );
     } else if (entry.value is List) {
       if (entry.value.isEmpty) {
-        return const SelectableText(
-          'Array[0]',
-          style: TextStyle(color: Colors.grey),
+        return InkWell(
+          onTap: () {
+            setState(() {
+              openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+            });
+          },
+          child: const Text(
+            'Array[0]',
+            style: TextStyle(color: Colors.grey),
+          ),
         );
       } else {
-        return SelectableText(
-          'Array<${getTypeName(entry.value[0])}>[${entry.value.length}]',
-          style: const TextStyle(color: Colors.grey),
+        return InkWell(
+          onTap: () {
+            setState(() {
+              openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+            });
+          },
+          child: Text(
+            'Array<${getTypeName(entry.value[0])}>[${entry.value.length}]',
+            style: const TextStyle(color: Colors.grey),
+          ),
         );
       }
     }
-    return const SelectableText(
-      'Object',
-      style: TextStyle(color: Colors.grey),
+    return InkWell(
+      onTap: () {
+        setState(() {
+          openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+        });
+      },
+      child: const Text(
+        'Object',
+        style: TextStyle(color: Colors.grey),
+      ),
     );
   }
 
@@ -291,7 +312,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
 
   _getList() {
     List<Widget> list = [];
-    for(int i = 0; i < widget.jsonArray.length; i++){
+    for (int i = 0; i < widget.jsonArray.length; i++) {
       final content = widget.jsonArray[i];
       bool ex = JsonObjectViewerState.isExtensible(content);
       bool ink = JsonObjectViewerState.isInkWell(content);
@@ -300,51 +321,51 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ex
-                ? ((openFlag[i])
-                ? InkWell(
-              onTap: () {
-                setState(() {
-                  openFlag[i] = !(openFlag[i]);
-                });
-              },
-              child: Icon(
-                Icons.arrow_drop_down,
-                size: 14,
-                color: Colors.grey[700],
-              ),
-            )
+                ? (openFlag[i])
+                    ? InkWell(
+                        onTap: () {
+                          setState(() {
+                            openFlag[i] = !(openFlag[i]);
+                          });
+                        },
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          size: 14,
+                          color: Colors.grey[700],
+                        ),
+                      )
+                    : InkWell(
+                        onTap: () {
+                          setState(() {
+                            openFlag[i] = !(openFlag[i]);
+                          });
+                        },
+                        child: Icon(
+                          Icons.arrow_right,
+                          size: 14,
+                          color: Colors.grey[700],
+                        ),
+                      )
                 : InkWell(
-              onTap: () {
-                setState(() {
-                  openFlag[i] = !(openFlag[i]);
-                });
-              },
-              child: Icon(
-                Icons.arrow_right,
-                size: 14,
-                color: Colors.grey[700],
-              ),
-            ))
-                : InkWell(
-              onTap: () {
-                setState(() {
-                  openFlag[i] = !(openFlag[i]);
-                });
-              },
-              child: const Icon(
-                Icons.arrow_right,
-                color: Color.fromARGB(0, 0, 0, 0),
-                size: 14,
-              ),
-            ),
+                    onTap: () {
+                      setState(() {
+                        openFlag[i] = !(openFlag[i]);
+                      });
+                    },
+                    child: const Icon(
+                      Icons.arrow_right,
+                      color: Color.fromARGB(0, 0, 0, 0),
+                      size: 14,
+                    ),
+                  ),
             (ex && ink)
                 ? getInkWell(i)
                 : SelectableText(
-              '[$i]',
-              style: TextStyle(
-                color: content == null ? Colors.grey : Colors.black,
-              ),
-            ),
+                    '[$i]',
+                    style: TextStyle(
+                      color: content == null ? Colors.grey : Colors.black,
+                    ),
+                  ),
             const SelectableText(
               ':',
               style: TextStyle(color: Colors.grey),
@@ -404,20 +425,41 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       );
     } else if (content is List) {
       if (content.isEmpty) {
-        return const SelectableText(
-          'Array[0]',
-          style: TextStyle(color: Colors.grey),
+        return InkWell(
+          onTap: () {
+            setState(() {
+              openFlag[index] = !openFlag[index];
+            });
+          },
+          child: const Text(
+            'Array[0]',
+            style: TextStyle(color: Colors.grey),
+          ),
         );
       } else {
-        return SelectableText(
-          'Array<${JsonObjectViewerState.getTypeName(content)}>[${content.length}]',
-          style: const TextStyle(color: Colors.grey),
+        return InkWell(
+          onTap: () {
+            setState(() {
+              openFlag[index] = !openFlag[index];
+            });
+          },
+          child: Text(
+            'Array<${JsonObjectViewerState.getTypeName(content)}>[${content.length}]',
+            style: const TextStyle(color: Colors.grey),
+          ),
         );
       }
     }
-    return const SelectableText(
-      'Object',
-      style: TextStyle(color: Colors.grey),
+    return InkWell(
+      onTap: () {
+        setState(() {
+          openFlag[index] = !openFlag[index];
+        });
+      },
+      child: const Text(
+        'Object',
+        style: TextStyle(color: Colors.grey),
+      ),
     );
   }
 }
