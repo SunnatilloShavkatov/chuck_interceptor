@@ -215,7 +215,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           },
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(
-              text: jsonEncode(openFlag[entry.key]),
+              text: jsonEncode(entry.value),
             )).then((_) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Copied to your clipboard !'),
@@ -236,7 +236,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           },
           onDoubleTap: () {
             Clipboard.setData(
-                    ClipboardData(text: jsonEncode(openFlag[entry.key])))
+                    ClipboardData(text: jsonEncode(entry.value)))
                 .then((_) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Copied to your clipboard !'),
@@ -257,7 +257,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         });
       },
       onDoubleTap: () {
-        Clipboard.setData(ClipboardData(text: jsonEncode(openFlag[entry.key])))
+        Clipboard.setData(ClipboardData(text: jsonEncode(entry.value)))
             .then((_) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Copied to your clipboard !'),
@@ -413,7 +413,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
   }
 
   getInkWell(int index) {
-    return SelectableText('[$index]', style: TextStyle(color: Colors.black));
+    return Text('[$index]', style: TextStyle(color: Colors.black));
   }
 
   getValueWidget(dynamic content, int index) {
