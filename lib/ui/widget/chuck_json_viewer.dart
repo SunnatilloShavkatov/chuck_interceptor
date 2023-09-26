@@ -218,6 +218,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
               text: jsonEncode(entry.value),
             )).then((_) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Colors.red,
                 content: Text('Copied to your clipboard !'),
               ));
             });
@@ -239,6 +240,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                     ClipboardData(text: jsonEncode(entry.value)))
                 .then((_) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Colors.red,
                 content: Text('Copied to your clipboard !'),
               ));
             });
@@ -260,6 +262,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         Clipboard.setData(ClipboardData(text: jsonEncode(entry.value)))
             .then((_) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.red,
             content: Text('Copied to your clipboard !'),
           ));
         });
@@ -464,6 +467,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
             Clipboard.setData(ClipboardData(text: jsonEncode(content)))
                 .then((_) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Colors.red,
                 content: Text('Copied to your clipboard !'),
               ));
             });
@@ -484,6 +488,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
             Clipboard.setData(ClipboardData(text: jsonEncode(content)))
                 .then((_) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Colors.red,
                 content: Text('Copied to your clipboard !'),
               ));
             });
@@ -504,6 +509,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       onDoubleTap: () {
         Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.red,
             content: Text('Copied to your clipboard !'),
           ));
         });
