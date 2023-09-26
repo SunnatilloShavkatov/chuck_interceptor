@@ -1,6 +1,9 @@
 library flutter_json_widget;
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class JsonViewer extends StatefulWidget {
   final dynamic jsonObj;
@@ -120,7 +123,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                       color: entry.value == null ? Colors.grey : Colors.black,
                     ),
                   ),
-            const SelectableText(
+            const Text(
               ':',
               style: TextStyle(color: Colors.grey),
             ),
@@ -210,6 +213,15 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
               openFlag[entry.key] = !(openFlag[entry.key] ?? false);
             });
           },
+          onDoubleTap: () {
+            Clipboard.setData(ClipboardData(
+              text: jsonEncode(openFlag[entry.key]),
+            )).then((_) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Copied to your clipboard !'),
+              ));
+            });
+          },
           child: const Text(
             'Array[0]',
             style: TextStyle(color: Colors.grey),
@@ -220,6 +232,15 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           onTap: () {
             setState(() {
               openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+            });
+          },
+          onDoubleTap: () {
+            Clipboard.setData(
+                    ClipboardData(text: jsonEncode(openFlag[entry.key])))
+                .then((_) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Copied to your clipboard !'),
+              ));
             });
           },
           child: Text(
@@ -233,6 +254,14 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       onTap: () {
         setState(() {
           openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+        });
+      },
+      onDoubleTap: () {
+        Clipboard.setData(ClipboardData(text: jsonEncode(openFlag[entry.key])))
+            .then((_) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Copied to your clipboard !'),
+          ));
         });
       },
       child: const Text(
@@ -360,13 +389,13 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                   ),
             (ex && ink)
                 ? getInkWell(i)
-                : SelectableText(
+                : Text(
                     '[$i]',
                     style: TextStyle(
                       color: content == null ? Colors.grey : Colors.black,
                     ),
                   ),
-            const SelectableText(
+            const Text(
               ':',
               style: TextStyle(color: Colors.grey),
             ),
@@ -431,6 +460,14 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
               openFlag[index] = !openFlag[index];
             });
           },
+          onDoubleTap: () {
+            Clipboard.setData(ClipboardData(text: jsonEncode(content)))
+                .then((_) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Copied to your clipboard !'),
+              ));
+            });
+          },
           child: const Text(
             'Array[0]',
             style: TextStyle(color: Colors.grey),
@@ -441,6 +478,14 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           onTap: () {
             setState(() {
               openFlag[index] = !openFlag[index];
+            });
+          },
+          onDoubleTap: () {
+            Clipboard.setData(ClipboardData(text: jsonEncode(content)))
+                .then((_) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Copied to your clipboard !'),
+              ));
             });
           },
           child: Text(
@@ -454,6 +499,13 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       onTap: () {
         setState(() {
           openFlag[index] = !openFlag[index];
+        });
+      },
+      onDoubleTap: () {
+        Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Copied to your clipboard !'),
+          ));
         });
       },
       child: const Text(
