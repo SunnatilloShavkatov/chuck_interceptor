@@ -217,10 +217,8 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
             Clipboard.setData(ClipboardData(
               text: jsonEncode(entry.value),
             )).then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                backgroundColor: Colors.red,
-                content: Text('Copied to your clipboard !'),
-              ));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const CustomSnackBar());
             });
           },
           child: const Text(
@@ -236,13 +234,10 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
             });
           },
           onDoubleTap: () {
-            Clipboard.setData(
-                    ClipboardData(text: jsonEncode(entry.value)))
+            Clipboard.setData(ClipboardData(text: jsonEncode(entry.value)))
                 .then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                backgroundColor: Colors.red,
-                content: Text('Copied to your clipboard !'),
-              ));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const CustomSnackBar());
             });
           },
           child: Text(
@@ -261,10 +256,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       onDoubleTap: () {
         Clipboard.setData(ClipboardData(text: jsonEncode(entry.value)))
             .then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Copied to your clipboard !'),
-          ));
+          ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
         });
       },
       child: const Text(
@@ -466,10 +458,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(content)))
                 .then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                backgroundColor: Colors.red,
-                content: Text('Copied to your clipboard !'),
-              ));
+              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
             });
           },
           child: const Text(
@@ -487,10 +476,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(content)))
                 .then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                backgroundColor: Colors.red,
-                content: Text('Copied to your clipboard !'),
-              ));
+              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
             });
           },
           child: Text(
@@ -508,16 +494,32 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       },
       onDoubleTap: () {
         Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Copied to your clipboard !'),
-          ));
+          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar());
         });
       },
       child: const Text(
         'Object',
         style: TextStyle(color: Colors.grey),
       ),
+    );
+  }
+}
+
+class CustomSnackBar extends SnackBar {
+  const CustomSnackBar({
+    super.key,
+    super.content = const Text(
+      'Copied to your clipboard !',
+      style: TextStyle(
+        color: Colors.black,
+      ),
+    ),
+  });
+
+  Widget build(BuildContext context) {
+    return SnackBar(
+      backgroundColor: Colors.yellow,
+      content: content,
     );
   }
 }
