@@ -508,6 +508,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
 class CustomSnackBar extends SnackBar {
   const CustomSnackBar({
     super.key,
+    super.backgroundColor = Colors.yellow,
     super.content = const Text(
       'Copied to your clipboard !',
       style: TextStyle(
@@ -518,7 +519,7 @@ class CustomSnackBar extends SnackBar {
 
   Widget build(BuildContext context) {
     return SnackBar(
-      backgroundColor: Colors.yellow,
+      backgroundColor: backgroundColor,
       content: content,
     );
   }
