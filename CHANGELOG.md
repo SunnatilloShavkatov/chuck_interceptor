@@ -1,6 +1,14 @@
+## 2.0.4
+
+* json viewer ui changes
+
+## 2.0.3
+
+* json viewer ui changes
+
 ## 2.0.2
 
-* Updates minimum supported SDK version to Flutter 3.13/Dart 3.1.
+* Updates minimum supported SDK version to Flutter 3.13/Dart 3.1.0
 
 ## 2.0.0+1
 
