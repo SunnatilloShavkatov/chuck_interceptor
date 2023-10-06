@@ -58,37 +58,6 @@ class _ChuckCallResponseWidgetState
     super.dispose();
   }
 
-  List<Widget> _buildGeneralDataRows() {
-    final List<Widget> rows = [];
-    rows.add(getListRow("Received:", _call.response!.time.toString()));
-    rows.add(getListRow("Bytes received:", formatBytes(_call.response!.size)));
-
-    final status = _call.response!.status;
-    var statusText = "$status";
-    if (status == -1) {
-      statusText = "Error";
-    }
-
-    rows.add(getListRow("Status:", statusText));
-    return rows;
-  }
-
-  List<Widget> _buildHeadersRows() {
-    final List<Widget> rows = [];
-    final headers = _call.response!.headers;
-    var headersContent = "Headers are empty";
-    if (headers != null && headers.isNotEmpty) {
-      headersContent = "";
-    }
-    rows.add(getListRow("Headers: ", headersContent));
-    if (_call.response!.headers != null) {
-      _call.response!.headers!.forEach((header, value) {
-        rows.add(getListRow("   • $header:", value.toString()));
-      });
-    }
-    return rows;
-  }
-
   List<Widget> _buildBodyRows() {
     final List<Widget> rows = [];
     if (_isImageResponse()) {
@@ -131,7 +100,7 @@ class _ChuckCallResponseWidgetState
                 child: CircularProgressIndicator(
                   value: loadingProgress.expectedTotalBytes != null
                       ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
+                          loadingProgress.expectedTotalBytes!
                       : null,
                 ),
               );
@@ -156,7 +125,7 @@ class _ChuckCallResponseWidgetState
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
-            MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
+                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
           ),
           onPressed: () {
             setState(() {
@@ -176,9 +145,9 @@ class _ChuckCallResponseWidgetState
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
     final bodyContent =
-    formatBody(_call.response!.body, getContentType(headers));
+        formatBody(_call.response!.body, getContentType(headers));
     //rows.add(getListRow("Body:", bodyContent));
-    if(bodyContent.contains("{") && bodyContent.contains("}")){
+    if (bodyContent.contains("{") && bodyContent.contains("}")) {
       rows.add(JsonViewer(jsonDecode(bodyContent)));
     } else {
       rows.add(getListRow("Body:", bodyContent));
@@ -194,7 +163,7 @@ class _ChuckCallResponseWidgetState
 
     if (_showUnsupportedBody) {
       final bodyContent =
-      formatBody(_call.response!.body, getContentType(headers));
+          formatBody(_call.response!.body, getContentType(headers));
       rows.add(getListRow("Body:", bodyContent));
     } else {
       rows.add(getListRow(
@@ -207,7 +176,7 @@ class _ChuckCallResponseWidgetState
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
-            MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
+                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
           ),
           onPressed: () {
             setState(() {
@@ -226,7 +195,7 @@ class _ChuckCallResponseWidgetState
     if (_call.request?.headers != null) {
       requestHeaders.addAll(
         _call.request!.headers.map(
-              (String key, dynamic value) {
+          (String key, dynamic value) {
             return MapEntry(key, value.toString());
           },
         ),
@@ -243,7 +212,7 @@ class _ChuckCallResponseWidgetState
 
   bool _isTextResponse() {
     final String responseContentTypeLowerCase =
-    _getContentTypeOfResponse()!.toLowerCase();
+        _getContentTypeOfResponse()!.toLowerCase();
 
     return responseContentTypeLowerCase.contains(_jsonContentType) ||
         responseContentTypeLowerCase.contains(_xmlContentType) ||

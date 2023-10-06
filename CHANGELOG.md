@@ -1,3 +1,7 @@
+## 2.0.5
+
+* flutter_local_notifications package updated
+
 ## 2.0.4
 
 * json viewer ui changes

@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_json_viewer.dart';
 import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:flutter/material.dart';
