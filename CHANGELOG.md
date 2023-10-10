@@ -1,3 +1,7 @@
+## 2.0.6
+
+* Updated dependencies
+
 ## 2.0.5
 
 * flutter_local_notifications package updated
