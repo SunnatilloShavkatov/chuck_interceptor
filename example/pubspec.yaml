@@ -9,14 +9,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  dio: ^5.4.1
   path_provider: ^2.1.2
-  connectivity_plus: ^5.0.2
+  connectivity_plus: ^6.0.1
+  chuck_interceptor:
+    path: ../
 
 dev_dependencies:
   build_runner:
   chopper_generator:
-  chuck_interceptor:
-    path: ../
 
 flutter:
 

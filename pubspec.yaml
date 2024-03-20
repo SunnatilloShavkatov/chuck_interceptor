@@ -13,9 +13,9 @@ dependencies:
   dio: ">=5.4.0-0 <6.0.0"
   http: ">=0.13.5-0 <2.0.0"
   rxdart: ^0.27.7
-  share_plus: ^7.2.2
+  share_plus: ^8.0.2
   path_provider: ^2.1.2
-  package_info_plus: ^5.0.1
+  package_info_plus: ^6.0.0
   plugin_platform_interface: ^2.1.8
   permission_handler: ">=11.3.0-0 <14.0.0"
   flutter_local_notifications: ^17.0.0
