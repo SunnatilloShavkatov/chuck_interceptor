@@ -34,9 +34,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
     return Directionality(
       textDirection: widget.core.directionality ?? Directionality.of(context),
       child: Theme(
-        data: ThemeData(
-          brightness: widget.core.brightness,
-        ),
+        data: ThemeData(brightness: widget.core.brightness),
         child: StreamBuilder<List<ChuckHttpCall>>(
           stream: widget.core.callsSubject,
           initialData: [widget.call],

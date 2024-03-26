@@ -36,9 +36,9 @@ class _ChuckCallResponseWidgetState
     if (!_call.loading) {
       rows.addAll(_buildBodyRows());
 
-      return Container(
+      return ListView(
         padding: const EdgeInsets.all(6),
-        child: ListView(children: rows),
+        children: rows,
       );
     } else {
       return Center(
@@ -144,9 +144,10 @@ class _ChuckCallResponseWidgetState
   List<Widget> _buildTextBodyRows() {
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
-    final bodyContent =
-        formatBody(_call.response!.body, getContentType(headers));
-    //rows.add(getListRow("Body:", bodyContent));
+    final bodyContent = formatBody(
+      _call.response!.body,
+      getContentType(headers),
+    );
     if (bodyContent.contains("{") && bodyContent.contains("}")) {
       rows.add(JsonViewer(jsonDecode(bodyContent)));
     } else {

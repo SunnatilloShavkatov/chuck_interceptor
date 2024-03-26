@@ -19,6 +19,7 @@ class _MyAppState extends State<MyApp> {
   late HttpClient _httpClient;
   Color _primaryColor = Color(0xffff5e57);
   Color _buttonColor = Color(0xff008000);
+
   @override
   void initState() {
     _Chuck = Chuck(
@@ -27,23 +28,20 @@ class _MyAppState extends State<MyApp> {
       darkTheme: false,
       maxCallsCount: 1000,
     );
-    _dio = Dio(BaseOptions(
-      followRedirects: false,
-    ));
+    _dio = Dio(BaseOptions(followRedirects: false));
     _dio.interceptors.add(_Chuck.getDioInterceptor());
     _httpClient = HttpClient();
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     ButtonStyle _buttonStyle = ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(_buttonColor));
+      backgroundColor: MaterialStateProperty.all<Color>(_buttonColor),
+      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    );
     return MaterialApp(
-      theme: ThemeData(
-        primaryColor: _primaryColor,
-      ),
+      theme: ThemeData(primaryColor: _primaryColor),
       navigatorKey: _Chuck.getNavigatorKey(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -203,12 +201,14 @@ class _MyAppState extends State<MyApp> {
 
     _httpClient
         .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/"))
-        .then((request) async {
-      _Chuck.onHttpClientRequest(request);
-      var httpResponse = await request.close();
-      var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
-    });
+        .then(
+      (request) async {
+        _Chuck.onHttpClientRequest(request);
+        var httpResponse = await request.close();
+        var responseBody = await utf8.decoder.bind(httpResponse).join();
+        _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+      },
+    );
   }
 
   void _runHttpInspector() {

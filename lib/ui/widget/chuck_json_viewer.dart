@@ -81,7 +81,6 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                         },
                         child: Icon(
                           Icons.arrow_drop_down,
-                          size: 14,
                           color: Colors.grey[700],
                         ),
                       )
@@ -94,7 +93,6 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                         },
                         child: Icon(
                           Icons.arrow_right,
-                          size: 14,
                           color: Colors.grey[700],
                         ),
                       )
@@ -354,7 +352,6 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                         },
                         child: Icon(
                           Icons.arrow_drop_down,
-                          size: 14,
                           color: Colors.grey[700],
                         ),
                       )
@@ -366,7 +363,6 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                         },
                         child: Icon(
                           Icons.arrow_right,
-                          size: 14,
                           color: Colors.grey[700],
                         ),
                       )
@@ -379,7 +375,6 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                     child: const Icon(
                       Icons.arrow_right,
                       color: Color.fromARGB(0, 0, 0, 0),
-                      size: 14,
                     ),
                   ),
             (ex && ink)
