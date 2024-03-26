@@ -119,8 +119,9 @@ class ChuckSaveHelper {
     stringBuffer.write("Method: ${call.method} \n");
     stringBuffer.write("Endpoint: ${call.endpoint} \n");
     stringBuffer.write("Client: ${call.client} \n");
-    stringBuffer
-        .write("Duration ${ChuckConversionHelper.formatTime(call.duration)}\n");
+    stringBuffer.write(
+      "Duration ${ChuckConversionHelper.formatTime(call.duration)}\n",
+    );
     stringBuffer.write("Secured connection: ${call.secure}\n");
     stringBuffer.write("Completed: ${!call.loading} \n");
     stringBuffer.write("--------------------------------------------\n");
@@ -128,18 +129,23 @@ class ChuckSaveHelper {
     stringBuffer.write("--------------------------------------------\n");
     stringBuffer.write("Request time: ${call.request!.time}\n");
     stringBuffer.write("Request content type: ${call.request!.contentType}\n");
-    stringBuffer
-        .write("Request cookies: ${_encoder.convert(call.request!.cookies)}\n");
-    stringBuffer
-        .write("Request headers: ${_encoder.convert(call.request!.headers)}\n");
+    stringBuffer.write(
+      "Request cookies: ${_encoder.convert(call.request!.cookies)}\n",
+    );
+    stringBuffer.write(
+      "Request headers: ${_encoder.convert(call.request!.headers)}\n",
+    );
     if (call.request!.queryParameters.isNotEmpty) {
       stringBuffer.write(
-          "Request query params: ${_encoder.convert(call.request!.queryParameters)}\n");
+        "Request query params: ${_encoder.convert(call.request!.queryParameters)}\n",
+      );
     }
     stringBuffer.write(
-        "Request size: ${ChuckConversionHelper.formatBytes(call.request!.size)}\n");
+      "Request size: ${ChuckConversionHelper.formatBytes(call.request!.size)}\n",
+    );
     stringBuffer.write(
-        "Request body: ${ChuckParser.formatBody(call.request!.body, ChuckParser.getContentType(call.request!.headers))}\n");
+      "Request body: ${ChuckParser.formatBody(call.request!.body, ChuckParser.getContentType(call.request!.headers))}\n",
+    );
     stringBuffer.write("--------------------------------------------\n");
     stringBuffer.write("Response\n");
     stringBuffer.write("--------------------------------------------\n");
@@ -155,8 +161,14 @@ class ChuckSaveHelper {
       stringBuffer.write("--------------------------------------------\n");
       stringBuffer.write("Error\n");
       stringBuffer.write("--------------------------------------------\n");
-      stringBuffer.write("Error: ${call.error!.error}\n");
-      if (call.error!.stackTrace != null) {
+      stringBuffer.write("Error: DioException [${call.error?.error?.type}] \n");
+      if (call.error?.error?.response != null) {
+        stringBuffer.write("${call.error?.error?.response}\n");
+      }
+      if (call.error?.error?.error != null) {
+        stringBuffer.write("${call.error?.error?.error}\n");
+      }
+      if (call.error?.stackTrace != null) {
         stringBuffer.write("Error stacktrace: ${call.error!.stackTrace}\n");
       }
     }
