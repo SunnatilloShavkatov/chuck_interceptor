@@ -1,6 +1,4 @@
-import 'package:dio/dio.dart';
-
 class ChuckHttpError {
-  DioException? error;
+  dynamic error;
   StackTrace? stackTrace;
 }

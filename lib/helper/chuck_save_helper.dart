@@ -161,13 +161,9 @@ class ChuckSaveHelper {
       stringBuffer.write("--------------------------------------------\n");
       stringBuffer.write("Error\n");
       stringBuffer.write("--------------------------------------------\n");
-      stringBuffer.write("Error: DioException [${call.error?.error?.type}] \n");
-      if (call.error?.error?.response != null) {
-        stringBuffer.write("${call.error?.error?.response}\n");
-      }
-      if (call.error?.error?.error != null) {
-        stringBuffer.write("${call.error?.error?.error}\n");
-      }
+      stringBuffer.write(
+        "Error: ${call.error?.error.toString().replaceAll("Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status", "")}\n",
+      );
       if (call.error?.stackTrace != null) {
         stringBuffer.write("Error stacktrace: ${call.error!.stackTrace}\n");
       }
