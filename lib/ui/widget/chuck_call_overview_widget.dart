@@ -30,9 +30,9 @@ class _ChuckCallOverviewWidget
     rows.add(getListRow("Bytes received:", formatBytes(_call.response!.size)));
     rows.add(getListRow("Client:", _call.client));
     rows.add(getListRow("Secure:", _call.secure.toString()));
-    return Container(
+    return ListView(
       padding: const EdgeInsets.all(6),
-      child: ListView(children: rows),
+      children: rows,
     );
   }
 }

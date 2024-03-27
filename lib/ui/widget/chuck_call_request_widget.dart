@@ -69,10 +69,6 @@ class _ChuckCallRequestWidget
     _call.request!.queryParameters.forEach((query, dynamic value) {
       rows.add(getListRow("   • $query:", value.toString()));
     });
-
-    return Container(
-      padding: const EdgeInsets.all(6),
-      child: ListView(children: rows),
-    );
+    return ListView(padding: const EdgeInsets.all(6), children: rows);
   }
 }

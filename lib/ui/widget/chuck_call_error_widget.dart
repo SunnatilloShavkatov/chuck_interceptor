@@ -8,9 +8,7 @@ class ChuckCallErrorWidget extends StatefulWidget {
   const ChuckCallErrorWidget(this.call);
 
   @override
-  State<StatefulWidget> createState() {
-    return _ChuckCallErrorWidgetState();
-  }
+  State<StatefulWidget> createState() => _ChuckCallErrorWidgetState();
 }
 
 class _ChuckCallErrorWidgetState
@@ -24,14 +22,13 @@ class _ChuckCallErrorWidgetState
       final dynamic error = _call.error!.error;
       var errorText = "Error is empty";
       if (error != null) {
-        errorText = error.toString();
+        errorText = error.toString().replaceAll(
+              "Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status\n",
+              "",
+            );
       }
       rows.add(getListRow("Error:", errorText));
-
-      return Container(
-        padding: const EdgeInsets.all(6),
-        child: ListView(children: rows),
-      );
+      return ListView(padding: const EdgeInsets.all(6), children: rows);
     } else {
       return const Center(child: Text("Nothing to display here"));
     }

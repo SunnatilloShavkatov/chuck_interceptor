@@ -34,10 +34,9 @@ class _ChuckCallResponseWidgetState
       rows.addAll(_buildGeneralDataRows());
       rows.addAll(_buildHeadersRows());
       rows.addAll(_buildBodyRows());
-
-      return Container(
+      return ListView(
         padding: const EdgeInsets.all(6),
-        child: ListView(children: rows),
+        children: rows,
       );
     } else {
       return Center(
@@ -154,8 +153,12 @@ class _ChuckCallResponseWidgetState
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
+            backgroundColor: MaterialStatePropertyAll<Color>(
+              ChuckConstants.lightRed,
+            ),
+            foregroundColor: MaterialStatePropertyAll<Color>(
+              Colors.white,
+            ),
           ),
           onPressed: () {
             setState(() {
@@ -190,17 +193,24 @@ class _ChuckCallResponseWidgetState
           formatBody(_call.response!.body, getContentType(headers));
       rows.add(getListRow("Body:", bodyContent));
     } else {
-      rows.add(getListRow(
+      rows.add(
+        getListRow(
           "Body:",
           "Unsupported body. Chuck can render video/image/text body. "
               "Response has Content-Type: $contentType which can't be handled. "
               "If you're feeling lucky you can try button below to try render body"
-              " as text, but it may fail."));
+              " as text, but it may fail.",
+        ),
+      );
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
+            backgroundColor: MaterialStatePropertyAll<Color>(
+              ChuckConstants.lightRed,
+            ),
+            foregroundColor: MaterialStatePropertyAll<Color>(
+              Colors.white,
+            ),
           ),
           onPressed: () {
             setState(() {

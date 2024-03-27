@@ -13,18 +13,14 @@ class ChuckStatsScreen extends StatelessWidget {
     return Directionality(
       textDirection: chuckCore.directionality ?? Directionality.of(context),
       child: Theme(
-        data: ThemeData(
-          brightness: chuckCore.brightness,
-        ),
+        data: ThemeData(brightness: chuckCore.brightness),
         child: Scaffold(
           appBar: AppBar(
             title: const Text("Chuck - HTTP Inspector - Stats"),
           ),
-          body: Container(
+          body: ListView(
             padding: const EdgeInsets.all(8),
-            child: ListView(
-              children: _buildMainListWidgets(),
-            ),
+            children: _buildMainListWidgets(),
           ),
         ),
       ),

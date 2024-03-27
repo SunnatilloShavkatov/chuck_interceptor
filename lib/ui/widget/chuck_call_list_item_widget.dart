@@ -14,75 +14,74 @@ class ChuckCallListItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => itemClickAction(call),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildMethodAndEndpointRow(context),
-                      const SizedBox(height: 4),
-                      _buildServerRow(),
-                      const SizedBox(height: 4),
-                      _buildStatsRow()
-                    ],
-                  ),
-                ),
-                _buildResponseColumn(context)
-              ],
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildMethodAndEndpointRow(context),
+                  const SizedBox(height: 4),
+                  _buildServerRow(),
+                  const SizedBox(height: 4),
+                  _buildStatsRow()
+                ],
+              ),
             ),
-          ),
-          _buildDivider()
-        ],
+            _buildResponseColumn(context)
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildMethodAndEndpointRow(BuildContext context) {
     final Color? textColor = _getEndpointTextColor(context);
-    return Row(children: [
-      Text(
-        call.method,
-        style: TextStyle(fontSize: 16, color: textColor),
-      ),
-      const Padding(
-        padding: EdgeInsets.only(left: 10),
-      ),
-      Flexible(
-        // ignore: avoid_unnecessary_containers
-        child: Container(
-          child: Text(
-            call.endpoint,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 16,
-              color: textColor,
+    return Row(
+      children: [
+        Text(
+          call.method,
+          style: TextStyle(fontSize: 16, color: textColor),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(left: 10),
+        ),
+        Flexible(
+          // ignore: avoid_unnecessary_containers
+          child: Container(
+            child: Text(
+              call.endpoint,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 16,
+                color: textColor,
+              ),
             ),
           ),
-        ),
-      )
-    ]);
+        )
+      ],
+    );
   }
 
   Widget _buildServerRow() {
-    return Row(children: [
-      _getSecuredConnectionIcon(call.secure),
-      Expanded(
-        child: Text(
-          call.server,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-          style: const TextStyle(
-            fontSize: 14,
+    return Row(
+      children: [
+        _getSecuredConnectionIcon(call.secure),
+        Expanded(
+          child: Text(
+            call.server,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: const TextStyle(
+              fontSize: 14,
+            ),
           ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 
   Widget _buildStatsRow() {
@@ -112,10 +111,6 @@ class ChuckCallListItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider() {
-    return Container(height: 1, color: ChuckConstants.grey);
-  }
-
   String _formatTime(DateTime time) {
     return "${formatTimeUnit(time.hour)}:"
         "${formatTimeUnit(time.minute)}:"
@@ -139,11 +134,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
           ),
         ),
       );
-      widgets.add(
-        const SizedBox(
-          height: 4,
-        ),
-      );
+      widgets.add(const SizedBox(height: 4));
     }
     widgets.add(
       Text(
@@ -154,7 +145,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
         ),
       ),
     );
-    return Container(
+    return SizedBox(
       width: 50,
       child: Column(
         children: widgets,

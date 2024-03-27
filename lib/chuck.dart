@@ -83,8 +83,10 @@ class Chuck {
 
   /// Handle response from HttpClient
   void onHttpClientResponse(
-      HttpClientResponse response, HttpClientRequest request,
-      {dynamic body}) {
+    HttpClientResponse response,
+    HttpClientRequest request, {
+    dynamic body,
+  }) {
     _httpClientAdapter.onResponse(response, request, body: body);
   }
 

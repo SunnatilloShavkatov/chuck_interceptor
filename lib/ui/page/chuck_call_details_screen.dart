@@ -62,6 +62,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: ChuckConstants.lightRed,
+          foregroundColor: Colors.white,
           key: const Key('share_key'),
           onPressed: () async {
             Share.share(

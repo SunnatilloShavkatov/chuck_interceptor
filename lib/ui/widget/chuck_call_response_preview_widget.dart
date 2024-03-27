@@ -35,7 +35,6 @@ class _ChuckCallResponseWidgetState
     final List<Widget> rows = [];
     if (!_call.loading) {
       rows.addAll(_buildBodyRows());
-
       return ListView(
         padding: const EdgeInsets.all(6),
         children: rows,
@@ -71,7 +70,6 @@ class _ChuckCallResponseWidgetState
     } else {
       rows.addAll(_buildUnknownBodyRows());
     }
-
     return rows;
   }
 
@@ -118,14 +116,20 @@ class _ChuckCallResponseWidgetState
     if (_showLargeBody) {
       return _buildTextBodyRows();
     } else {
-      rows.add(getListRow("Body:",
-          "Too large to show (${_call.response!.body.toString().length} Bytes)"));
+      rows.add(
+        getListRow(
+          "Body:",
+          "Too large to show (${_call.response!.body.toString().length} Bytes)",
+        ),
+      );
       rows.add(const SizedBox(height: 8));
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
+            backgroundColor: MaterialStatePropertyAll<Color>(
+              ChuckConstants.lightRed,
+            ),
+            foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
           ),
           onPressed: () {
             setState(() {
@@ -161,23 +165,31 @@ class _ChuckCallResponseWidgetState
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
     final contentType = getContentType(headers) ?? "<unknown>";
-
     if (_showUnsupportedBody) {
-      final bodyContent =
-          formatBody(_call.response!.body, getContentType(headers));
+      final bodyContent = formatBody(
+        _call.response!.body,
+        getContentType(headers),
+      );
       rows.add(getListRow("Body:", bodyContent));
     } else {
-      rows.add(getListRow(
+      rows.add(
+        getListRow(
           "Body:",
           "Unsupported body. Chuck can render video/image/text body. "
               "Response has Content-Type: $contentType which can't be handled. "
               "If you're feeling lucky you can try button below to try render body"
-              " as text, but it may fail."));
+              " as text, but it may fail.",
+        ),
+      );
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(ChuckConstants.lightRed),
+            backgroundColor: MaterialStatePropertyAll<Color>(
+              ChuckConstants.lightRed,
+            ),
+            foregroundColor: MaterialStatePropertyAll<Color>(
+              Colors.white,
+            ),
           ),
           onPressed: () {
             setState(() {

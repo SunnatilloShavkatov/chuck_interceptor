@@ -16,14 +16,8 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget>
           name,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        const Padding(
-          padding: EdgeInsets.only(left: 5),
-        ),
-        Flexible(
-          child: SelectableText(
-            value,
-          ),
-        ),
+        const SizedBox(width: 6),
+        Flexible(child: SelectableText(value)),
         const Padding(
           padding: EdgeInsets.only(bottom: 18),
         )

@@ -152,17 +152,20 @@ class ChuckSaveHelper {
     stringBuffer.write("Response time: ${call.response!.time}\n");
     stringBuffer.write("Response status: ${call.response!.status}\n");
     stringBuffer.write(
-        "Response size: ${ChuckConversionHelper.formatBytes(call.response!.size)}\n");
+      "Response size: ${ChuckConversionHelper.formatBytes(call.response!.size)}\n",
+    );
     stringBuffer.write(
-        "Response headers: ${_encoder.convert(call.response!.headers)}\n");
+      "Response headers: ${_encoder.convert(call.response!.headers)}\n",
+    );
     stringBuffer.write(
-        "Response body: ${ChuckParser.formatBody(call.response!.body, ChuckParser.getContentType(call.response!.headers))}\n");
+      "Response body: ${ChuckParser.formatBody(call.response!.body, ChuckParser.getContentType(call.response!.headers))}\n",
+    );
     if (call.error != null) {
       stringBuffer.write("--------------------------------------------\n");
       stringBuffer.write("Error\n");
       stringBuffer.write("--------------------------------------------\n");
       stringBuffer.write(
-        "Error: ${call.error?.error.toString().replaceAll("Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status", "")}\n",
+        "Error: ${call.error?.error.toString().replaceAll("Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status\n", "")}\n",
       );
       if (call.error?.stackTrace != null) {
         stringBuffer.write("Error stacktrace: ${call.error!.stackTrace}\n");

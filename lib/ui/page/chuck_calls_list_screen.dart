@@ -41,9 +41,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
       textDirection:
           widget._chuckCore.directionality ?? Directionality.of(context),
       child: Theme(
-        data: ThemeData(
-          brightness: widget._chuckCore.brightness,
-        ),
+        data: ThemeData(brightness: widget._chuckCore.brightness),
         child: Scaffold(
           appBar: AppBar(
             title: _searchEnabled ? _buildSearchField() : _buildTitleWidget(),
@@ -87,16 +85,18 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
         return _menuItems.map((ChuckMenuItem item) {
           return PopupMenuItem<ChuckMenuItem>(
             value: item,
-            child: Row(children: [
-              Icon(
-                item.iconData,
-                color: ChuckConstants.lightRed,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 10),
-              ),
-              Text(item.title)
-            ]),
+            child: Row(
+              children: [
+                Icon(
+                  item.iconData,
+                  color: ChuckConstants.lightRed,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 10),
+                ),
+                Text(item.title)
+              ],
+            ),
           );
         }).toList();
       },
@@ -253,11 +253,16 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
         break;
     }
 
-    return ListView.builder(
+    return ListView.separated(
       itemCount: callsSorted.length,
       itemBuilder: (context, index) {
         return ChuckCallListItemWidget(callsSorted[index], _onListItemClicked);
       },
+      separatorBuilder: (_, __) => const Divider(
+        height: 1,
+        thickness: 1,
+        color: ChuckConstants.grey,
+      ),
     );
   }
 

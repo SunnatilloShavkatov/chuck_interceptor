@@ -47,7 +47,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
   @override
   Widget build(BuildContext context) {
     if (widget.notRoot) {
-      return Container(
+      return Padding(
         padding: const EdgeInsets.only(left: 14.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,7 +312,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
   @override
   Widget build(BuildContext context) {
     if (widget.notRoot) {
-      return Container(
+      return Padding(
         padding: const EdgeInsets.only(left: 14.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,7 +332,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
     openFlag = List.filled(widget.jsonArray.length, false);
   }
 
-  _getList() {
+  List<Widget> _getList() {
     List<Widget> list = [];
     for (int i = 0; i < widget.jsonArray.length; i++) {
       final content = widget.jsonArray[i];
@@ -402,11 +402,11 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
     return list;
   }
 
-  getInkWell(int index) {
+  Widget getInkWell(int index) {
     return Text('[$index]', style: TextStyle(color: Colors.black));
   }
 
-  getValueWidget(dynamic content, int index) {
+  Widget getValueWidget(dynamic content, int index) {
     if (content == null) {
       return const Expanded(
         child: SelectableText(
@@ -453,7 +453,8 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(content)))
                 .then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const CustomSnackBar());
             });
           },
           child: const Text(
@@ -471,7 +472,8 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(content)))
                 .then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const CustomSnackBar());
             });
           },
           child: Text(

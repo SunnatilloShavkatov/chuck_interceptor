@@ -208,15 +208,17 @@ class ChuckCore {
       presentSound: false,
     );
     final platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics);
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
+    );
     final String? message = _notificationMessage;
     await _flutterLocalNotificationsPlugin.show(
-        0,
-        "Chuck (total: ${callsSubject.value.length} requests)",
-        message,
-        platformChannelSpecifics,
-        payload: "");
+      0,
+      "Chuck (total: ${callsSubject.value.length} requests)",
+      message,
+      platformChannelSpecifics,
+      payload: "",
+    );
     _notificationMessageShown = message;
     _notificationProcessing = false;
     return;
