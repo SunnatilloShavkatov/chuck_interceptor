@@ -1,6 +1,6 @@
-## 2.1.1
+## 2.1.2
 
-* UI bug fixes.
+* UI bug fixes. Updated dependencies.
 
 ## 2.1.1
 
