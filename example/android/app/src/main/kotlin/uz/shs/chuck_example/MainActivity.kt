@@ -1,4 +1,4 @@
-package com.jhomlala.chuck_example
+package uz.shs.chuck_example
 
 import io.flutter.embedding.android.FlutterActivity;
 
