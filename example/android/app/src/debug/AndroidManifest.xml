@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jhomlala.chuck_example">
+    package="uz.shs.chuck_example">
 
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

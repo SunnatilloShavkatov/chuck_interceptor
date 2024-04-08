@@ -1,8 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.jhomlala.chuck_example">
+    package="uz.shs.chuck_example">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -14,9 +15,9 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleTop"
             android:exported="true"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
             android:theme="@style/LaunchTheme"
             android:windowSoftInputMode="adjustResize">
             <meta-data
