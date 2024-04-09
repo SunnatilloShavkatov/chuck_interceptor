@@ -194,8 +194,7 @@ To run project, you need to call this command in your terminal:
 ```bash
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
-You need to run this command to build Chopper generated classes. You should run this command only once,
-you don't need to run this command each time before running project (unless you modify something in Chopper endpoints).
+
 <p align="center">
- <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/13.png">
+ <img width="250px" src="https://github.com/SunnatilloShavkatov/chuck_interceptor/blob/master/media/13.jpg">
 <p align="center">
