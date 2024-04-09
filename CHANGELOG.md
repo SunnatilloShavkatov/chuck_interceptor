@@ -1,3 +1,7 @@
+## 2.1.4
+
+* Updated dependencies.
+
 ## 2.1.3
 
 * Thank you, @Hayotbek_Ferghana, for fixing the ui bug!

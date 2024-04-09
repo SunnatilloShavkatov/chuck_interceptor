@@ -28,7 +28,7 @@ ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging htt
 
 ```yaml
 dependencies:
-  chuck_interceptor: ^2.1.3
+  chuck_interceptor: ^2.1.4
 ```
 
 2. Install it
