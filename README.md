@@ -8,8 +8,6 @@ ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging htt
 - Dio
 - HttpClient from dart:io package
 - Http from http/http package
-- Chopper
-- Generic HTTP client
 
 **Features:**  
 ✔️ Detailed logs for each HTTP calls (HTTP Request, HTTP Response)  
