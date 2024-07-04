@@ -153,10 +153,10 @@ class _ChuckCallResponseWidgetState
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll<Color>(
+            backgroundColor: WidgetStatePropertyAll<Color>(
               ChuckConstants.lightRed,
             ),
-            foregroundColor: MaterialStatePropertyAll<Color>(
+            foregroundColor: WidgetStatePropertyAll<Color>(
               Colors.white,
             ),
           ),
@@ -205,10 +205,10 @@ class _ChuckCallResponseWidgetState
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll<Color>(
+            backgroundColor: WidgetStatePropertyAll<Color>(
               ChuckConstants.lightRed,
             ),
-            foregroundColor: MaterialStatePropertyAll<Color>(
+            foregroundColor: WidgetStatePropertyAll<Color>(
               Colors.white,
             ),
           ),

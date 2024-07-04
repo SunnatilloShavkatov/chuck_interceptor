@@ -6,64 +6,66 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  late Chuck _Chuck;
+  late Chuck _chuck;
   late Dio _dio;
   late HttpClient _httpClient;
-  Color _primaryColor = Color(0xffff5e57);
-  Color _buttonColor = Color(0xff008000);
+  final Color _primaryColor = const Color(0xffff5e57);
+  final Color _buttonColor = const Color(0xff008000);
 
   @override
   void initState() {
-    _Chuck = Chuck(
+    _chuck = Chuck(
       showNotification: true,
       showInspectorOnShake: true,
       darkTheme: false,
       maxCallsCount: 1000,
     );
     _dio = Dio(BaseOptions(followRedirects: false));
-    _dio.interceptors.add(_Chuck.getDioInterceptor());
+    _dio.interceptors.add(_chuck.getDioInterceptor());
     _httpClient = HttpClient();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    ButtonStyle _buttonStyle = ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(_buttonColor),
-      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    ButtonStyle buttonStyle = ButtonStyle(
+      backgroundColor: WidgetStatePropertyAll<Color>(_buttonColor),
+      foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
     );
     return MaterialApp(
       theme: ThemeData(primaryColor: _primaryColor),
-      navigatorKey: _Chuck.getNavigatorKey(),
+      navigatorKey: _chuck.getNavigatorKey(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Chuck HTTP Inspector - Example'),
         ),
         body: ListView(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           children: [
             const SizedBox(height: 8),
             _getTextWidget(
               "Welcome to example of Chuck Http Inspector. Click buttons below to generate sample data.",
             ),
             ElevatedButton(
-              child: Text("Run Dio HTTP Requests"),
               onPressed: _runDioRequests,
-              style: _buttonStyle,
+              style: buttonStyle,
+              child: const Text("Run Dio HTTP Requests"),
             ),
             ElevatedButton(
-              child: Text("Run HttpClient Requests"),
               onPressed: _runHttpHttpClientRequests,
-              style: _buttonStyle,
+              style: buttonStyle,
+              child: const Text("Run HttpClient Requests"),
             ),
             const SizedBox(height: 24),
             _getTextWidget(
@@ -71,9 +73,9 @@ class _MyAppState extends State<MyApp> {
               " Click on it to show inspector. You can also shake your device or click button below.",
             ),
             ElevatedButton(
-              child: Text("Run HTTP Inspector"),
               onPressed: _runHttpInspector,
-              style: _buttonStyle,
+              style: buttonStyle,
+              child: const Text("Run HTTP Inspector"),
             )
           ],
         ),
@@ -84,7 +86,7 @@ class _MyAppState extends State<MyApp> {
   Widget _getTextWidget(String text) {
     return Text(
       text,
-      style: TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: 14),
       textAlign: TextAlign.center,
     );
   }
@@ -146,72 +148,72 @@ class _MyAppState extends State<MyApp> {
     };
     _httpClient
         .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
-        .interceptWithChuck(_Chuck);
+        .interceptWithChuck(_chuck);
 
     _httpClient
         .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
-        .interceptWithChuck(_Chuck, body: body, headers: <String, dynamic>{});
+        .interceptWithChuck(_chuck, body: body, headers: <String, dynamic>{});
 
     _httpClient
         .putUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
-        .interceptWithChuck(_Chuck, body: body);
+        .interceptWithChuck(_chuck, body: body);
 
     _httpClient
         .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/"))
-        .interceptWithChuck(_Chuck);
+        .interceptWithChuck(_chuck);
 
     _httpClient
         .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
         .then((request) async {
-      _Chuck.onHttpClientRequest(request, body: body);
+      _chuck.onHttpClientRequest(request, body: body);
       request.write(body);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+      _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
     _httpClient
         .putUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
         .then((request) async {
-      _Chuck.onHttpClientRequest(request, body: body);
+      _chuck.onHttpClientRequest(request, body: body);
       request.write(body);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+      _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
     _httpClient
         .patchUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
         .then((request) async {
-      _Chuck.onHttpClientRequest(request, body: body);
+      _chuck.onHttpClientRequest(request, body: body);
       request.write(body);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+      _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
     _httpClient
         .deleteUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
         .then((request) async {
-      _Chuck.onHttpClientRequest(request);
+      _chuck.onHttpClientRequest(request);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
-      _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+      _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
     _httpClient
         .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/"))
         .then(
       (request) async {
-        _Chuck.onHttpClientRequest(request);
+        _chuck.onHttpClientRequest(request);
         var httpResponse = await request.close();
         var responseBody = await utf8.decoder.bind(httpResponse).join();
-        _Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+        _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
       },
     );
   }
 
   void _runHttpInspector() {
-    _Chuck.showInspector();
+    _chuck.showInspector();
   }
 }
