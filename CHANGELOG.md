@@ -1,3 +1,7 @@
+## 2.1.8
+
+* Updated dependencies.
+
 ## 2.1.7
 
 * Updated dependencies.
