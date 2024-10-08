@@ -8,9 +8,7 @@ class ChuckCallOverviewWidget extends StatefulWidget {
   const ChuckCallOverviewWidget(this.call);
 
   @override
-  State<StatefulWidget> createState() {
-    return _ChuckCallOverviewWidget();
-  }
+  State<StatefulWidget> createState() => _ChuckCallOverviewWidget();
 }
 
 class _ChuckCallOverviewWidget
@@ -30,9 +28,13 @@ class _ChuckCallOverviewWidget
     rows.add(getListRow("Bytes received:", formatBytes(_call.response!.size)));
     rows.add(getListRow("Client:", _call.client));
     rows.add(getListRow("Secure:", _call.secure.toString()));
-    return ListView(
-      padding: const EdgeInsets.all(6),
-      children: rows,
+    return CustomScrollView(
+      slivers: [
+        SliverSafeArea(
+          minimum: const EdgeInsets.all(6),
+          sliver: SliverList.list(children: rows),
+        )
+      ],
     );
   }
 }

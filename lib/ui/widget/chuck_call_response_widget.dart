@@ -4,14 +4,12 @@ import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart'
 import 'package:flutter/material.dart';
 
 class ChuckCallResponseWidget extends StatefulWidget {
-  final ChuckHttpCall call;
-
   const ChuckCallResponseWidget(this.call);
 
+  final ChuckHttpCall call;
+
   @override
-  State<StatefulWidget> createState() {
-    return _ChuckCallResponseWidgetState();
-  }
+  State<StatefulWidget> createState() => _ChuckCallResponseWidgetState();
 }
 
 class _ChuckCallResponseWidgetState
@@ -29,14 +27,23 @@ class _ChuckCallResponseWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> rows = [];
     if (!_call.loading) {
-      rows.addAll(_buildGeneralDataRows());
-      rows.addAll(_buildHeadersRows());
-      rows.addAll(_buildBodyRows());
-      return ListView(
-        padding: const EdgeInsets.all(6),
-        children: rows,
+      return Scrollbar(
+        controller: PrimaryScrollController.of(context),
+        child: CustomScrollView(
+          slivers: [
+            SliverSafeArea(
+              minimum: const EdgeInsets.all(6),
+              sliver: SliverList.list(
+                children: [
+                  ..._buildGeneralDataRows(),
+                  ..._buildHeadersRows(),
+                  ..._buildBodyRows(),
+                ],
+              ),
+            ),
+          ],
+        ),
       );
     } else {
       return Center(

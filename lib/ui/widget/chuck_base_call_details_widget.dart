@@ -18,9 +18,7 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget>
         ),
         const SizedBox(width: 6),
         Flexible(child: SelectableText(value)),
-        const Padding(
-          padding: EdgeInsets.only(bottom: 18),
-        )
+        const Padding(padding: EdgeInsets.only(bottom: 18))
       ],
     );
   }
