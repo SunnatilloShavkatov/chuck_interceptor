@@ -11,8 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   dio: ^5.7.0
-  path_provider: ^2.1.4
-  connectivity_plus: ^6.0.5
+  path_provider: ^2.1.5
+  connectivity_plus: ^6.1.0
   chuck_interceptor:
     path: ../
 
