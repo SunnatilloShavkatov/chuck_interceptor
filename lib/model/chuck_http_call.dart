@@ -63,8 +63,7 @@ class ChuckHttpCall {
     // If server already has http(s) don't add it again
     if (server.contains("http://") || server.contains("https://")) {
       // ignore: join_return_with_assignment
-      curlCmd +=
-          "${compressed ? " --compressed " : " "}${"'$server$endpoint$queryParams'"}";
+      curlCmd += "${compressed ? " --compressed " : " "}${"'$server$endpoint$queryParams'"}";
     } else {
       // ignore: join_return_with_assignment
       curlCmd +=
@@ -72,5 +71,39 @@ class ChuckHttpCall {
     }
 
     return curlCmd;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'createdTime': createdTime.toString(),
+      'client': client,
+      'loading': loading,
+      'secure': secure,
+      'method': method,
+      'endpoint': endpoint,
+      'server': server,
+      'uri': uri,
+      'duration': duration,
+      'request': request?.toJson(),
+      'response': response?.toJson(),
+      'error': error?.toJson()
+    };
+  }
+
+  factory ChuckHttpCall.fromJson(Map<String, dynamic> json) {
+    return ChuckHttpCall(json['id'])
+      ..createdTime = DateTime.parse(json['createdTime'])
+      ..client = json['client']
+      ..loading = json['loading']
+      ..secure = json['secure']
+      ..method = json['method']
+      ..endpoint = json['endpoint']
+      ..server = json['server']
+      ..uri = json['uri']
+      ..duration = json['duration']
+      ..request = ChuckHttpRequest.fromJson(json['request'])
+      ..response = json['response'] != null ? ChuckHttpResponse.fromJson(json['response']) : null
+      ..error = json['error'] != null ? ChuckHttpError.fromJson(json['error']) : null;
   }
 }

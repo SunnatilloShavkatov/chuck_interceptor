@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:chuck_interceptor/core/chuck_utils.dart';
 import 'package:chuck_interceptor/helper/chuck_save_helper.dart';
@@ -9,10 +10,11 @@ import 'package:chuck_interceptor/ui/page/chuck_calls_list_screen.dart';
 import 'package:chuck_interceptor/utils/shake_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hive/hive.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ChuckCore {
-  /// Should user be notified with notification if there's new request catched
+  /// Should user be notified with notification if there's new request catch
   /// by Chuck
   final bool showNotification;
 
@@ -24,8 +26,7 @@ class ChuckCore {
   final bool darkTheme;
 
   /// Rx subject which contains all intercepted http calls
-  final BehaviorSubject<List<ChuckHttpCall>> callsSubject =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<ChuckHttpCall>> callsSubject = BehaviorSubject.seeded([]);
 
   /// Icon url for notification
   final String notificationIcon;
@@ -46,10 +47,12 @@ class ChuckCore {
   String? _notificationMessage;
   String? _notificationMessageShown;
   bool _notificationProcessing = false;
+  Box<dynamic> cacheBox;
 
   /// Creates Chuck core instance
   ChuckCore(
     this.navigatorKey, {
+    required this.cacheBox,
     required this.showNotification,
     required this.showInspectorOnShake,
     required this.darkTheme,
@@ -84,8 +87,7 @@ class ChuckCore {
 
   void _initializeNotificationsPlugin() {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid =
-        AndroidInitializationSettings(notificationIcon);
+    final initializationSettingsAndroid = AndroidInitializationSettings(notificationIcon);
     const initializationSettingsIOS = DarwinInitializationSettings();
     final initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
@@ -103,8 +105,7 @@ class ChuckCore {
   void _onCallsChanged() async {
     if (callsSubject.value.isNotEmpty) {
       _notificationMessage = _getNotificationMessage();
-      if (_notificationMessage != _notificationMessageShown &&
-          !_notificationProcessing) {
+      if (_notificationMessage != _notificationMessageShown && !_notificationProcessing) {
         await _showLocalNotification();
         _onCallsChanged();
       }
@@ -121,8 +122,7 @@ class ChuckCore {
   void navigateToCallListScreen() {
     final context = getContext();
     if (context == null) {
-      ChuckUtils.log(
-          "Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application");
+      ChuckUtils.log("Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application");
       return;
     }
     if (!_isInspectorOpened) {
@@ -143,30 +143,23 @@ class ChuckCore {
     final List<ChuckHttpCall> calls = callsSubject.value;
     final int successCalls = calls
         .where((call) =>
-            call.response != null &&
-            call.response!.status! >= 200 &&
-            call.response!.status! < 300)
+            call.response != null && (call.response!.status ?? 0) >= 200 && (call.response!.status ?? 0) < 300)
         .toList()
         .length;
 
     final int redirectCalls = calls
         .where((call) =>
-            call.response != null &&
-            call.response!.status! >= 300 &&
-            call.response!.status! < 400)
+            call.response != null && (call.response!.status ?? 0) >= 300 && (call.response!.status ?? 0) < 400)
         .toList()
         .length;
 
     final int errorCalls = calls
         .where((call) =>
-            call.response != null &&
-            call.response!.status! >= 400 &&
-            call.response!.status! < 600)
+            call.response != null && (call.response!.status ?? 0) >= 400 && (call.response!.status ?? 0) < 600)
         .toList()
         .length;
 
-    final int loadingCalls =
-        calls.where((call) => call.loading).toList().length;
+    final int loadingCalls = calls.where((call) => call.loading).toList().length;
 
     final StringBuffer notificationsMessage = StringBuffer();
     if (loadingCalls > 0) {
@@ -186,8 +179,7 @@ class ChuckCore {
     }
     String notificationMessageString = notificationsMessage.toString();
     if (notificationMessageString.endsWith(" | ")) {
-      notificationMessageString = notificationMessageString.substring(
-          0, notificationMessageString.length - 3);
+      notificationMessageString = notificationMessageString.substring(0, notificationMessageString.length - 3);
     }
 
     return notificationMessageString;
@@ -230,13 +222,16 @@ class ChuckCore {
     if (callsCount >= maxCallsCount) {
       final originalCalls = callsSubject.value;
       final calls = List<ChuckHttpCall>.from(originalCalls);
-      calls.sort(
-          (call1, call2) => call1.createdTime.compareTo(call2.createdTime));
+      calls.sort((call1, call2) => call1.createdTime.compareTo(call2.createdTime));
       final indexToReplace = originalCalls.indexOf(calls.first);
       originalCalls[indexToReplace] = call;
 
+      for (int i = 0; i < originalCalls.length; i++) {
+        cacheBox.put(originalCalls[i].id, jsonEncode(originalCalls[i].toJson()));
+      }
       callsSubject.add(originalCalls);
     } else {
+      cacheBox.put(call.id, jsonEncode(call.toJson()));
       callsSubject.add([...callsSubject.value, call]);
     }
   }
@@ -251,6 +246,7 @@ class ChuckCore {
     }
 
     selectedCall.error = error;
+    cacheBox.put(selectedCall.id, jsonEncode(selectedCall.toJson()));
     callsSubject.add([...callsSubject.value]);
   }
 
@@ -264,9 +260,8 @@ class ChuckCore {
     }
     selectedCall.loading = false;
     selectedCall.response = response;
-    selectedCall.duration = response.time.millisecondsSinceEpoch -
-        selectedCall.request!.time.millisecondsSinceEpoch;
-
+    selectedCall.duration = response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
+    cacheBox.put(selectedCall.id, jsonEncode(selectedCall.toJson()));
     callsSubject.add([...callsSubject.value]);
   }
 
@@ -282,8 +277,7 @@ class ChuckCore {
     callsSubject.add([]);
   }
 
-  ChuckHttpCall? _selectCall(int requestId) =>
-      callsSubject.value.firstWhere((call) => call.id == requestId);
+  ChuckHttpCall? _selectCall(int requestId) => callsSubject.value.firstWhere((call) => call.id == requestId);
 
   /// Save all calls to file
   void saveHttpRequests(BuildContext context) {

@@ -4,12 +4,21 @@ import 'package:chuck_interceptor/chuck.dart';
 import 'package:chuck_interceptor/core/chuck_http_client_extensions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final Directory directory = await getApplicationCacheDirectory();
+  Hive.init(directory.path);
+  final Box<dynamic> chuckBox = await Hive.openBox<dynamic>("chuck_mobile_box");
+  runApp(MyApp(chuckBox: chuckBox));
+}
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.chuckBox});
+
+  final Box<dynamic> chuckBox;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -24,7 +33,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    initChuck();
+    super.initState();
+  }
+
+  void initChuck() {
     _chuck = Chuck(
+      cacheBox: widget.chuckBox,
       showNotification: true,
       showInspectorOnShake: true,
       darkTheme: false,
@@ -33,7 +48,6 @@ class _MyAppState extends State<MyApp> {
     _dio = Dio(BaseOptions(followRedirects: false));
     _dio.interceptors.add(_chuck.getDioInterceptor());
     _httpClient = HttpClient();
-    super.initState();
   }
 
   @override
@@ -92,35 +106,26 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _runDioRequests() async {
-    Map<String, dynamic> body = <String, dynamic>{
-      "title": "foo",
-      "body": "bar",
-      "userId": "1"
-    };
-    _dio.get<void>(
-        "https://httpbin.org/redirect-to?url=https%3A%2F%2Fhttpbin.org");
+    Map<String, dynamic> body = <String, dynamic>{"title": "foo", "body": "bar", "userId": "1"};
+    _dio.get<void>("https://httpbin.org/redirect-to?url=https%3A%2F%2Fhttpbin.org");
     _dio.delete<void>("https://httpbin.org/status/500");
     _dio.delete<void>("https://httpbin.org/status/400");
     _dio.delete<void>("https://httpbin.org/status/300");
     _dio.delete<void>("https://httpbin.org/status/200");
     _dio.delete<void>("https://httpbin.org/status/100");
     _dio.post<void>("https://jsonplaceholder.typicode.com/posts", data: body);
-    _dio.get<void>("https://jsonplaceholder.typicode.com/posts",
-        queryParameters: <String, dynamic>{"test": 1});
+    _dio.get<void>("https://jsonplaceholder.typicode.com/posts", queryParameters: <String, dynamic>{"test": 1});
     _dio.put<void>("https://jsonplaceholder.typicode.com/posts/1", data: body);
     _dio.put<void>("https://jsonplaceholder.typicode.com/posts/1", data: body);
     _dio.delete<void>("https://jsonplaceholder.typicode.com/posts/1");
     _dio.get<void>("http://jsonplaceholder.typicode.com/test/test");
 
     _dio.get<void>("https://jsonplaceholder.typicode.com/photos");
-    _dio.get<void>(
-        "https://icons.iconarchive.com/icons/paomedia/small-n-flat/256/sign-info-icon.png");
+    _dio.get<void>("https://icons.iconarchive.com/icons/paomedia/small-n-flat/256/sign-info-icon.png");
     _dio.get<void>(
         "https://images.unsplash.com/photo-1542736705-53f0131d1e98?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80");
-    _dio.get<void>(
-        "https://findicons.com/files/icons/1322/world_of_aqua_5/128/bluetooth.png");
-    _dio.get<void>(
-        "https://upload.wikimedia.org/wikipedia/commons/4/4e/Pleiades_large.jpg");
+    _dio.get<void>("https://findicons.com/files/icons/1322/world_of_aqua_5/128/bluetooth.png");
+    _dio.get<void>("https://upload.wikimedia.org/wikipedia/commons/4/4e/Pleiades_large.jpg");
     _dio.get<void>("http://techslides.com/demos/sample-videos/small.mp4");
 
     _dio.get<void>("https://www.cse.wustl.edu/~jain/cis677-97/ftp/e_3dlc2.pdf");
@@ -134,21 +139,14 @@ class _MyAppState extends State<MyApp> {
     FormData formData = FormData.fromMap(<String, dynamic>{
       "file": await MultipartFile.fromFile(file.path, filename: fileName),
     });
-    _dio.post<void>("https://jsonplaceholder.typicode.com/photos",
-        data: formData);
+    _dio.post<void>("https://jsonplaceholder.typicode.com/photos", data: formData);
 
     _dio.get<void>("http://dummy.restapiexample.com/api/v1/employees");
   }
 
   void _runHttpHttpClientRequests() {
-    Map<String, dynamic> body = <String, dynamic>{
-      "title": "foo",
-      "body": "bar",
-      "userId": "1"
-    };
-    _httpClient
-        .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
-        .interceptWithChuck(_chuck);
+    Map<String, dynamic> body = <String, dynamic>{"title": "foo", "body": "bar", "userId": "1"};
+    _httpClient.getUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts")).interceptWithChuck(_chuck);
 
     _httpClient
         .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
@@ -158,13 +156,9 @@ class _MyAppState extends State<MyApp> {
         .putUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
         .interceptWithChuck(_chuck, body: body);
 
-    _httpClient
-        .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/"))
-        .interceptWithChuck(_chuck);
+    _httpClient.getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/")).interceptWithChuck(_chuck);
 
-    _httpClient
-        .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
-        .then((request) async {
+    _httpClient.postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts")).then((request) async {
       _chuck.onHttpClientRequest(request, body: body);
       request.write(body);
       var httpResponse = await request.close();
@@ -172,9 +166,7 @@ class _MyAppState extends State<MyApp> {
       _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
-    _httpClient
-        .putUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
-        .then((request) async {
+    _httpClient.putUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1")).then((request) async {
       _chuck.onHttpClientRequest(request, body: body);
       request.write(body);
       var httpResponse = await request.close();
@@ -182,9 +174,7 @@ class _MyAppState extends State<MyApp> {
       _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
-    _httpClient
-        .patchUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
-        .then((request) async {
+    _httpClient.patchUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1")).then((request) async {
       _chuck.onHttpClientRequest(request, body: body);
       request.write(body);
       var httpResponse = await request.close();
@@ -192,18 +182,14 @@ class _MyAppState extends State<MyApp> {
       _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
-    _httpClient
-        .deleteUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1"))
-        .then((request) async {
+    _httpClient.deleteUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts/1")).then((request) async {
       _chuck.onHttpClientRequest(request);
       var httpResponse = await request.close();
       var responseBody = await utf8.decoder.bind(httpResponse).join();
       _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
-    _httpClient
-        .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/"))
-        .then(
+    _httpClient.getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/")).then(
       (request) async {
         _chuck.onHttpClientRequest(request);
         var httpResponse = await request.close();

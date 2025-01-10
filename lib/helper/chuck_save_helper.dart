@@ -15,13 +15,11 @@ class ChuckSaveHelper {
   static const JsonEncoder _encoder = JsonEncoder.withIndent('  ');
 
   /// Top level method used to save calls to file
-  static void saveCalls(
-      BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) {
+  static void saveCalls(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) {
     _checkPermissions(context, calls, brightness);
   }
 
-  static void _checkPermissions(BuildContext context, List<ChuckHttpCall> calls,
-      Brightness brightness) async {
+  static void _checkPermissions(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
     final status = await Permission.storage.status;
     if (status.isGranted) {
       _saveToFile(context, calls, brightness);
@@ -58,11 +56,9 @@ class ChuckSaveHelper {
       }
       final bool isAndroid = Platform.isAndroid;
 
-      final Directory externalDir = await (isAndroid
-          ? getExternalStorageDirectory() as FutureOr<Directory>
-          : getApplicationDocumentsDirectory());
-      final String fileName =
-          "Chuck_log_${DateTime.now().millisecondsSinceEpoch}.txt";
+      final Directory externalDir =
+          await (isAndroid ? getExternalStorageDirectory() as FutureOr<Directory> : getApplicationDocumentsDirectory());
+      final String fileName = "Chuck_log_${DateTime.now().millisecondsSinceEpoch}.txt";
       final File file = File("${externalDir.path}/$fileName");
       file.createSync();
       final IOSink sink = file.openWrite(mode: FileMode.append);

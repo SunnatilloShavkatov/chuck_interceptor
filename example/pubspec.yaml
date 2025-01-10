@@ -15,6 +15,7 @@ dependencies:
   connectivity_plus: ^6.1.1
   chuck_interceptor:
     path: ../
+  hive: ^2.2.3
 
 dev_dependencies:
   lints: ^5.1.1

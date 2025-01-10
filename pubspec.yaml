@@ -18,6 +18,8 @@ dependencies:
   package_info_plus: ^8.1.2
   permission_handler: ">=11.3.1 <14.0.0"
   flutter_local_notifications: ^18.0.1
+  # storage
+  hive: ^2.2.3
 
 dev_dependencies:
   flutter_test:

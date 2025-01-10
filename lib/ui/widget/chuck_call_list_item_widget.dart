@@ -42,24 +42,13 @@ class ChuckCallListItemWidget extends StatelessWidget {
     final Color? textColor = _getEndpointTextColor(context);
     return Row(
       children: [
-        Text(
-          call.method,
-          style: TextStyle(fontSize: 16, color: textColor),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(left: 10),
-        ),
+        Text(call.method, style: TextStyle(fontSize: 16, color: textColor)),
+        const Padding(padding: EdgeInsets.only(left: 10)),
         Flexible(
-          // ignore: avoid_unnecessary_containers
-          child: Container(
-            child: Text(
-              call.endpoint,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 16,
-                color: textColor,
-              ),
-            ),
+          child: Text(
+            call.endpoint,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 16, color: textColor),
           ),
         )
       ],
@@ -75,9 +64,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
             call.server,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
-            style: const TextStyle(
-              fontSize: 14,
-            ),
+            style: const TextStyle(fontSize: 14),
           ),
         ),
       ],
@@ -139,25 +126,17 @@ class ChuckCallListItemWidget extends StatelessWidget {
     widgets.add(
       Text(
         _getStatus(call.response!),
-        style: TextStyle(
-          fontSize: 16,
-          color: _getStatusTextColor(context),
-        ),
+        style: TextStyle(fontSize: 16, color: _getStatusTextColor(context)),
       ),
     );
-    return SizedBox(
-      width: 50,
-      child: Column(
-        children: widgets,
-      ),
-    );
+    return Column(children: widgets);
   }
 
   Color? _getStatusTextColor(BuildContext context) {
-    final int? status = call.response!.status;
+    final int status = call.response!.status ?? 0;
     if (status == -1) {
       return ChuckConstants.red;
-    } else if (status! < 200) {
+    } else if (status < 200) {
       return Theme.of(context).textTheme.bodyLarge!.color;
     } else if (status >= 200 && status < 300) {
       return ChuckConstants.green;
@@ -200,11 +179,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
     }
     return Padding(
       padding: const EdgeInsets.only(right: 3),
-      child: Icon(
-        iconData,
-        color: iconColor,
-        size: 12,
-      ),
+      child: Icon(iconData, color: iconColor, size: 12),
     );
   }
 }

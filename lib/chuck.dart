@@ -7,6 +7,7 @@ import 'package:chuck_interceptor/core/chuck_dio_interceptor.dart';
 import 'package:chuck_interceptor/core/chuck_http_client_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class Chuck {
@@ -32,6 +33,7 @@ class Chuck {
   final TextDirection? directionality;
 
   GlobalKey<NavigatorState>? _navigatorKey;
+  final Box<dynamic> cacheBox;
   late ChuckCore _ChuckCore;
   late ChuckHttpClientAdapter _httpClientAdapter;
   late ChuckHttpAdapter _httpAdapter;
@@ -39,6 +41,7 @@ class Chuck {
   /// Creates Chuck instance.
   Chuck({
     GlobalKey<NavigatorState>? navigatorKey,
+    required this.cacheBox,
     this.showNotification = true,
     this.showInspectorOnShake = false,
     this.darkTheme = false,
@@ -49,6 +52,7 @@ class Chuck {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
     _ChuckCore = ChuckCore(
       _navigatorKey,
+      cacheBox: cacheBox,
       showNotification: showNotification,
       showInspectorOnShake: showInspectorOnShake,
       darkTheme: darkTheme,

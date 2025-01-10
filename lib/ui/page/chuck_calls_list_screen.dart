@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:chuck_interceptor/core/chuck_core.dart';
+import 'package:chuck_interceptor/extension/box_extensions.dart';
 import 'package:chuck_interceptor/model/chuck_menu_item.dart';
 import 'package:chuck_interceptor/helper/chuck_alert_helper.dart';
 import 'package:chuck_interceptor/model/chuck_sort_option.dart';
@@ -7,7 +10,9 @@ import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_call_list_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
+import 'chuck_hive_call_details_screen.dart';
 import 'chuck_stats_screen.dart';
 
 class ChuckCallsListScreen extends StatefulWidget {
@@ -19,27 +24,29 @@ class ChuckCallsListScreen extends StatefulWidget {
   _ChuckCallsListScreenState createState() => _ChuckCallsListScreenState();
 }
 
-class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
+class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> with SingleTickerProviderStateMixin {
   ChuckCore get chuckCore => widget._chuckCore;
   bool _searchEnabled = false;
-  final TextEditingController _queryTextEditingController =
-      TextEditingController();
+  final TextEditingController _queryTextEditingController = TextEditingController();
   final List<ChuckMenuItem> _menuItems = [];
   ChuckSortOption? _sortOption = ChuckSortOption.time;
   bool _sortAscending = false;
+  late TabController tabController;
 
-  _ChuckCallsListScreenState() {
+  @override
+  void initState() {
     _menuItems.add(ChuckMenuItem("Sort", Icons.sort));
     _menuItems.add(ChuckMenuItem("Delete", Icons.delete));
     _menuItems.add(ChuckMenuItem("Stats", Icons.insert_chart));
     _menuItems.add(ChuckMenuItem("Save", Icons.save));
+    super.initState();
+    tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection:
-          widget._chuckCore.directionality ?? Directionality.of(context),
+      textDirection: widget._chuckCore.directionality ?? Directionality.of(context),
       child: Theme(
         data: ThemeData(brightness: widget._chuckCore.brightness),
         child: Scaffold(
@@ -49,8 +56,21 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
               _buildSearchButton(),
               _buildMenuButton(),
             ],
+            bottom: TabBar(
+              controller: tabController,
+              tabs: [
+                Tab(text: "Online"),
+                Tab(text: "Cache"),
+              ],
+            ),
           ),
-          body: _buildCallsListWrapper(),
+          body: TabBarView(
+            controller: tabController,
+            children: [
+              _buildCallsListWrapper(),
+              _buildHiveCallsListWrapper(),
+            ],
+          ),
         ),
       ),
     );
@@ -143,10 +163,31 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
         List<ChuckHttpCall> calls = snapshot.data ?? [];
         final String query = _queryTextEditingController.text.trim();
         if (query.isNotEmpty) {
-          calls = calls
-              .where((call) =>
-                  call.endpoint.toLowerCase().contains(query.toLowerCase()))
-              .toList();
+          calls = calls.where((call) => call.endpoint.toLowerCase().contains(query.toLowerCase())).toList();
+        }
+        if (calls.isNotEmpty) {
+          return _buildCallsListWidget(calls);
+        } else {
+          return _buildEmptyWidget();
+        }
+      },
+    );
+  }
+
+  Widget _buildHiveCallsListWrapper() {
+    return ValueListenableBuilder<Box<dynamic>>(
+      valueListenable: chuckCore.cacheBox.listenable(),
+      builder: (_, snapshot, __) {
+        final List<dynamic> boxCalls = snapshot.values.toList();
+        List<ChuckHttpCall> calls = [];
+        for (final dynamic boxCall in boxCalls) {
+          if (boxCall is String) {
+            calls.add(ChuckHttpCall.fromJson(jsonDecode(boxCall)));
+          }
+        }
+        final String query = _queryTextEditingController.text.trim();
+        if (query.isNotEmpty) {
+          calls = calls.where((call) => call.endpoint.toLowerCase().contains(query.toLowerCase())).toList();
         }
         if (calls.isNotEmpty) {
           return _buildCallsListWidget(calls);
@@ -205,48 +246,38 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     switch (_sortOption) {
       case ChuckSortOption.time:
         if (_sortAscending) {
-          callsSorted.sort(
-              (call1, call2) => call1.createdTime.compareTo(call2.createdTime));
+          callsSorted.sort((call1, call2) => call1.createdTime.compareTo(call2.createdTime));
         } else {
-          callsSorted.sort(
-              (call1, call2) => call2.createdTime.compareTo(call1.createdTime));
+          callsSorted.sort((call1, call2) => call2.createdTime.compareTo(call1.createdTime));
         }
         break;
       case ChuckSortOption.responseTime:
         if (_sortAscending) {
           callsSorted.sort();
-          callsSorted.sort((call1, call2) =>
-              call1.response?.time.compareTo(call2.response!.time) ?? -1);
+          callsSorted.sort((call1, call2) => call1.response?.time.compareTo(call2.response!.time) ?? -1);
         } else {
-          callsSorted.sort((call1, call2) =>
-              call2.response?.time.compareTo(call1.response!.time) ?? -1);
+          callsSorted.sort((call1, call2) => call2.response?.time.compareTo(call1.response!.time) ?? -1);
         }
         break;
       case ChuckSortOption.responseCode:
         if (_sortAscending) {
-          callsSorted.sort((call1, call2) =>
-              call1.response?.status?.compareTo(call2.response!.status!) ?? -1);
+          callsSorted.sort((call1, call2) => call1.response?.status?.compareTo(call2.response!.status!) ?? -1);
         } else {
-          callsSorted.sort((call1, call2) =>
-              call2.response?.status?.compareTo(call1.response!.status!) ?? -1);
+          callsSorted.sort((call1, call2) => call2.response?.status?.compareTo(call1.response!.status!) ?? -1);
         }
         break;
       case ChuckSortOption.responseSize:
         if (_sortAscending) {
-          callsSorted.sort((call1, call2) =>
-              call1.response?.size.compareTo(call2.response!.size) ?? -1);
+          callsSorted.sort((call1, call2) => call1.response?.size.compareTo(call2.response!.size) ?? -1);
         } else {
-          callsSorted.sort((call1, call2) =>
-              call2.response?.size.compareTo(call1.response!.size) ?? -1);
+          callsSorted.sort((call1, call2) => call2.response?.size.compareTo(call1.response!.size) ?? -1);
         }
         break;
       case ChuckSortOption.endpoint:
         if (_sortAscending) {
-          callsSorted
-              .sort((call1, call2) => call1.endpoint.compareTo(call2.endpoint));
+          callsSorted.sort((call1, call2) => call1.endpoint.compareTo(call2.endpoint));
         } else {
-          callsSorted
-              .sort((call1, call2) => call2.endpoint.compareTo(call1.endpoint));
+          callsSorted.sort((call1, call2) => call2.endpoint.compareTo(call1.endpoint));
         }
         break;
       default:
@@ -258,21 +289,26 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
       itemBuilder: (context, index) {
         return ChuckCallListItemWidget(callsSorted[index], _onListItemClicked);
       },
-      separatorBuilder: (_, __) => const Divider(
-        height: 1,
-        thickness: 1,
-        color: ChuckConstants.grey,
-      ),
+      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
     );
   }
 
   void _onListItemClicked(ChuckHttpCall call) {
-    Navigator.push<void>(
-      widget._chuckCore.getContext()!,
-      MaterialPageRoute(
-        builder: (context) => ChuckCallDetailsScreen(call, widget._chuckCore),
-      ),
-    );
+    if (tabController.index == 0) {
+      Navigator.push<void>(
+        widget._chuckCore.getContext()!,
+        MaterialPageRoute(
+          builder: (context) => ChuckCallDetailsScreen(call, widget._chuckCore),
+        ),
+      );
+    } else {
+      Navigator.push<void>(
+        widget._chuckCore.getContext()!,
+        MaterialPageRoute(
+          builder: (context) => ChuckHiveCallDetailsScreen(call, widget._chuckCore),
+        ),
+      );
+    }
   }
 
   void _showRemoveDialog() {
@@ -288,7 +324,11 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
   }
 
   void _removeCalls() {
-    chuckCore.removeCalls();
+    if (tabController.index == 0) {
+      chuckCore.removeCalls();
+    } else {
+      chuckCore.cacheBox.clear();
+    }
   }
 
   void _showStatsScreen() {
@@ -322,8 +362,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
               return Wrap(
                 children: [
                   ...ChuckSortOption.values
-                      .map((ChuckSortOption sortOption) =>
-                          RadioListTile<ChuckSortOption>(
+                      .map((ChuckSortOption sortOption) => RadioListTile<ChuckSortOption>(
                             title: Text(sortOption.name),
                             value: sortOption,
                             groupValue: _sortOption,
