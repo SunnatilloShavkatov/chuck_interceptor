@@ -196,9 +196,7 @@ class ChuckCore {
       playSound: false,
       largeIcon: DrawableResourceAndroidBitmap(notificationIcon),
     );
-    const iOSPlatformChannelSpecifics = DarwinNotificationDetails(
-      presentSound: false,
-    );
+    const iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentSound: false);
     final platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics,
@@ -226,12 +224,8 @@ class ChuckCore {
       final indexToReplace = originalCalls.indexOf(calls.first);
       originalCalls[indexToReplace] = call;
 
-      for (int i = 0; i < originalCalls.length; i++) {
-        cacheBox.put(originalCalls[i].id, jsonEncode(originalCalls[i].toJson()));
-      }
       callsSubject.add(originalCalls);
     } else {
-      cacheBox.put(call.id, jsonEncode(call.toJson()));
       callsSubject.add([...callsSubject.value, call]);
     }
   }
@@ -246,7 +240,7 @@ class ChuckCore {
     }
 
     selectedCall.error = error;
-    cacheBox.put(selectedCall.id, jsonEncode(selectedCall.toJson()));
+    cacheBox.add(jsonEncode(selectedCall.toJson()));
     callsSubject.add([...callsSubject.value]);
   }
 
@@ -261,7 +255,7 @@ class ChuckCore {
     selectedCall.loading = false;
     selectedCall.response = response;
     selectedCall.duration = response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
-    cacheBox.put(selectedCall.id, jsonEncode(selectedCall.toJson()));
+    cacheBox.add(jsonEncode(selectedCall.toJson()));
     callsSubject.add([...callsSubject.value]);
   }
 
