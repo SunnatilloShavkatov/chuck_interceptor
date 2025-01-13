@@ -185,6 +185,8 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> with Single
             calls.add(ChuckHttpCall.fromJson(jsonDecode(boxCall)));
           }
         }
+        calls.sort((call1, call2) => call2.createdTime.compareTo(call1.createdTime));
+        calls = calls.reversed.toList();
         final String query = _queryTextEditingController.text.trim();
         if (query.isNotEmpty) {
           calls = calls.where((call) => call.endpoint.toLowerCase().contains(query.toLowerCase())).toList();

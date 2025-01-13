@@ -19,7 +19,7 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
   /// Handles dio request and creates Chuck http call based on it
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final ChuckHttpCall call = ChuckHttpCall(options.hashCode);
+    final ChuckHttpCall call = ChuckHttpCall(options.hashCode, DateTime.now());
 
     final Uri uri = options.uri;
     call.method = options.method;

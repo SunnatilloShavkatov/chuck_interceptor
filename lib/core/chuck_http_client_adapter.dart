@@ -15,7 +15,7 @@ class ChuckHttpClientAdapter {
 
   /// Handles httpClientRequest and creates http Chuck call from it
   void onRequest(HttpClientRequest request, {dynamic body}) {
-    final ChuckHttpCall call = ChuckHttpCall(request.hashCode);
+    final ChuckHttpCall call = ChuckHttpCall(request.hashCode, DateTime.now());
     call.loading = true;
     call.client = "HttpClient (io package)";
     call.method = request.method;
@@ -61,8 +61,7 @@ class ChuckHttpClientAdapter {
   }
 
   /// Handles httpClientRequest and adds response to http Chuck call
-  void onResponse(HttpClientResponse response, HttpClientRequest request,
-      {dynamic body}) async {
+  void onResponse(HttpClientResponse response, HttpClientRequest request, {dynamic body}) async {
     final ChuckHttpResponse httpResponse = ChuckHttpResponse();
     httpResponse.status = response.statusCode;
 

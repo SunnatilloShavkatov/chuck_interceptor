@@ -4,7 +4,7 @@ import 'chuck_http_response.dart';
 
 class ChuckHttpCall {
   final int id;
-  late DateTime createdTime;
+  final DateTime createdTime;
   String client = "";
   bool loading = true;
   bool secure = false;
@@ -18,9 +18,8 @@ class ChuckHttpCall {
   ChuckHttpResponse? response;
   ChuckHttpError? error;
 
-  ChuckHttpCall(this.id) {
+  ChuckHttpCall(this.id, this.createdTime) {
     loading = true;
-    createdTime = DateTime.now();
   }
 
   void setResponse(ChuckHttpResponse response) {
@@ -92,8 +91,10 @@ class ChuckHttpCall {
   }
 
   factory ChuckHttpCall.fromJson(Map<String, dynamic> json) {
-    return ChuckHttpCall(json['id'])
-      ..createdTime = DateTime.parse(json['createdTime'])
+    return ChuckHttpCall(
+      json['id'],
+      DateTime.parse(json['createdTime']),
+    )
       ..client = json['client']
       ..loading = json['loading']
       ..secure = json['secure']
