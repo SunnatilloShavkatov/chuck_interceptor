@@ -21,7 +21,7 @@ class ChuckHttpResponse {
       'status': status,
       'size': size,
       'time': time.toString(),
-      'body': body,
+      if (body != null && body is Map) 'body': body,
       'headers': headers,
     };
   }
