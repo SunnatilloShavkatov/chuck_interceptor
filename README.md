@@ -168,8 +168,7 @@ You can use extensions to shorten your http and http client code. This is option
 Example:
 1. Import:
 ```dart
-import 'package:chuck_interceptor/core/chuck_http_client_extensions.dart';
-import 'package:chuck_interceptor/core/chuck_http_extensions.dart';
+import 'package:chuck_interceptor/chuck.dart';
 ```
 
 2. Use extensions:

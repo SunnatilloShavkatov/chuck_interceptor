@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:chuck_interceptor/core/chuck_core.dart';
-import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:chuck_interceptor/model/chuck_http_request.dart';
-import 'package:chuck_interceptor/model/chuck_http_response.dart';
+import 'package:chuck_interceptor/src/core/chuck_core.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_request.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 
 class ChuckHttpClientAdapter {
   /// ChuckCore instance

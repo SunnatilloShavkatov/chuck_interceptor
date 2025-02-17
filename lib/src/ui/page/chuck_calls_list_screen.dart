@@ -1,11 +1,11 @@
-import 'package:chuck_interceptor/core/chuck_core.dart';
-import 'package:chuck_interceptor/model/chuck_menu_item.dart';
-import 'package:chuck_interceptor/helper/chuck_alert_helper.dart';
-import 'package:chuck_interceptor/model/chuck_sort_option.dart';
-import 'package:chuck_interceptor/ui/page/chuck_call_details_screen.dart';
-import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:chuck_interceptor/utils/chuck_constants.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_call_list_item_widget.dart';
+import 'package:chuck_interceptor/src/core/chuck_core.dart';
+import 'package:chuck_interceptor/src/model/chuck_menu_item.dart';
+import 'package:chuck_interceptor/src/helper/chuck_alert_helper.dart';
+import 'package:chuck_interceptor/src/model/chuck_sort_option.dart';
+import 'package:chuck_interceptor/src/ui/page/chuck_call_details_screen.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
+import 'package:chuck_interceptor/src/ui/widget/chuck_call_list_item_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'chuck_stats_screen.dart';

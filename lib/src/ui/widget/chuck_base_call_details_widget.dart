@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
-import 'package:chuck_interceptor/utils/chuck_parser.dart';
+import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
+import 'package:chuck_interceptor/src/utils/chuck_parser.dart';
 import 'package:flutter/material.dart';
 
 abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget>

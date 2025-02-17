@@ -1,5 +1,5 @@
-import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:flutter/material.dart';
 
 class ChuckCallRequestWidget extends StatefulWidget {

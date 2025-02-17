@@ -1,15 +1,20 @@
 import 'dart:io';
-import 'package:chuck_interceptor/core/chuck_http_adapter.dart';
-import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/core/chuck_http_adapter.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 
-import 'package:chuck_interceptor/core/chuck_core.dart';
-import 'package:chuck_interceptor/core/chuck_dio_interceptor.dart';
-import 'package:chuck_interceptor/core/chuck_http_client_adapter.dart';
+import 'package:chuck_interceptor/src/core/chuck_core.dart';
+import 'package:chuck_interceptor/src/core/chuck_dio_interceptor.dart';
+import 'package:chuck_interceptor/src/core/chuck_http_client_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
-class Chuck {
+export 'package:chuck_interceptor/src/core/chuck_core.dart';
+export 'package:chuck_interceptor/src/core/chuck_dio_interceptor.dart';
+export 'package:chuck_interceptor/src/core/chuck_http_client_adapter.dart';
+export 'package:chuck_interceptor/src/core/chuck_http_client_extensions.dart';
+
+final class Chuck {
   /// Should user be notified with notification if there's new request catched
   /// by Chuck
   final bool showNotification;
@@ -32,7 +37,7 @@ class Chuck {
   final TextDirection? directionality;
 
   GlobalKey<NavigatorState>? _navigatorKey;
-  late ChuckCore _ChuckCore;
+  late ChuckCore _chuckCore;
   late ChuckHttpClientAdapter _httpClientAdapter;
   late ChuckHttpAdapter _httpAdapter;
 
@@ -47,34 +52,30 @@ class Chuck {
     this.directionality,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
-    _ChuckCore = ChuckCore(
+    _chuckCore = ChuckCore(
       _navigatorKey,
-      showNotification: showNotification,
-      showInspectorOnShake: showInspectorOnShake,
       darkTheme: darkTheme,
-      notificationIcon: notificationIcon,
       maxCallsCount: maxCallsCount,
       directionality: directionality,
+      showNotification: showNotification,
+      notificationIcon: notificationIcon,
+      showInspectorOnShake: showInspectorOnShake,
     );
-    _httpClientAdapter = ChuckHttpClientAdapter(_ChuckCore);
-    _httpAdapter = ChuckHttpAdapter(_ChuckCore);
+    _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
+    _httpAdapter = ChuckHttpAdapter(_chuckCore);
   }
 
   /// Set custom navigation key. This will help if there's route library.
   void setNavigatorKey(GlobalKey<NavigatorState> navigatorKey) {
     _navigatorKey = navigatorKey;
-    _ChuckCore.navigatorKey = navigatorKey;
+    _chuckCore.navigatorKey = navigatorKey;
   }
 
   /// Get currently used navigation key
-  GlobalKey<NavigatorState>? getNavigatorKey() {
-    return _navigatorKey;
-  }
+  GlobalKey<NavigatorState>? get navigatorKey => _navigatorKey;
 
   /// Get Dio interceptor which should be applied to Dio instance.
-  ChuckDioInterceptor getDioInterceptor() {
-    return ChuckDioInterceptor(_ChuckCore);
-  }
+  ChuckDioInterceptor get dioInterceptor => ChuckDioInterceptor(_chuckCore);
 
   /// Handle request from HttpClient
   void onHttpClientRequest(HttpClientRequest request, {dynamic body}) {
@@ -97,14 +98,12 @@ class Chuck {
 
   /// Opens Http calls inspector. This will navigate user to the new fullscreen
   /// page where all listened http calls can be viewed.
-  void showInspector() {
-    _ChuckCore.navigateToCallListScreen();
-  }
+  void showInspector() => _chuckCore.navigateToCallListScreen();
 
   /// Handle generic http call. Can be used to any http client.
   void addHttpCall(ChuckHttpCall ChuckHttpCall) {
     assert(ChuckHttpCall.request != null, "Http call request can't be null");
     assert(ChuckHttpCall.response != null, "Http call response can't be null");
-    _ChuckCore.addCall(ChuckHttpCall);
+    _chuckCore.addCall(ChuckHttpCall);
   }
 }

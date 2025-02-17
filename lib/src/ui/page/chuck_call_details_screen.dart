@@ -1,12 +1,12 @@
-import 'package:chuck_interceptor/core/chuck_core.dart';
-import 'package:chuck_interceptor/helper/chuck_save_helper.dart';
-import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_call_response_preview_widget.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_call_response_widget.dart';
-import 'package:chuck_interceptor/utils/chuck_constants.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_call_error_widget.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_call_overview_widget.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_call_request_widget.dart';
+import 'package:chuck_interceptor/src/core/chuck_core.dart';
+import 'package:chuck_interceptor/src/helper/chuck_save_helper.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/ui/widget/chuck_call_response_preview_widget.dart';
+import 'package:chuck_interceptor/src/ui/widget/chuck_call_response_widget.dart';
+import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
+import 'package:chuck_interceptor/src/ui/widget/chuck_call_error_widget.dart';
+import 'package:chuck_interceptor/src/ui/widget/chuck_call_overview_widget.dart';
+import 'package:chuck_interceptor/src/ui/widget/chuck_call_request_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 

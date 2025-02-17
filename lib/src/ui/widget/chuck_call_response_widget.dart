@@ -1,13 +1,10 @@
-import 'dart:convert';
-
-import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_json_viewer.dart';
-import 'package:chuck_interceptor/utils/chuck_constants.dart';
-import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
+import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:flutter/material.dart';
 
-class ChuckCallResponsePreviewWidget extends StatefulWidget {
-  const ChuckCallResponsePreviewWidget(this.call);
+class ChuckCallResponseWidget extends StatefulWidget {
+  const ChuckCallResponseWidget(this.call);
 
   final ChuckHttpCall call;
 
@@ -16,7 +13,7 @@ class ChuckCallResponsePreviewWidget extends StatefulWidget {
 }
 
 class _ChuckCallResponseWidgetState
-    extends ChuckBaseCallDetailsWidgetState<ChuckCallResponsePreviewWidget> {
+    extends ChuckBaseCallDetailsWidgetState<ChuckCallResponseWidget> {
   static const _imageContentType = "image";
   static const _jsonContentType = "json";
   static const _xmlContentType = "xml";
@@ -37,7 +34,13 @@ class _ChuckCallResponseWidgetState
           slivers: [
             SliverSafeArea(
               minimum: const EdgeInsets.all(6),
-              sliver: SliverList.list(children: _buildBodyRows()),
+              sliver: SliverList.list(
+                children: [
+                  ..._buildGeneralDataRows(),
+                  ..._buildHeadersRows(),
+                  ..._buildBodyRows(),
+                ],
+              ),
             ),
           ],
         ),
@@ -60,6 +63,37 @@ class _ChuckCallResponseWidgetState
     super.dispose();
   }
 
+  List<Widget> _buildGeneralDataRows() {
+    final List<Widget> rows = [];
+    rows.add(getListRow("Received:", _call.response!.time.toString()));
+    rows.add(getListRow("Bytes received:", formatBytes(_call.response!.size)));
+
+    final status = _call.response!.status;
+    var statusText = "$status";
+    if (status == -1) {
+      statusText = "Error";
+    }
+
+    rows.add(getListRow("Status:", statusText));
+    return rows;
+  }
+
+  List<Widget> _buildHeadersRows() {
+    final List<Widget> rows = [];
+    final headers = _call.response!.headers;
+    var headersContent = "Headers are empty";
+    if (headers != null && headers.isNotEmpty) {
+      headersContent = "";
+    }
+    rows.add(getListRow("Headers: ", headersContent));
+    if (_call.response!.headers != null) {
+      _call.response!.headers!.forEach((header, value) {
+        rows.add(getListRow("   • $header:", value.toString()));
+      });
+    }
+    return rows;
+  }
+
   List<Widget> _buildBodyRows() {
     final List<Widget> rows = [];
     if (_isImageResponse()) {
@@ -73,6 +107,7 @@ class _ChuckCallResponseWidgetState
     } else {
       rows.addAll(_buildUnknownBodyRows());
     }
+
     return rows;
   }
 
@@ -119,12 +154,8 @@ class _ChuckCallResponseWidgetState
     if (_showLargeBody) {
       return _buildTextBodyRows();
     } else {
-      rows.add(
-        getListRow(
-          "Body:",
-          "Too large to show (${_call.response!.body.toString().length} Bytes)",
-        ),
-      );
+      rows.add(getListRow("Body:",
+          "Too large to show (${_call.response!.body.toString().length} Bytes)"));
       rows.add(const SizedBox(height: 8));
       rows.add(
         ElevatedButton(
@@ -132,7 +163,9 @@ class _ChuckCallResponseWidgetState
             backgroundColor: WidgetStatePropertyAll<Color>(
               ChuckConstants.lightRed,
             ),
-            foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
+            foregroundColor: WidgetStatePropertyAll<Color>(
+              Colors.white,
+            ),
           ),
           onPressed: () {
             setState(() {
@@ -151,16 +184,9 @@ class _ChuckCallResponseWidgetState
   List<Widget> _buildTextBodyRows() {
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
-    final bodyContent = formatBody(
-      _call.response!.body,
-      getContentType(headers),
-    );
-    if (bodyContent.contains("{") && bodyContent.contains("}")) {
-      rows.add(JsonViewer(jsonDecode(bodyContent)));
-    } else {
-      rows.add(getListRow("Body:", bodyContent));
-    }
-
+    final bodyContent =
+        formatBody(_call.response!.body, getContentType(headers));
+    rows.add(getListRow("Body:", bodyContent));
     return rows;
   }
 
@@ -168,11 +194,10 @@ class _ChuckCallResponseWidgetState
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
     final contentType = getContentType(headers) ?? "<unknown>";
+
     if (_showUnsupportedBody) {
-      final bodyContent = formatBody(
-        _call.response!.body,
-        getContentType(headers),
-      );
+      final bodyContent =
+          formatBody(_call.response!.body, getContentType(headers));
       rows.add(getListRow("Body:", bodyContent));
     } else {
       rows.add(

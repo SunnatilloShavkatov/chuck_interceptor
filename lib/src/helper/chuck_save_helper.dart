@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:chuck_interceptor/core/chuck_utils.dart';
-import 'package:chuck_interceptor/helper/chuck_alert_helper.dart';
-import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
-import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:chuck_interceptor/utils/chuck_parser.dart';
+import 'package:chuck_interceptor/src/core/chuck_utils.dart';
+import 'package:chuck_interceptor/src/helper/chuck_alert_helper.dart';
+import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/utils/chuck_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';

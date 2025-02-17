@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:chuck_interceptor/core/chuck_core.dart';
-import 'package:chuck_interceptor/model/chuck_form_data_file.dart';
-import 'package:chuck_interceptor/model/chuck_from_data_field.dart';
-import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:chuck_interceptor/model/chuck_http_error.dart';
-import 'package:chuck_interceptor/model/chuck_http_request.dart';
-import 'package:chuck_interceptor/model/chuck_http_response.dart';
+import 'package:chuck_interceptor/src/core/chuck_core.dart';
+import 'package:chuck_interceptor/src/model/chuck_form_data_file.dart';
+import 'package:chuck_interceptor/src/model/chuck_from_data_field.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_error.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_request.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 import 'package:dio/dio.dart';
 
 class ChuckDioInterceptor extends InterceptorsWrapper {
