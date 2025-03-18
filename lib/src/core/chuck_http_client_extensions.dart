@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:chuck_interceptor/chuck.dart';
+import 'package:chuck_interceptor/chuck_interceptor.dart';
+
 
 extension ChuckHttpClientExtensions on Future<HttpClientRequest> {
   /// Intercept http client with Chuck. This extension method provides additional
   /// helpful method to intercept httpClientResponse.
   Future<HttpClientResponse> interceptWithChuck(
-    Chuck Chuck, {
+    Chuck chuck, {
     dynamic body,
     Map<String, dynamic>? headers,
   }) async {
@@ -23,10 +24,10 @@ extension ChuckHttpClientExtensions on Future<HttpClientRequest> {
         },
       );
     }
-    Chuck.onHttpClientRequest(request, body: body);
+    chuck.onHttpClientRequest(request, body: body);
     final httpResponse = await request.close();
     final responseBody = await utf8.decoder.bind(httpResponse).join();
-    Chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+    chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     return httpResponse;
   }
 }
