@@ -26,7 +26,7 @@ ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging htt
 
 ```yaml
 dependencies:
-  chuck_interceptor: ^2.1.4
+  chuck_interceptor: ^2.1.9
 ```
 
 2. Install it
@@ -38,7 +38,7 @@ $ flutter packages get
 3. Import it
 
 ```dart
-import 'package:chuck_interceptor/chuck.dart';
+import 'package:chuck_interceptor/chuck_interceptor.dart';
 ```
 
 ## Usage
@@ -168,7 +168,7 @@ You can use extensions to shorten your http and http client code. This is option
 Example:
 1. Import:
 ```dart
-import 'package:chuck_interceptor/chuck.dart';
+import 'package:chuck_interceptor/chuck_interceptor.dart';
 ```
 
 2. Use extensions:
