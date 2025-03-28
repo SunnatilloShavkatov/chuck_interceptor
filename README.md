@@ -108,7 +108,7 @@ If you're using Dio, you just need to add interceptor.
 
 ```dart
 Dio dio = Dio();
-dio.interceptors.add(chuck.getDioInterceptor());
+dio.interceptors.add(chuck.dioInterceptor);
 ```
 
 
