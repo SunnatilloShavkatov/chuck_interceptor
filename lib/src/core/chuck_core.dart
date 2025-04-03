@@ -88,15 +88,14 @@ class ChuckCore {
         AndroidInitializationSettings(notificationIcon);
     const initializationSettingsIOS = DarwinInitializationSettings();
     final initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
-      linux: LinuxInitializationSettings(defaultActionName: 'default'),
       macOS: initializationSettingsIOS,
+      android: initializationSettingsAndroid,
+      linux: LinuxInitializationSettings(defaultActionName: 'default'),
     );
     _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: _onSelectedNotification,
-      // onDidReceiveBackgroundNotificationResponse: _onSelectedNotification,
     );
   }
 
@@ -129,9 +128,7 @@ class ChuckCore {
       _isInspectorOpened = true;
       Navigator.push<void>(
         context,
-        MaterialPageRoute(
-          builder: (context) => ChuckCallsListScreen(this),
-        ),
+        MaterialPageRoute(builder: (context) => ChuckCallsListScreen(this)),
       ).then((onValue) => _isInspectorOpened = false);
     }
   }

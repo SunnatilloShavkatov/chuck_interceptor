@@ -12,8 +12,7 @@ class ChuckCallResponseWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _ChuckCallResponseWidgetState();
 }
 
-class _ChuckCallResponseWidgetState
-    extends ChuckBaseCallDetailsWidgetState<ChuckCallResponseWidget> {
+class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCallResponseWidget> {
   static const _imageContentType = "image";
   static const _jsonContentType = "json";
   static const _xmlContentType = "xml";
@@ -49,10 +48,7 @@ class _ChuckCallResponseWidgetState
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            CircularProgressIndicator(),
-            Text("Awaiting response...")
-          ],
+          children: const [CircularProgressIndicator(), Text("Awaiting response...")],
         ),
       );
     }
@@ -129,14 +125,12 @@ class _ChuckCallResponseWidgetState
             _call.uri,
             fit: BoxFit.fill,
             headers: _buildRequestHeaders(),
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
               if (loadingProgress == null) return child;
               return Center(
                 child: CircularProgressIndicator(
                   value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
+                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                       : null,
                 ),
               );
@@ -154,8 +148,7 @@ class _ChuckCallResponseWidgetState
     if (_showLargeBody) {
       return _buildTextBodyRows();
     } else {
-      rows.add(getListRow("Body:",
-          "Too large to show (${_call.response!.body.toString().length} Bytes)"));
+      rows.add(getListRow("Body:", "Too large to show (${_call.response!.body.toString().length} Bytes)"));
       rows.add(const SizedBox(height: 8));
       rows.add(
         ElevatedButton(
@@ -184,8 +177,7 @@ class _ChuckCallResponseWidgetState
   List<Widget> _buildTextBodyRows() {
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
-    final bodyContent =
-        formatBody(_call.response!.body, getContentType(headers));
+    final bodyContent = formatBody(_call.response!.body, getContentType(headers));
     rows.add(getListRow("Body:", bodyContent));
     return rows;
   }
@@ -196,8 +188,7 @@ class _ChuckCallResponseWidgetState
     final contentType = getContentType(headers) ?? "<unknown>";
 
     if (_showUnsupportedBody) {
-      final bodyContent =
-          formatBody(_call.response!.body, getContentType(headers));
+      final bodyContent = formatBody(_call.response!.body, getContentType(headers));
       rows.add(getListRow("Body:", bodyContent));
     } else {
       rows.add(
@@ -246,14 +237,11 @@ class _ChuckCallResponseWidgetState
   }
 
   bool _isImageResponse() {
-    return _getContentTypeOfResponse()!
-        .toLowerCase()
-        .contains(_imageContentType);
+    return _getContentTypeOfResponse()!.toLowerCase().contains(_imageContentType);
   }
 
   bool _isTextResponse() {
-    final String responseContentTypeLowerCase =
-        _getContentTypeOfResponse()!.toLowerCase();
+    final String responseContentTypeLowerCase = _getContentTypeOfResponse()!.toLowerCase();
 
     return responseContentTypeLowerCase.contains(_jsonContentType) ||
         responseContentTypeLowerCase.contains(_xmlContentType) ||
@@ -265,7 +253,6 @@ class _ChuckCallResponseWidgetState
   }
 
   bool _isLargeResponseBody() {
-    return _call.response!.body != null &&
-        _call.response!.body.toString().length > _kLargeOutputSize;
+    return _call.response!.body != null && _call.response!.body.toString().length > _kLargeOutputSize;
   }
 }

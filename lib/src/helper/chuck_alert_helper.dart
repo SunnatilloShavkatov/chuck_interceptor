@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ChuckAlertHelper {
+sealed class ChuckAlertHelper {
+  const ChuckAlertHelper._();
+
   ///Helper method used to open alarm with given title and description.
   static void showAlert(
     BuildContext context,
@@ -41,9 +43,7 @@ class ChuckAlertHelper {
       context: context,
       builder: (BuildContext buildContext) {
         return Theme(
-          data: ThemeData(
-            brightness: brightness ?? Brightness.light,
-          ),
+          data: ThemeData(brightness: brightness ?? Brightness.light),
           child: AlertDialog(
             title: Text(title),
             content: Text(description),

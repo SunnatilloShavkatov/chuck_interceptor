@@ -46,8 +46,7 @@ class ChuckHttpAdapter {
       // ignore: cast_nullable_to_non_nullable
       httpRequest.body = body ?? (response.request as http.Request).body ?? "";
       httpRequest.size = utf8.encode(httpRequest.body.toString()).length;
-      httpRequest.headers =
-          Map<String, dynamic>.from(response.request!.headers);
+      httpRequest.headers = Map<String, dynamic>.from(response.request!.headers);
     } else if (body == null) {
       httpRequest.size = 0;
       httpRequest.body = "";

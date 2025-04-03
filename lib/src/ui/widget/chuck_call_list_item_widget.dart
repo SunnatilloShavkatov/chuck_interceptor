@@ -42,24 +42,13 @@ class ChuckCallListItemWidget extends StatelessWidget {
     final Color? textColor = _getEndpointTextColor(context);
     return Row(
       children: [
-        Text(
-          call.method,
-          style: TextStyle(fontSize: 16, color: textColor),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(left: 10),
-        ),
+        Text(call.method, style: TextStyle(fontSize: 16, color: textColor)),
+        SizedBox(width: 10),
         Flexible(
-          // ignore: avoid_unnecessary_containers
-          child: Container(
-            child: Text(
-              call.endpoint,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 16,
-                color: textColor,
-              ),
-            ),
+          child: Text(
+            call.endpoint,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 16, color: textColor),
           ),
         )
       ],
@@ -75,9 +64,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
             call.server,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
-            style: const TextStyle(
-              fontSize: 14,
-            ),
+            style: const TextStyle(fontSize: 14),
           ),
         ),
       ],
@@ -89,16 +76,12 @@ class ChuckCallListItemWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
-          child: Text(
-            _formatTime(call.request!.time),
-            style: const TextStyle(fontSize: 12),
-          ),
+          child: Text(_formatTime(call.request!.time),
+              style: const TextStyle(fontSize: 12)),
         ),
         Flexible(
-          child: Text(
-            ChuckConversionHelper.formatTime(call.duration),
-            style: const TextStyle(fontSize: 12),
-          ),
+          child: Text(ChuckConversionHelper.formatTime(call.duration),
+              style: const TextStyle(fontSize: 12)),
         ),
         Flexible(
           child: Text(
@@ -139,17 +122,12 @@ class ChuckCallListItemWidget extends StatelessWidget {
     widgets.add(
       Text(
         _getStatus(call.response!),
-        style: TextStyle(
-          fontSize: 16,
-          color: _getStatusTextColor(context),
-        ),
+        style: TextStyle(fontSize: 16, color: _getStatusTextColor(context)),
       ),
     );
     return SizedBox(
       width: 50,
-      child: Column(
-        children: widgets,
-      ),
+      child: Column(children: widgets),
     );
   }
 
@@ -200,11 +178,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
     }
     return Padding(
       padding: const EdgeInsets.only(right: 3),
-      child: Icon(
-        iconData,
-        color: iconColor,
-        size: 12,
-      ),
+      child: Icon(iconData, color: iconColor, size: 12),
     );
   }
 }

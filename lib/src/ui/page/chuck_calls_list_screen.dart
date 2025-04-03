@@ -164,15 +164,10 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              color: ChuckConstants.orange,
-            ),
+            Icon(Icons.error_outline, color: ChuckConstants.orange),
             const SizedBox(height: 6),
-            const Text(
-              "There are no calls to show",
-              style: TextStyle(fontSize: 18),
-            ),
+            const Text("There are no calls to show",
+                style: TextStyle(fontSize: 18)),
             const SizedBox(height: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,17 +247,12 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
       default:
         break;
     }
-
     return ListView.separated(
       itemCount: callsSorted.length,
-      itemBuilder: (context, index) {
-        return ChuckCallListItemWidget(callsSorted[index], _onListItemClicked);
-      },
-      separatorBuilder: (_, __) => const Divider(
-        height: 1,
-        thickness: 1,
-        color: ChuckConstants.grey,
-      ),
+      itemBuilder: (_, index) =>
+          ChuckCallListItemWidget(callsSorted[index], _onListItemClicked),
+      separatorBuilder: (_, __) =>
+          const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
     );
   }
 

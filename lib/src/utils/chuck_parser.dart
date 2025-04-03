@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class ChuckParser {
+sealed class ChuckParser {
+  const ChuckParser._();
+
   static const String _emptyBody = "Body is empty";
   static const String _unknownContentType = "Unknown";
   static const String _jsonContentTypeSmall = "content-type";
@@ -34,8 +36,7 @@ class ChuckParser {
 
       var bodyContent = _emptyBody;
 
-      if (contentType == null ||
-          !contentType.toLowerCase().contains(_applicationJson)) {
+      if (contentType == null || !contentType.toLowerCase().contains(_applicationJson)) {
         final bodyTemp = body.toString();
 
         if (bodyTemp.isNotEmpty) {

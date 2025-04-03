@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:chuck_interceptor/chuck_interceptor.dart';
 
-
 extension ChuckHttpClientExtensions on Future<HttpClientRequest> {
   /// Intercept http client with Chuck. This extension method provides additional
   /// helpful method to intercept httpClientResponse.

@@ -11,17 +11,18 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ChuckSaveHelper {
+sealed class ChuckSaveHelper {
+  const ChuckSaveHelper._();
+
+  /// JsonEncoder instance used to encode request and response headers
   static const JsonEncoder _encoder = JsonEncoder.withIndent('  ');
 
   /// Top level method used to save calls to file
-  static void saveCalls(
-      BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) {
+  static void saveCalls(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) {
     _checkPermissions(context, calls, brightness);
   }
 
-  static void _checkPermissions(BuildContext context, List<ChuckHttpCall> calls,
-      Brightness brightness) async {
+  static void _checkPermissions(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
     final status = await Permission.storage.status;
     if (status.isGranted) {
       _saveToFile(context, calls, brightness);
@@ -41,11 +42,7 @@ class ChuckSaveHelper {
     }
   }
 
-  static Future<String> _saveToFile(
-    BuildContext context,
-    List<ChuckHttpCall> calls,
-    Brightness brightness,
-  ) async {
+  static Future<String> _saveToFile(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
     try {
       if (calls.isEmpty) {
         ChuckAlertHelper.showAlert(
@@ -58,11 +55,9 @@ class ChuckSaveHelper {
       }
       final bool isAndroid = Platform.isAndroid;
 
-      final Directory externalDir = await (isAndroid
-          ? getExternalStorageDirectory() as FutureOr<Directory>
-          : getApplicationDocumentsDirectory());
-      final String fileName =
-          "Chuck_log_${DateTime.now().millisecondsSinceEpoch}.txt";
+      final Directory externalDir =
+          await (isAndroid ? getExternalStorageDirectory() as FutureOr<Directory> : getApplicationDocumentsDirectory());
+      final String fileName = "Chuck_log_${DateTime.now().millisecondsSinceEpoch}.txt";
       final File file = File("${externalDir.path}/$fileName");
       file.createSync();
       final IOSink sink = file.openWrite(mode: FileMode.append);

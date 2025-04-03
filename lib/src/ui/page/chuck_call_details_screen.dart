@@ -20,14 +20,8 @@ class ChuckCallDetailsScreen extends StatefulWidget {
   _ChuckCallDetailsScreenState createState() => _ChuckCallDetailsScreenState();
 }
 
-class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
-    with SingleTickerProviderStateMixin {
+class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with SingleTickerProviderStateMixin {
   ChuckHttpCall get call => widget.call;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +34,8 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
           initialData: [widget.call],
           builder: (context, callsSnapshot) {
             if (callsSnapshot.hasData) {
-              final ChuckHttpCall? call = callsSnapshot.data!.firstWhere(
-                  (snapshotCall) => snapshotCall.id == widget.call.id);
+              final ChuckHttpCall? call =
+                  callsSnapshot.data!.firstWhere((snapshotCall) => snapshotCall.id == widget.call.id);
               if (call != null) {
                 return _buildMainWidget();
               } else {

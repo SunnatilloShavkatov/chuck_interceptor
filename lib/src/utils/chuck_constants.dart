@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 sealed class ChuckConstants {
-  ChuckConstants._();
+  const ChuckConstants._();
 
   static const Color red = Color(0xffff3f34);
   static const Color lightRed = Color(0xffff5e57);

@@ -56,8 +56,7 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
         if (data.files.isNotEmpty == true) {
           final List<ChuckFormDataFile> files = [];
           data.files.forEach((entry) {
-            files.add(ChuckFormDataFile(entry.value.filename,
-                entry.value.contentType.toString(), entry.value.length));
+            files.add(ChuckFormDataFile(entry.value.filename, entry.value.contentType.toString(), entry.value.length));
           });
 
           request.formDataFiles = files;
@@ -82,8 +81,7 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
 
   /// Handles dio response and adds data to Chuck http call
   @override
-  void onResponse(
-      Response<dynamic> response, ResponseInterceptorHandler handler) {
+  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
     final httpResponse = ChuckHttpResponse();
     httpResponse.status = response.statusCode;
 
