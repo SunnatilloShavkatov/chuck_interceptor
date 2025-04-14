@@ -207,7 +207,7 @@ class ChuckCore {
       "Chuck (total: ${callsSubject.value.length} requests)",
       message,
       platformChannelSpecifics,
-      payload: "",
+      payload: "chuck_interceptor",
     );
     _notificationMessageShown = message;
     _notificationProcessing = false;
