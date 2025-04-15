@@ -47,18 +47,18 @@ class ChuckCore {
   String? _notificationMessage;
   String? _notificationMessageShown;
   bool _notificationProcessing = false;
-  Box<dynamic> cacheBox;
+  Box<dynamic>? cacheBox;
 
   /// Creates Chuck core instance
   ChuckCore(
     this.navigatorKey, {
-    required this.cacheBox,
     required this.showNotification,
     required this.showInspectorOnShake,
     required this.darkTheme,
     required this.notificationIcon,
     required this.maxCallsCount,
     this.directionality,
+    this.cacheBox,
   }) {
     if (showNotification) {
       _initializeNotificationsPlugin();
@@ -240,7 +240,7 @@ class ChuckCore {
     }
 
     selectedCall.error = error;
-    cacheBox.add(jsonEncode(selectedCall.toJson()));
+    cacheBox?.add(jsonEncode(selectedCall.toJson()));
     callsSubject.add([...callsSubject.value]);
   }
 
@@ -255,7 +255,7 @@ class ChuckCore {
     selectedCall.loading = false;
     selectedCall.response = response;
     selectedCall.duration = response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
-    cacheBox.add(jsonEncode(selectedCall.toJson()));
+    cacheBox?.add(jsonEncode(selectedCall.toJson()));
     callsSubject.add([...callsSubject.value]);
   }
 

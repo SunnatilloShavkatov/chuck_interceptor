@@ -33,15 +33,15 @@ class Chuck {
   final TextDirection? directionality;
 
   GlobalKey<NavigatorState>? _navigatorKey;
-  final Box<dynamic> cacheBox;
-  late ChuckCore _ChuckCore;
+  final Box<dynamic>? cacheBox;
+  late ChuckCore _chuckCore;
   late ChuckHttpClientAdapter _httpClientAdapter;
   late ChuckHttpAdapter _httpAdapter;
 
   /// Creates Chuck instance.
   Chuck({
     GlobalKey<NavigatorState>? navigatorKey,
-    required this.cacheBox,
+    this.cacheBox,
     this.showNotification = true,
     this.showInspectorOnShake = false,
     this.darkTheme = false,
@@ -50,7 +50,7 @@ class Chuck {
     this.directionality,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
-    _ChuckCore = ChuckCore(
+    _chuckCore = ChuckCore(
       _navigatorKey,
       cacheBox: cacheBox,
       showNotification: showNotification,
@@ -60,14 +60,14 @@ class Chuck {
       maxCallsCount: maxCallsCount,
       directionality: directionality,
     );
-    _httpClientAdapter = ChuckHttpClientAdapter(_ChuckCore);
-    _httpAdapter = ChuckHttpAdapter(_ChuckCore);
+    _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
+    _httpAdapter = ChuckHttpAdapter(_chuckCore);
   }
 
   /// Set custom navigation key. This will help if there's route library.
   void setNavigatorKey(GlobalKey<NavigatorState> navigatorKey) {
     _navigatorKey = navigatorKey;
-    _ChuckCore.navigatorKey = navigatorKey;
+    _chuckCore.navigatorKey = navigatorKey;
   }
 
   /// Get currently used navigation key
@@ -77,7 +77,7 @@ class Chuck {
 
   /// Get Dio interceptor which should be applied to Dio instance.
   ChuckDioInterceptor getDioInterceptor() {
-    return ChuckDioInterceptor(_ChuckCore);
+    return ChuckDioInterceptor(_chuckCore);
   }
 
   /// Handle request from HttpClient
@@ -102,13 +102,13 @@ class Chuck {
   /// Opens Http calls inspector. This will navigate user to the new fullscreen
   /// page where all listened http calls can be viewed.
   void showInspector() {
-    _ChuckCore.navigateToCallListScreen();
+    _chuckCore.navigateToCallListScreen();
   }
 
   /// Handle generic http call. Can be used to any http client.
   void addHttpCall(ChuckHttpCall ChuckHttpCall) {
     assert(ChuckHttpCall.request != null, "Http call request can't be null");
     assert(ChuckHttpCall.response != null, "Http call response can't be null");
-    _ChuckCore.addCall(ChuckHttpCall);
+    _chuckCore.addCall(ChuckHttpCall);
   }
 }

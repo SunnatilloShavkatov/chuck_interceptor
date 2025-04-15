@@ -34,12 +34,15 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.core.cacheBox == null) {
+      return const SizedBox.shrink();
+    }
     return Directionality(
       textDirection: widget.core.directionality ?? Directionality.of(context),
       child: Theme(
         data: ThemeData(brightness: widget.core.brightness),
         child: ValueListenableBuilder<Box<dynamic>>(
-          valueListenable: widget.core.cacheBox.listenable(),
+          valueListenable: widget.core.cacheBox!.listenable(),
           builder: (_, callsSnapshot, __) {
             final List<dynamic> boxCalls = callsSnapshot.values.toList();
             List<ChuckHttpCall> calls = [];

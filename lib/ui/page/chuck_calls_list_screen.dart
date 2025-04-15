@@ -175,8 +175,11 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> with Single
   }
 
   Widget _buildHiveCallsListWrapper() {
+    if (chuckCore.cacheBox == null) {
+      return const SizedBox.shrink();
+    }
     return ValueListenableBuilder<Box<dynamic>>(
-      valueListenable: chuckCore.cacheBox.listenable(),
+      valueListenable: chuckCore.cacheBox!.listenable(),
       builder: (_, snapshot, __) {
         final List<dynamic> boxCalls = snapshot.values.toList();
         List<ChuckHttpCall> calls = [];
@@ -329,7 +332,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> with Single
     if (tabController.index == 0) {
       chuckCore.removeCalls();
     } else {
-      chuckCore.cacheBox.clear();
+      chuckCore.cacheBox?.clear();
     }
   }
 
