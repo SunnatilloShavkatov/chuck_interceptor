@@ -47,6 +47,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
         Flexible(
           child: Text(
             call.endpoint,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 16, color: textColor),
           ),
