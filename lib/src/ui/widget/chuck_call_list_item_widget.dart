@@ -47,6 +47,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
         Flexible(
           child: Text(
             call.endpoint,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 16, color: textColor),
           ),
@@ -76,12 +77,10 @@ class ChuckCallListItemWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
-          child: Text(_formatTime(call.request!.time),
-              style: const TextStyle(fontSize: 12)),
+          child: Text(_formatTime(call.request!.time), style: const TextStyle(fontSize: 12)),
         ),
         Flexible(
-          child: Text(ChuckConversionHelper.formatTime(call.duration),
-              style: const TextStyle(fontSize: 12)),
+          child: Text(ChuckConversionHelper.formatTime(call.duration), style: const TextStyle(fontSize: 12)),
         ),
         Flexible(
           child: Text(

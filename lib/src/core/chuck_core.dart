@@ -24,8 +24,7 @@ class ChuckCore {
   final bool darkTheme;
 
   /// Rx subject which contains all intercepted http calls
-  final BehaviorSubject<List<ChuckHttpCall>> callsSubject =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<ChuckHttpCall>> callsSubject = BehaviorSubject.seeded([]);
 
   /// Icon url for notification
   final String notificationIcon;
@@ -84,8 +83,7 @@ class ChuckCore {
 
   void _initializeNotificationsPlugin() {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid =
-        AndroidInitializationSettings(notificationIcon);
+    final initializationSettingsAndroid = AndroidInitializationSettings(notificationIcon);
     const initializationSettingsIOS = DarwinInitializationSettings();
     final initializationSettings = InitializationSettings(
       iOS: initializationSettingsIOS,
@@ -102,8 +100,7 @@ class ChuckCore {
   void _onCallsChanged() async {
     if (callsSubject.value.isNotEmpty) {
       _notificationMessage = _getNotificationMessage();
-      if (_notificationMessage != _notificationMessageShown &&
-          !_notificationProcessing) {
+      if (_notificationMessage != _notificationMessageShown && !_notificationProcessing) {
         await _showLocalNotification();
         _onCallsChanged();
       }
@@ -120,8 +117,7 @@ class ChuckCore {
   void navigateToCallListScreen() {
     final context = getContext();
     if (context == null) {
-      ChuckUtils.log(
-          "Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application");
+      ChuckUtils.log("Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application");
       return;
     }
     if (!_isInspectorOpened) {
@@ -139,31 +135,21 @@ class ChuckCore {
   String _getNotificationMessage() {
     final List<ChuckHttpCall> calls = callsSubject.value;
     final int successCalls = calls
-        .where((call) =>
-            call.response != null &&
-            call.response!.status! >= 200 &&
-            call.response!.status! < 300)
+        .where((call) => call.response != null && call.response!.status! >= 200 && call.response!.status! < 300)
         .toList()
         .length;
 
     final int redirectCalls = calls
-        .where((call) =>
-            call.response != null &&
-            call.response!.status! >= 300 &&
-            call.response!.status! < 400)
+        .where((call) => call.response != null && call.response!.status! >= 300 && call.response!.status! < 400)
         .toList()
         .length;
 
     final int errorCalls = calls
-        .where((call) =>
-            call.response != null &&
-            call.response!.status! >= 400 &&
-            call.response!.status! < 600)
+        .where((call) => call.response != null && call.response!.status! >= 400 && call.response!.status! < 600)
         .toList()
         .length;
 
-    final int loadingCalls =
-        calls.where((call) => call.loading).toList().length;
+    final int loadingCalls = calls.where((call) => call.loading).toList().length;
 
     final StringBuffer notificationsMessage = StringBuffer();
     if (loadingCalls > 0) {
@@ -183,8 +169,7 @@ class ChuckCore {
     }
     String notificationMessageString = notificationsMessage.toString();
     if (notificationMessageString.endsWith(" | ")) {
-      notificationMessageString = notificationMessageString.substring(
-          0, notificationMessageString.length - 3);
+      notificationMessageString = notificationMessageString.substring(0, notificationMessageString.length - 3);
     }
 
     return notificationMessageString;
@@ -201,9 +186,7 @@ class ChuckCore {
       playSound: false,
       largeIcon: DrawableResourceAndroidBitmap(notificationIcon),
     );
-    const iOSPlatformChannelSpecifics = DarwinNotificationDetails(
-      presentSound: false,
-    );
+    const iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentSound: false);
     final platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics,
@@ -227,8 +210,7 @@ class ChuckCore {
     if (callsCount >= maxCallsCount) {
       final originalCalls = callsSubject.value;
       final calls = List<ChuckHttpCall>.from(originalCalls);
-      calls.sort(
-          (call1, call2) => call1.createdTime.compareTo(call2.createdTime));
+      calls.sort((call1, call2) => call1.createdTime.compareTo(call2.createdTime));
       final indexToReplace = originalCalls.indexOf(calls.first);
       originalCalls[indexToReplace] = call;
 
@@ -239,7 +221,7 @@ class ChuckCore {
   }
 
   /// Add error to existing Chuck http call
-  void addError(ChuckHttpError error, int requestId) {
+  void addError(ChuckHttpError<dynamic> error, int requestId) {
     final ChuckHttpCall? selectedCall = _selectCall(requestId);
 
     if (selectedCall == null) {
@@ -261,8 +243,7 @@ class ChuckCore {
     }
     selectedCall.loading = false;
     selectedCall.response = response;
-    selectedCall.duration = response.time.millisecondsSinceEpoch -
-        selectedCall.request!.time.millisecondsSinceEpoch;
+    selectedCall.duration = response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
 
     callsSubject.add([...callsSubject.value]);
   }
@@ -279,8 +260,7 @@ class ChuckCore {
     callsSubject.add([]);
   }
 
-  ChuckHttpCall? _selectCall(int requestId) =>
-      callsSubject.value.firstWhere((call) => call.id == requestId);
+  ChuckHttpCall? _selectCall(int requestId) => callsSubject.value.firstWhere((call) => call.id == requestId);
 
   /// Save all calls to file
   void saveHttpRequests(BuildContext context) {

@@ -11,10 +11,7 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget> extends
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SelectableText(
-          name,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
+        SelectableText(name, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(width: 6),
         Flexible(child: SelectableText(value)),
         const Padding(padding: EdgeInsets.only(bottom: 18))

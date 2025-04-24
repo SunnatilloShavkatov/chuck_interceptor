@@ -1,5 +1,3 @@
-library flutter_json_widget;
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -55,13 +53,10 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         ),
       );
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _getList(),
-    );
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: _getList());
   }
 
-  _getList() {
+  List<Widget> _getList() {
     List<Widget> list = [];
     for (MapEntry<String, dynamic> entry in widget.jsonObj.entries) {
       bool ex = isExtensible(entry.value);
@@ -75,8 +70,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                     ? InkWell(
                         onTap: () {
                           setState(() {
-                            openFlag[entry.key] =
-                                !(openFlag[entry.key] ?? false);
+                            openFlag[entry.key] = !(openFlag[entry.key] ?? false);
                           });
                         },
                         child: Icon(
@@ -87,8 +81,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                     : InkWell(
                         onTap: () {
                           setState(() {
-                            openFlag[entry.key] =
-                                !(openFlag[entry.key] ?? false);
+                            openFlag[entry.key] = !(openFlag[entry.key] ?? false);
                           });
                         },
                         child: Icon(
@@ -204,8 +197,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
             Clipboard.setData(ClipboardData(
               text: jsonEncode(entry.value),
             )).then((_) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const CustomSnackBar());
+              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
             });
           },
           child: const Text(
@@ -221,10 +213,8 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
             });
           },
           onDoubleTap: () {
-            Clipboard.setData(ClipboardData(text: jsonEncode(entry.value)))
-                .then((_) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const CustomSnackBar());
+            Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
+              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
             });
           },
           child: Text(
@@ -241,8 +231,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         });
       },
       onDoubleTap: () {
-        Clipboard.setData(ClipboardData(text: jsonEncode(entry.value)))
-            .then((_) {
+        Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
           ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
         });
       },
@@ -440,10 +429,8 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
             });
           },
           onDoubleTap: () {
-            Clipboard.setData(ClipboardData(text: jsonEncode(content)))
-                .then((_) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const CustomSnackBar());
+            Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
+              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
             });
           },
           child: const Text(
@@ -459,10 +446,8 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
             });
           },
           onDoubleTap: () {
-            Clipboard.setData(ClipboardData(text: jsonEncode(content)))
-                .then((_) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const CustomSnackBar());
+            Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
+              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
             });
           },
           child: Text(

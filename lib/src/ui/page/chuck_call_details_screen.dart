@@ -59,9 +59,8 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
           foregroundColor: Colors.white,
           key: const Key('share_key'),
           onPressed: () async {
-            Share.share(
-              await _getSharableResponseString(),
-              subject: 'Request Details',
+            SharePlus.instance.share(
+              ShareParams(subject: 'Request Details', text: await _getSharableResponseString()),
             );
           },
           child: const Icon(Icons.share),

@@ -7,11 +7,11 @@ import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 import 'package:http/http.dart' as http;
 
 class ChuckHttpAdapter {
+  /// Creates Chuck http adapter
+  const ChuckHttpAdapter(this.chuckCore);
+
   /// ChuckCore instance
   final ChuckCore chuckCore;
-
-  /// Creates Chuck http adapter
-  ChuckHttpAdapter(this.chuckCore);
 
   /// Handles http response. It creates both request and response from http call
   void onResponse(http.Response response, {dynamic body}) {

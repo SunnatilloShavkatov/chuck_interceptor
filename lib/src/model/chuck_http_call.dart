@@ -16,7 +16,7 @@ class ChuckHttpCall {
 
   ChuckHttpRequest? request;
   ChuckHttpResponse? response;
-  ChuckHttpError? error;
+  ChuckHttpError<dynamic>? error;
 
   ChuckHttpCall(this.id) {
     loading = true;
@@ -63,8 +63,7 @@ class ChuckHttpCall {
     // If server already has http(s) don't add it again
     if (server.contains("http://") || server.contains("https://")) {
       // ignore: join_return_with_assignment
-      curlCmd +=
-          "${compressed ? " --compressed " : " "}${"'$server$endpoint$queryParams'"}";
+      curlCmd += "${compressed ? " --compressed " : " "}${"'$server$endpoint$queryParams'"}";
     } else {
       // ignore: join_return_with_assignment
       curlCmd +=

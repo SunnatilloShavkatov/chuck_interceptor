@@ -77,14 +77,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
     rows.add(
       Column(
         children: [
-          Row(
-            children: const [
-              Text(
-                "Body: Image",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
+          Text("Body: Image", style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Image.network(
             _call.uri,

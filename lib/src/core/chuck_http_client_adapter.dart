@@ -7,11 +7,11 @@ import 'package:chuck_interceptor/src/model/chuck_http_request.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 
 class ChuckHttpClientAdapter {
+  /// Creates Chuck http client adapter
+  const ChuckHttpClientAdapter(this.chuckCore);
+
   /// ChuckCore instance
   final ChuckCore chuckCore;
-
-  /// Creates Chuck http client adapter
-  ChuckHttpClientAdapter(this.chuckCore);
 
   /// Handles httpClientRequest and creates http Chuck call from it
   void onRequest(HttpClientRequest request, {dynamic body}) {
