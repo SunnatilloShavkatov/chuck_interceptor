@@ -20,7 +20,15 @@ class _JsonViewerState extends State<JsonViewer> {
 
   static getContentWidget(dynamic content) {
     if (content == null) {
-      return const SelectableText('{}');
+      return SelectableText(
+        '{}',
+        contextMenuBuilder: (_, editableTextState) {
+          return AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          );
+        },
+      );
     } else if (content is List) {
       return JsonArrayViewer(content, notRoot: false);
     } else {
@@ -93,15 +101,23 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
             (ex && ink)
                 ? SelectableText(
                     entry.key,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+                    style: TextStyle(color: Colors.black),
+                    contextMenuBuilder: (_, editableTextState) {
+                      return AdaptiveTextSelectionToolbar.buttonItems(
+                        anchors: editableTextState.contextMenuAnchors,
+                        buttonItems: editableTextState.contextMenuButtonItems,
+                      );
+                    },
                   )
                 : SelectableText(
                     entry.key,
-                    style: TextStyle(
-                      color: entry.value == null ? Colors.grey : Colors.black,
-                    ),
+                    style: TextStyle(color: entry.value == null ? Colors.grey : Colors.black),
+                    contextMenuBuilder: (_, editableTextState) {
+                      return AdaptiveTextSelectionToolbar.buttonItems(
+                        anchors: editableTextState.contextMenuAnchors,
+                        buttonItems: editableTextState.contextMenuButtonItems,
+                      );
+                    },
                   ),
             const Text(
               ':',
@@ -149,12 +165,18 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
     return true;
   }
 
-  getValueWidget(MapEntry<String, dynamic> entry) {
+  Widget getValueWidget(MapEntry<String, dynamic> entry) {
     if (entry.value == null) {
-      return const Expanded(
+      return Expanded(
         child: SelectableText(
           'undefined',
           style: TextStyle(color: Colors.grey),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (entry.value is int) {
@@ -162,6 +184,12 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         child: SelectableText(
           entry.value.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (entry.value is String) {
@@ -169,6 +197,12 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         child: SelectableText(
           "\"${entry.value}\"",
           style: const TextStyle(color: Color(0xff6a8759)),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (entry.value is bool) {
@@ -176,6 +210,12 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         child: SelectableText(
           entry.value.toString(),
           style: const TextStyle(color: Color(0xffca7832)),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (entry.value is double) {
@@ -183,6 +223,12 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         child: SelectableText(
           entry.value.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (entry.value is List) {
@@ -386,10 +432,16 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
 
   Widget getValueWidget(dynamic content, int index) {
     if (content == null) {
-      return const Expanded(
+      return Expanded(
         child: SelectableText(
           'undefined',
           style: TextStyle(color: Colors.grey),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (content is int) {
@@ -397,6 +449,12 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         child: SelectableText(
           content.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (content is String) {
@@ -404,6 +462,12 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         child: SelectableText(
           "\"$content\"",
           style: const TextStyle(color: Color(0xff6a8759)),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (content is bool) {
@@ -411,6 +475,12 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         child: SelectableText(
           content.toString(),
           style: const TextStyle(color: Color(0xffca7832)),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (content is double) {
@@ -418,6 +488,12 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         child: SelectableText(
           content.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
+          contextMenuBuilder: (_, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       );
     } else if (content is List) {
