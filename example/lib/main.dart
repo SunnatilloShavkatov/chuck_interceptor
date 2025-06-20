@@ -57,25 +57,17 @@ class _MyAppState extends State<MyApp> {
       foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
     );
     return MaterialApp(
-      theme: ThemeData(primaryColor: _primaryColor),
+      theme: ThemeData(primaryColor: _primaryColor, useMaterial3: true),
       navigatorKey: _chuck.getNavigatorKey(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Chuck HTTP Inspector - Example'),
-        ),
+        appBar: AppBar(title: const Text('Chuck HTTP Inspector - Example')),
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
             const SizedBox(height: 8),
-            _getTextWidget(
-              "Welcome to example of Chuck Http Inspector. Click buttons below to generate sample data.",
-            ),
-            ElevatedButton(
-              onPressed: _runDioRequests,
-              style: buttonStyle,
-              child: const Text("Run Dio HTTP Requests"),
-            ),
+            _getTextWidget("Welcome to example of Chuck Http Inspector. Click buttons below to generate sample data."),
+            ElevatedButton(onPressed: _runDioRequests, style: buttonStyle, child: const Text("Run Dio HTTP Requests")),
             ElevatedButton(
               onPressed: _runHttpHttpClientRequests,
               style: buttonStyle,
@@ -86,11 +78,7 @@ class _MyAppState extends State<MyApp> {
               "After clicking on buttons above, you should receive notification."
               " Click on it to show inspector. You can also shake your device or click button below.",
             ),
-            ElevatedButton(
-              onPressed: _runHttpInspector,
-              style: buttonStyle,
-              child: const Text("Run HTTP Inspector"),
-            )
+            ElevatedButton(onPressed: _runHttpInspector, style: buttonStyle, child: const Text("Run HTTP Inspector")),
           ],
         ),
       ),
@@ -98,11 +86,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _getTextWidget(String text) {
-    return Text(
-      text,
-      style: const TextStyle(fontSize: 14),
-      textAlign: TextAlign.center,
-    );
+    return Text(text, style: const TextStyle(fontSize: 14), textAlign: TextAlign.center);
   }
 
   void _runDioRequests() async {
@@ -123,7 +107,8 @@ class _MyAppState extends State<MyApp> {
     _dio.get<void>("https://jsonplaceholder.typicode.com/photos");
     _dio.get<void>("https://icons.iconarchive.com/icons/paomedia/small-n-flat/256/sign-info-icon.png");
     _dio.get<void>(
-        "https://images.unsplash.com/photo-1542736705-53f0131d1e98?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80");
+      "https://images.unsplash.com/photo-1542736705-53f0131d1e98?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
+    );
     _dio.get<void>("https://findicons.com/files/icons/1322/world_of_aqua_5/128/bluetooth.png");
     _dio.get<void>("https://upload.wikimedia.org/wikipedia/commons/4/4e/Pleiades_large.jpg");
     _dio.get<void>("http://techslides.com/demos/sample-videos/small.mp4");
@@ -189,14 +174,12 @@ class _MyAppState extends State<MyApp> {
       _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
     });
 
-    _httpClient.getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/")).then(
-      (request) async {
-        _chuck.onHttpClientRequest(request);
-        var httpResponse = await request.close();
-        var responseBody = await utf8.decoder.bind(httpResponse).join();
-        _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
-      },
-    );
+    _httpClient.getUrl(Uri.parse("https://jsonplaceholder.typicode.com/test/test/")).then((request) async {
+      _chuck.onHttpClientRequest(request);
+      var httpResponse = await request.close();
+      var responseBody = await utf8.decoder.bind(httpResponse).join();
+      _chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+    });
   }
 
   void _runHttpInspector() {

@@ -20,8 +20,7 @@ class ChuckCallDetailsScreen extends StatefulWidget {
   _ChuckCallDetailsScreenState createState() => _ChuckCallDetailsScreenState();
 }
 
-class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
-    with SingleTickerProviderStateMixin {
+class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with SingleTickerProviderStateMixin {
   ChuckHttpCall get call => widget.call;
 
   @override
@@ -40,8 +39,8 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
           initialData: [widget.call],
           builder: (context, callsSnapshot) {
             if (callsSnapshot.hasData) {
-              final ChuckHttpCall? call = callsSnapshot.data!.firstWhere(
-                  (snapshotCall) => snapshotCall.id == widget.call.id);
+              final ChuckHttpCall? call =
+                  callsSnapshot.data!.firstWhere((snapshotCall) => snapshotCall.id == widget.call.id);
               if (call != null) {
                 return _buildMainWidget();
               } else {
@@ -63,11 +62,13 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
         floatingActionButton: FloatingActionButton(
           backgroundColor: ChuckConstants.lightRed,
           foregroundColor: Colors.white,
-          key: const Key('share_key'),
+          key: const Key('shareKey'),
           onPressed: () async {
-            Share.share(
-              await _getSharableResponseString(),
-              subject: 'Request Details',
+            SharePlus.instance.share(
+              ShareParams(
+                text: await _getSharableResponseString(),
+                subject: 'Request Details',
+              ),
             );
           },
           child: const Icon(Icons.share),
