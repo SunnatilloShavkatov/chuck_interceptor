@@ -13,10 +13,10 @@ import 'chuck_stats_screen.dart';
 class ChuckCallsListScreen extends StatefulWidget {
   final ChuckCore _chuckCore;
 
-  const ChuckCallsListScreen(this._chuckCore);
+  const ChuckCallsListScreen(this._chuckCore, {super.key});
 
   @override
-  _ChuckCallsListScreenState createState() => _ChuckCallsListScreenState();
+  State<ChuckCallsListScreen> createState() => _ChuckCallsListScreenState();
 }
 
 class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
@@ -43,10 +43,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
         child: Scaffold(
           appBar: AppBar(
             title: _searchEnabled ? _buildSearchField() : _buildTitleWidget(),
-            actions: [
-              _buildSearchButton(),
-              _buildMenuButton(),
-            ],
+            actions: [_buildSearchButton(), _buildMenuButton()],
           ),
           body: StreamBuilder<List<ChuckHttpCall>>(
             stream: chuckCore.callsSubject,
@@ -98,7 +95,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
               children: [
                 Icon(item.iconData, color: ChuckConstants.lightRed),
                 const Padding(padding: EdgeInsets.only(left: 10)),
-                Text(item.title)
+                Text(item.title),
               ],
             ),
           );
@@ -164,13 +161,9 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
                   style: TextStyle(fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
-                Text(
-                  "• Check search filters",
-                  style: TextStyle(fontSize: 12),
-                  textAlign: TextAlign.center,
-                )
+                Text("• Check search filters", style: TextStyle(fontSize: 12), textAlign: TextAlign.center),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -222,16 +215,14 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     return ListView.separated(
       itemCount: callsSorted.length,
       itemBuilder: (_, index) => ChuckCallListItemWidget(callsSorted[index], _onListItemClicked),
-      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
+      separatorBuilder: (_, _) => const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
     );
   }
 
   void _onListItemClicked(ChuckHttpCall call) {
     Navigator.push<void>(
       widget._chuckCore.getContext()!,
-      MaterialPageRoute(
-        builder: (context) => ChuckCallDetailsScreen(call, widget._chuckCore),
-      ),
+      MaterialPageRoute(builder: (context) => ChuckCallDetailsScreen(call, widget._chuckCore)),
     );
   }
 
@@ -254,9 +245,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
   void _showStatsScreen() {
     Navigator.push<void>(
       chuckCore.getContext()!,
-      MaterialPageRoute(
-        builder: (context) => ChuckStatsScreen(widget._chuckCore),
-      ),
+      MaterialPageRoute(builder: (context) => ChuckStatsScreen(widget._chuckCore)),
     );
   }
 
@@ -276,49 +265,50 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
           data: ThemeData(brightness: Brightness.light),
           child: AlertDialog(
             title: const Text("Select filter"),
-            content: StatefulBuilder(builder: (context, setState) {
-              return Wrap(
-                children: [
-                  ...ChuckSortOption.values
-                      .map(
-                        (sortOption) => RadioListTile<ChuckSortOption>(
-                          title: Text(sortOption.name),
-                          value: sortOption,
-                          groupValue: _sortOption,
-                          onChanged: (value) {
-                            setState(() {
-                              _sortOption = value;
-                            });
-                          },
-                        ),
-                      )
-                      .toList(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Descending"),
-                      Switch(
-                        value: _sortAscending,
+            content: StatefulBuilder(
+              builder: (context, setState) {
+                return Wrap(
+                  children: [
+                    ...ChuckSortOption.values.map(
+                      (sortOption) => RadioListTile<ChuckSortOption>(
+                        title: Text(sortOption.name),
+                        value: sortOption,
+                        groupValue: _sortOption,
                         onChanged: (value) {
                           setState(() {
-                            _sortAscending = value;
+                            _sortOption = value;
                           });
                         },
-                        activeTrackColor: Colors.grey,
-                        activeColor: Colors.white,
                       ),
-                      const Text("Ascending")
-                    ],
-                  )
-                ],
-              );
-            }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Descending"),
+                        Switch(
+                          value: _sortAscending,
+                          onChanged: (value) {
+                            setState(() {
+                              _sortAscending = value;
+                            });
+                          },
+                          activeTrackColor: Colors.grey,
+                          activeColor: Colors.white,
+                        ),
+                        const Text("Ascending"),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
             actions: [
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Cancel")),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Cancel"),
+              ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();

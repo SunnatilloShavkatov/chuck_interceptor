@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class ChuckStatsScreen extends StatelessWidget {
   final ChuckCore chuckCore;
 
-  const ChuckStatsScreen(this.chuckCore);
+  const ChuckStatsScreen(this.chuckCore, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +16,7 @@ class ChuckStatsScreen extends StatelessWidget {
         data: ThemeData(brightness: chuckCore.brightness),
         child: Scaffold(
           appBar: AppBar(title: const Text("Chuck - HTTP Inspector - Stats")),
-          body: ListView(
-            padding: const EdgeInsets.all(8),
-            children: _buildMainListWidgets(),
-          ),
+          body: ListView(padding: const EdgeInsets.all(8), children: _buildMainListWidgets()),
         ),
       ),
     );
@@ -50,17 +47,9 @@ class ChuckStatsScreen extends StatelessWidget {
   Widget _getRow(String label, String value) {
     return Row(
       children: <Widget>[
-        Text(
-          label,
-          style: _getLabelTextStyle(),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(left: 10),
-        ),
-        Text(
-          value,
-          style: _getValueTextStyle(),
-        )
+        Text(label, style: _getLabelTextStyle()),
+        const Padding(padding: EdgeInsets.only(left: 10)),
+        Text(value, style: _getValueTextStyle()),
       ],
     );
   }

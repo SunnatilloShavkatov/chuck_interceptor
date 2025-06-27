@@ -33,7 +33,7 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget> extends
             },
           ),
         ),
-        const Padding(padding: EdgeInsets.only(bottom: 18))
+        const Padding(padding: EdgeInsets.only(bottom: 18)),
       ],
     );
   }

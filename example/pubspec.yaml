@@ -1,6 +1,6 @@
 name: chuck_example
-publish_to: "none"
 version: 1.0.0+1
+publish_to: "none"
 description: "Demonstrates how to use the Chuck Interceptor plugin."
 
 environment:

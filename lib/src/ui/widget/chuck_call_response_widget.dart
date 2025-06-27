@@ -4,7 +4,7 @@ import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.d
 import 'package:flutter/material.dart';
 
 class ChuckCallResponseWidget extends StatefulWidget {
-  const ChuckCallResponseWidget(this.call);
+  const ChuckCallResponseWidget(this.call, {super.key});
 
   final ChuckHttpCall call;
 
@@ -34,11 +34,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
             SliverSafeArea(
               minimum: const EdgeInsets.all(6),
               sliver: SliverList.list(
-                children: [
-                  ..._buildGeneralDataRows(),
-                  ..._buildHeadersRows(),
-                  ..._buildBodyRows(),
-                ],
+                children: [..._buildGeneralDataRows(), ..._buildHeadersRows(), ..._buildBodyRows()],
               ),
             ),
           ],
@@ -113,12 +109,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
       Column(
         children: [
           Row(
-            children: const [
-              Text(
-                "Body: Image",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
-            ],
+            children: const [Text("Body: Image", style: TextStyle(fontWeight: FontWeight.bold))],
           ),
           const SizedBox(height: 8),
           Image.network(
@@ -153,12 +144,8 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll<Color>(
-              ChuckConstants.lightRed,
-            ),
-            foregroundColor: WidgetStatePropertyAll<Color>(
-              Colors.white,
-            ),
+            backgroundColor: WidgetStatePropertyAll<Color>(ChuckConstants.lightRed),
+            foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
           ),
           onPressed: () {
             setState(() {
@@ -203,12 +190,8 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll<Color>(
-              ChuckConstants.lightRed,
-            ),
-            foregroundColor: WidgetStatePropertyAll<Color>(
-              Colors.white,
-            ),
+            backgroundColor: WidgetStatePropertyAll<Color>(ChuckConstants.lightRed),
+            foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
           ),
           onPressed: () {
             setState(() {
@@ -226,11 +209,9 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
     final Map<String, String> requestHeaders = {};
     if (_call.request?.headers != null) {
       requestHeaders.addAll(
-        _call.request!.headers.map(
-          (String key, dynamic value) {
-            return MapEntry(key, value.toString());
-          },
-        ),
+        _call.request!.headers.map((String key, dynamic value) {
+          return MapEntry(key, value.toString());
+        }),
       );
     }
     return requestHeaders;

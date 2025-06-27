@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ChuckCallOverviewWidget extends StatefulWidget {
   final ChuckHttpCall call;
 
-  const ChuckCallOverviewWidget(this.call);
+  const ChuckCallOverviewWidget(this.call, {super.key});
 
   @override
   State<StatefulWidget> createState() => _ChuckCallOverviewWidget();
@@ -28,7 +28,12 @@ class _ChuckCallOverviewWidget extends ChuckBaseCallDetailsWidgetState<ChuckCall
     rows.add(getListRow("Client:", _call.client));
     rows.add(getListRow("Secure:", _call.secure.toString()));
     return CustomScrollView(
-      slivers: [SliverSafeArea(minimum: const EdgeInsets.all(6), sliver: SliverList.list(children: rows))],
+      slivers: [
+        SliverSafeArea(
+          minimum: const EdgeInsets.all(6),
+          sliver: SliverList.list(children: rows),
+        ),
+      ],
     );
   }
 }

@@ -83,11 +83,7 @@ final class Chuck {
   }
 
   /// Handle response from HttpClient
-  void onHttpClientResponse(
-    HttpClientResponse response,
-    HttpClientRequest request, {
-    dynamic body,
-  }) {
+  void onHttpClientResponse(HttpClientResponse response, HttpClientRequest request, {dynamic body}) {
     _httpClientAdapter.onResponse(response, request, body: body);
   }
 
@@ -101,9 +97,9 @@ final class Chuck {
   void showInspector() => _chuckCore.navigateToCallListScreen();
 
   /// Handle generic http call. Can be used to any http client.
-  void addHttpCall(ChuckHttpCall ChuckHttpCall) {
-    assert(ChuckHttpCall.request != null, "Http call request can't be null");
-    assert(ChuckHttpCall.response != null, "Http call response can't be null");
-    _chuckCore.addCall(ChuckHttpCall);
+  void addHttpCall(ChuckHttpCall chuckHttpCall) {
+    assert(chuckHttpCall.request != null, "Http call request can't be null");
+    assert(chuckHttpCall.response != null, "Http call response can't be null");
+    _chuckCore.addCall(chuckHttpCall);
   }
 }

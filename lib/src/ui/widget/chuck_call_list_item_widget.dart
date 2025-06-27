@@ -8,7 +8,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
   final ChuckHttpCall call;
   final Function itemClickAction;
 
-  const ChuckCallListItemWidget(this.call, this.itemClickAction);
+  const ChuckCallListItemWidget(this.call, this.itemClickAction, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +27,11 @@ class ChuckCallListItemWidget extends StatelessWidget {
                   const SizedBox(height: 4),
                   _buildServerRow(),
                   const SizedBox(height: 4),
-                  _buildStatsRow()
+                  _buildStatsRow(),
                 ],
               ),
             ),
-            _buildResponseColumn(context)
+            _buildResponseColumn(context),
           ],
         ),
       ),
@@ -51,7 +51,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 16, color: textColor),
           ),
-        )
+        ),
       ],
     );
   }
@@ -61,12 +61,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
       children: [
         _getSecuredConnectionIcon(call.secure),
         Expanded(
-          child: Text(
-            call.server,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            style: const TextStyle(fontSize: 14),
-          ),
+          child: Text(call.server, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 14)),
         ),
       ],
     );
@@ -76,19 +71,15 @@ class ChuckCallListItemWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
-          child: Text(_formatTime(call.request!.time), style: const TextStyle(fontSize: 12)),
-        ),
-        Flexible(
-          child: Text(ChuckConversionHelper.formatTime(call.duration), style: const TextStyle(fontSize: 12)),
-        ),
+        Flexible(child: Text(_formatTime(call.request!.time), style: const TextStyle(fontSize: 12))),
+        Flexible(child: Text(ChuckConversionHelper.formatTime(call.duration), style: const TextStyle(fontSize: 12))),
         Flexible(
           child: Text(
             "${ChuckConversionHelper.formatBytes(call.request!.size)} / "
             "${ChuckConversionHelper.formatBytes(call.response!.size)}",
             style: const TextStyle(fontSize: 12),
           ),
-        )
+        ),
       ],
     );
   }
@@ -111,23 +102,13 @@ class ChuckCallListItemWidget extends StatelessWidget {
         SizedBox(
           width: 20,
           height: 20,
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(ChuckConstants.lightRed),
-          ),
+          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(ChuckConstants.lightRed)),
         ),
       );
       widgets.add(const SizedBox(height: 4));
     }
-    widgets.add(
-      Text(
-        _getStatus(call.response!),
-        style: TextStyle(fontSize: 16, color: _getStatusTextColor(context)),
-      ),
-    );
-    return SizedBox(
-      width: 50,
-      child: Column(children: widgets),
-    );
+    widgets.add(Text(_getStatus(call.response!), style: TextStyle(fontSize: 16, color: _getStatusTextColor(context))));
+    return SizedBox(width: 50, child: Column(children: widgets));
   }
 
   Color? _getStatusTextColor(BuildContext context) {

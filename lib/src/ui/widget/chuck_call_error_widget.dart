@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ChuckCallErrorWidget extends StatefulWidget {
   final ChuckHttpCall call;
 
-  const ChuckCallErrorWidget(this.call);
+  const ChuckCallErrorWidget(this.call, {super.key});
 
   @override
   State<StatefulWidget> createState() => _ChuckCallErrorWidgetState();
@@ -22,9 +22,9 @@ class _ChuckCallErrorWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCa
       var errorText = "Error is empty";
       if (error != null) {
         errorText = error.toString().replaceAll(
-              "Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status\n",
-              "",
-            );
+          "Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status\n",
+          "",
+        );
       }
       rows.add(getListRow("Error:", errorText));
       return ListView(padding: const EdgeInsets.all(6), children: rows);

@@ -107,10 +107,7 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
   /// Handles error and adds data to Chuck http call
   @override
   void onError(DioException error, ErrorInterceptorHandler handler) {
-    final httpError = ChuckHttpError(
-      error: error,
-      stackTrace: error is Error ? (error as Error).stackTrace : null,
-    );
+    final httpError = ChuckHttpError(error: error, stackTrace: error is Error ? (error as Error).stackTrace : null);
     chuckCore.addError(httpError, error.requestOptions.hashCode);
     final httpResponse = ChuckHttpResponse();
     httpResponse.time = DateTime.now();
@@ -127,16 +124,11 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
         httpResponse.size = utf8.encode(error.response!.data.toString()).length;
       }
       final Map<String, String> headers = {};
-      error.response!.headers.forEach(
-        (header, values) {
-          headers[header] = values.toString();
-        },
-      );
+      error.response!.headers.forEach((header, values) {
+        headers[header] = values.toString();
+      });
       httpResponse.headers = headers;
-      chuckCore.addResponse(
-        httpResponse,
-        error.response!.requestOptions.hashCode,
-      );
+      chuckCore.addResponse(httpResponse, error.response!.requestOptions.hashCode);
     }
     handler.next(error);
   }

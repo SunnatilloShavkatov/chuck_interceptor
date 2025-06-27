@@ -7,7 +7,7 @@ import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.d
 import 'package:flutter/material.dart';
 
 class ChuckCallResponsePreviewWidget extends StatefulWidget {
-  const ChuckCallResponsePreviewWidget(this.call);
+  const ChuckCallResponsePreviewWidget(this.call, {super.key});
 
   final ChuckHttpCall call;
 
@@ -106,19 +106,12 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
     if (_showLargeBody) {
       return _buildTextBodyRows();
     } else {
-      rows.add(
-        getListRow(
-          "Body:",
-          "Too large to show (${_call.response!.body.toString().length} Bytes)",
-        ),
-      );
+      rows.add(getListRow("Body:", "Too large to show (${_call.response!.body.toString().length} Bytes)"));
       rows.add(const SizedBox(height: 8));
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll<Color>(
-              ChuckConstants.lightRed,
-            ),
+            backgroundColor: WidgetStatePropertyAll<Color>(ChuckConstants.lightRed),
             foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
           ),
           onPressed: () {
@@ -138,10 +131,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
   List<Widget> _buildTextBodyRows() {
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
-    final bodyContent = formatBody(
-      _call.response!.body,
-      getContentType(headers),
-    );
+    final bodyContent = formatBody(_call.response!.body, getContentType(headers));
     if (bodyContent.contains("{") && bodyContent.contains("}")) {
       rows.add(JsonViewer(jsonDecode(bodyContent)));
     } else {
@@ -156,10 +146,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
     final headers = _call.response!.headers;
     final contentType = getContentType(headers) ?? "<unknown>";
     if (_showUnsupportedBody) {
-      final bodyContent = formatBody(
-        _call.response!.body,
-        getContentType(headers),
-      );
+      final bodyContent = formatBody(_call.response!.body, getContentType(headers));
       rows.add(getListRow("Body:", bodyContent));
     } else {
       rows.add(
@@ -174,12 +161,8 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
       rows.add(
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll<Color>(
-              ChuckConstants.lightRed,
-            ),
-            foregroundColor: WidgetStatePropertyAll<Color>(
-              Colors.white,
-            ),
+            backgroundColor: WidgetStatePropertyAll<Color>(ChuckConstants.lightRed),
+            foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
           ),
           onPressed: () {
             setState(() {
@@ -197,11 +180,9 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
     final Map<String, String> requestHeaders = {};
     if (_call.request?.headers != null) {
       requestHeaders.addAll(
-        _call.request!.headers.map(
-          (String key, dynamic value) {
-            return MapEntry(key, value.toString());
-          },
-        ),
+        _call.request!.headers.map((String key, dynamic value) {
+          return MapEntry(key, value.toString());
+        }),
       );
     }
     return requestHeaders;

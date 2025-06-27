@@ -24,14 +24,13 @@ sealed class ChuckSaveHelper {
 
   static void _checkPermissions(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
     final status = await Permission.storage.status;
-    if (status.isGranted) {
+    if (status.isGranted && context.mounted) {
       _saveToFile(context, calls, brightness);
     } else {
       final status = await Permission.storage.request();
-
-      if (status.isGranted) {
+      if (status.isGranted && context.mounted) {
         _saveToFile(context, calls, brightness);
-      } else {
+      } else if (context.mounted) {
         ChuckAlertHelper.showAlert(
           context,
           "Permission error",
@@ -45,18 +44,14 @@ sealed class ChuckSaveHelper {
   static Future<String> _saveToFile(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
     try {
       if (calls.isEmpty) {
-        ChuckAlertHelper.showAlert(
-          context,
-          "Error",
-          "There are no logs to save",
-          brightness: brightness,
-        );
+        ChuckAlertHelper.showAlert(context, "Error", "There are no logs to save", brightness: brightness);
         return "";
       }
       final bool isAndroid = Platform.isAndroid;
 
-      final Directory externalDir =
-          await (isAndroid ? getExternalStorageDirectory() as FutureOr<Directory> : getApplicationDocumentsDirectory());
+      final Directory externalDir = await (isAndroid
+          ? getExternalStorageDirectory() as FutureOr<Directory>
+          : getApplicationDocumentsDirectory());
       final String fileName = "Chuck_log_${DateTime.now().millisecondsSinceEpoch}.txt";
       final File file = File("${externalDir.path}/$fileName");
       file.createSync();
@@ -67,22 +62,21 @@ sealed class ChuckSaveHelper {
       });
       await sink.flush();
       await sink.close();
-      ChuckAlertHelper.showAlert(
-        context,
-        "Success",
-        "Successfully saved logs in ${file.path}",
-        secondButtonTitle: isAndroid ? "View file" : null,
-        secondButtonAction: () => null,
-        brightness: brightness,
-      );
+      if (context.mounted) {
+        ChuckAlertHelper.showAlert(
+          context,
+          "Success",
+          "Successfully saved logs in ${file.path}",
+          secondButtonTitle: isAndroid ? "View file" : null,
+          secondButtonAction: () => null,
+          brightness: brightness,
+        );
+      }
       return file.path;
     } catch (exception) {
-      ChuckAlertHelper.showAlert(
-        context,
-        "Error",
-        "Failed to save http calls to file",
-        brightness: brightness,
-      );
+      if (context.mounted) {
+        ChuckAlertHelper.showAlert(context, "Error", "Failed to save http calls to file", brightness: brightness);
+      }
       ChuckUtils.log(exception.toString());
     }
 
@@ -114,9 +108,7 @@ sealed class ChuckSaveHelper {
     stringBuffer.write("Method: ${call.method} \n");
     stringBuffer.write("Endpoint: ${call.endpoint} \n");
     stringBuffer.write("Client: ${call.client} \n");
-    stringBuffer.write(
-      "Duration ${ChuckConversionHelper.formatTime(call.duration)}\n",
-    );
+    stringBuffer.write("Duration ${ChuckConversionHelper.formatTime(call.duration)}\n");
     stringBuffer.write("Secured connection: ${call.secure}\n");
     stringBuffer.write("Completed: ${!call.loading} \n");
     stringBuffer.write("--------------------------------------------\n");
@@ -124,20 +116,12 @@ sealed class ChuckSaveHelper {
     stringBuffer.write("--------------------------------------------\n");
     stringBuffer.write("Request time: ${call.request!.time}\n");
     stringBuffer.write("Request content type: ${call.request!.contentType}\n");
-    stringBuffer.write(
-      "Request cookies: ${_encoder.convert(call.request!.cookies)}\n",
-    );
-    stringBuffer.write(
-      "Request headers: ${_encoder.convert(call.request!.headers)}\n",
-    );
+    stringBuffer.write("Request cookies: ${_encoder.convert(call.request!.cookies)}\n");
+    stringBuffer.write("Request headers: ${_encoder.convert(call.request!.headers)}\n");
     if (call.request!.queryParameters.isNotEmpty) {
-      stringBuffer.write(
-        "Request query params: ${_encoder.convert(call.request!.queryParameters)}\n",
-      );
+      stringBuffer.write("Request query params: ${_encoder.convert(call.request!.queryParameters)}\n");
     }
-    stringBuffer.write(
-      "Request size: ${ChuckConversionHelper.formatBytes(call.request!.size)}\n",
-    );
+    stringBuffer.write("Request size: ${ChuckConversionHelper.formatBytes(call.request!.size)}\n");
     stringBuffer.write(
       "Request body: ${ChuckParser.formatBody(call.request!.body, ChuckParser.getContentType(call.request!.headers))}\n",
     );
@@ -146,12 +130,8 @@ sealed class ChuckSaveHelper {
     stringBuffer.write("--------------------------------------------\n");
     stringBuffer.write("Response time: ${call.response!.time}\n");
     stringBuffer.write("Response status: ${call.response!.status}\n");
-    stringBuffer.write(
-      "Response size: ${ChuckConversionHelper.formatBytes(call.response!.size)}\n",
-    );
-    stringBuffer.write(
-      "Response headers: ${_encoder.convert(call.response!.headers)}\n",
-    );
+    stringBuffer.write("Response size: ${ChuckConversionHelper.formatBytes(call.response!.size)}\n");
+    stringBuffer.write("Response headers: ${_encoder.convert(call.response!.headers)}\n");
     stringBuffer.write(
       "Response body: ${ChuckParser.formatBody(call.response!.body, ChuckParser.getContentType(call.response!.headers))}\n",
     );

@@ -1,5 +1,7 @@
 ///Code from https://github.com/deven98/shake
 ///Seems to be not maintained for almost 2 years... (01.03.2021).
+library;
+
 import 'dart:async';
 
 /// Callback for phone shakes
