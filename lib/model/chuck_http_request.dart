@@ -6,7 +6,7 @@ import 'chuck_from_data_field.dart';
 class ChuckHttpRequest {
   ChuckHttpRequest({
     this.size = 0,
-    DateTime? time,
+    required this.time,
     this.headers = const <String, dynamic>{},
     this.body = "",
     this.contentType,
@@ -14,12 +14,11 @@ class ChuckHttpRequest {
     this.queryParameters = const <String, dynamic>{},
     this.formDataFiles,
     this.formDataFields,
-  }) {
-    time = time ?? DateTime.now();
-  }
+  });
 
   int size = 0;
-  DateTime time = DateTime.now();
+  final DateTime time;
+
   Map<String, dynamic> headers = <String, dynamic>{};
   dynamic body = "";
   String? contentType = "";
@@ -31,12 +30,12 @@ class ChuckHttpRequest {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'size': size,
-      'time': time.toString(),
-      'headers': headers,
       'body': body,
+      'headers': headers,
+      'time': time.toString(),
       'contentType': contentType,
-      'cookies': cookies.map((e) => e.toJson()).toList(),
       'queryParameters': queryParameters,
+      'cookies': cookies.map((e) => e.toJson()).toList(),
       'formDataFiles': formDataFiles?.map((e) => e.toJson()).toList(),
       'formDataFields': formDataFields?.map((e) => e.toJson()).toList(),
     };
@@ -45,10 +44,10 @@ class ChuckHttpRequest {
   factory ChuckHttpRequest.fromJson(Map<String, dynamic> json) {
     return ChuckHttpRequest(
       size: json['size'],
-      time: json['time'] != null ? DateTime.parse(json['time']) : null,
       headers: json['headers'],
       body: json['body'],
       contentType: json['contentType'],
+      time: json['time'] != null ? DateTime.parse(json['time']) : DateTime.now(),
       cookies: json['cookies'] != null ? List<Cookie>.from(json['cookies'].map((x) => Cookie("", "").fromJson(x))) : [],
       queryParameters: json['queryParameters'],
       formDataFiles: json['formDataFiles'] != null

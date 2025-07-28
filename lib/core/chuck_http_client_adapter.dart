@@ -7,11 +7,11 @@ import 'package:chuck_interceptor/model/chuck_http_request.dart';
 import 'package:chuck_interceptor/model/chuck_http_response.dart';
 
 class ChuckHttpClientAdapter {
+  /// Creates Chuck http client adapter
+  const ChuckHttpClientAdapter(this.chuckCore);
+
   /// ChuckCore instance
   final ChuckCore chuckCore;
-
-  /// Creates Chuck http client adapter
-  ChuckHttpClientAdapter(this.chuckCore);
 
   /// Handles httpClientRequest and creates http Chuck call from it
   void onRequest(HttpClientRequest request, {dynamic body}) {
@@ -31,7 +31,7 @@ class ChuckHttpClientAdapter {
     if (request.uri.scheme == "https") {
       call.secure = true;
     }
-    final ChuckHttpRequest httpRequest = ChuckHttpRequest();
+    final ChuckHttpRequest httpRequest = ChuckHttpRequest(time: DateTime.now());
     if (body == null) {
       httpRequest.size = 0;
       httpRequest.body = "";
@@ -39,7 +39,6 @@ class ChuckHttpClientAdapter {
       httpRequest.size = utf8.encode(body.toString()).length;
       httpRequest.body = body;
     }
-    httpRequest.time = DateTime.now();
     final Map<String, dynamic> headers = <String, dynamic>{};
 
     httpRequest.headers.forEach((header, dynamic value) {

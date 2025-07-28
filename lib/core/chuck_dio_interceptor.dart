@@ -36,7 +36,7 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
       call.secure = true;
     }
 
-    final ChuckHttpRequest request = ChuckHttpRequest();
+    final ChuckHttpRequest request = ChuckHttpRequest(time: DateTime.now());
 
     final dynamic data = options.data;
     if (data == null) {
@@ -77,7 +77,6 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
       }
     }
 
-    request.time = DateTime.now();
     request.headers = options.headers;
     request.contentType = options.contentType.toString();
     request.queryParameters = options.queryParameters;

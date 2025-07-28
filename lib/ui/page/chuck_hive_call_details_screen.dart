@@ -72,9 +72,8 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
           foregroundColor: Colors.white,
           key: const Key('share_key'),
           onPressed: () async {
-            Share.share(
-              await _getSharableResponseString(),
-              subject: 'Request Details',
+            SharePlus.instance.share(
+              ShareParams(text: await _getSharableResponseString(), title: 'Request Details'),
             );
           },
           child: const Icon(Icons.share),

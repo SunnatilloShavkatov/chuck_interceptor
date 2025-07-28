@@ -17,7 +17,7 @@ dependencies:
   path_provider: ^2.1.5
   package_info_plus: ^8.3.0
   permission_handler: ">=11.3.1 <14.0.0"
-  flutter_local_notifications: ^19.2.1
+  flutter_local_notifications: ^19.4.0
   # storage
   hive: ^2.2.3
 

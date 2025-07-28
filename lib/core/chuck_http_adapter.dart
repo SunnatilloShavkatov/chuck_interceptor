@@ -36,7 +36,7 @@ class ChuckHttpAdapter {
       call.secure = true;
     }
 
-    final ChuckHttpRequest httpRequest = ChuckHttpRequest();
+    final ChuckHttpRequest httpRequest = ChuckHttpRequest(time: DateTime.now());
 
     if (response.request is http.Request) {
       // we are guaranteed` the existence of body and headers
@@ -54,8 +54,6 @@ class ChuckHttpAdapter {
       httpRequest.size = utf8.encode(body.toString()).length;
       httpRequest.body = body;
     }
-
-    httpRequest.time = DateTime.now();
 
     String? contentType = "unknown";
     if (httpRequest.headers.containsKey("Content-Type")) {

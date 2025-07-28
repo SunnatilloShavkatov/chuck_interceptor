@@ -76,12 +76,13 @@ class ChuckCallListItemWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
-          child: Text(
-            _formatTime(call.request!.time),
-            style: const TextStyle(fontSize: 12),
+        if (call.request?.time != null)
+          Flexible(
+            child: Text(
+              _formatTime(call.request!.time),
+              style: const TextStyle(fontSize: 12),
+            ),
           ),
-        ),
         Flexible(
           child: Text(
             ChuckConversionHelper.formatTime(call.duration),

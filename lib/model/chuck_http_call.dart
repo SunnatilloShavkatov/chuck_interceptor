@@ -3,6 +3,10 @@ import 'chuck_http_request.dart';
 import 'chuck_http_response.dart';
 
 class ChuckHttpCall {
+  ChuckHttpCall(this.id, this.createdTime) {
+    loading = true;
+  }
+
   final int id;
   final DateTime createdTime;
   String client = "";
@@ -17,10 +21,6 @@ class ChuckHttpCall {
   ChuckHttpRequest? request;
   ChuckHttpResponse? response;
   ChuckHttpError? error;
-
-  ChuckHttpCall(this.id, this.createdTime) {
-    loading = true;
-  }
 
   void setResponse(ChuckHttpResponse response) {
     this.response = response;
@@ -61,10 +61,8 @@ class ChuckHttpCall {
 
     // If server already has http(s) don't add it again
     if (server.contains("http://") || server.contains("https://")) {
-      // ignore: join_return_with_assignment
       curlCmd += "${compressed ? " --compressed " : " "}${"'$server$endpoint$queryParams'"}";
     } else {
-      // ignore: join_return_with_assignment
       curlCmd +=
           "${compressed ? " --compressed " : " "}${"'${secure ? 'https://' : 'http://'}$server$endpoint$queryParams'"}";
     }
@@ -75,18 +73,18 @@ class ChuckHttpCall {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'createdTime': createdTime.toString(),
+      'uri': uri,
       'client': client,
-      'loading': loading,
       'secure': secure,
       'method': method,
-      'endpoint': endpoint,
       'server': server,
-      'uri': uri,
+      'loading': loading,
+      'endpoint': endpoint,
       'duration': duration,
+      'error': error?.toJson(),
       'request': request?.toJson(),
       'response': response?.toJson(),
-      'error': error?.toJson()
+      'createdTime': createdTime.toString(),
     };
   }
 
