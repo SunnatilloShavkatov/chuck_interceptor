@@ -102,4 +102,10 @@ final class Chuck {
     assert(chuckHttpCall.response != null, "Http call response can't be null");
     _chuckCore.addCall(chuckHttpCall);
   }
+
+  /// Dispose of resources used by Chuck.
+  /// Call this method when Chuck is no longer needed to prevent memory leaks.
+  void dispose() {
+    _chuckCore.dispose();
+  }
 }

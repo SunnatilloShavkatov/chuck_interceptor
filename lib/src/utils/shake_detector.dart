@@ -47,12 +47,11 @@ class ShakeDetector {
 
   /// Stops listening to accelerometer events
   void stopListening() {
-    if (streamSubscription != null) {
-      streamSubscription!.cancel();
-    }
+    streamSubscription?.cancel();
+    streamSubscription = null;
   }
 
   void dispose() {
-    streamSubscription?.cancel();
+    stopListening();
   }
 }

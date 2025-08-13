@@ -29,47 +29,65 @@ class ChuckHttpCall {
   }
 
   String getCurlCommand() {
+    if (request == null) return "curl # No request data available";
+    
     var compressed = false;
-    var curlCmd = "curl";
-    curlCmd += " -X $method";
+    final StringBuffer curlCmd = StringBuffer("curl");
+    curlCmd.write(" -X $method");
+    
     final headers = request!.headers;
     headers.forEach((key, dynamic value) {
       if ("Accept-Encoding" == key && "gzip" == value) {
         compressed = true;
       }
-      curlCmd += " -H '$key: $value'";
+      // Escape single quotes in header values for shell safety
+      final String escapedValue = value.toString().replaceAll("'", "'\"'\"'");
+      curlCmd.write(" -H '$key: $escapedValue'");
     });
 
     final String requestBody = request!.body.toString();
-    if (requestBody != '') {
-      // try to keep to a single line and use a subshell to preserve any line breaks
-      curlCmd += " --data \$'${requestBody.replaceAll("\n", "\\n")}'";
+    if (requestBody.isNotEmpty) {
+      // Escape single quotes and newlines for shell safety
+      final String escapedBody = requestBody
+          .replaceAll("'", "'\"'\"'")
+          .replaceAll("\n", "\\n");
+      curlCmd.write(" --data \$'$escapedBody'");
     }
 
     final queryParamMap = request!.queryParameters;
-    int paramCount = queryParamMap.keys.length;
-    var queryParams = "";
-    if (paramCount > 0) {
-      queryParams += "?";
-      queryParamMap.forEach((key, dynamic value) {
-        queryParams += '$key=$value';
-        paramCount -= 1;
-        if (paramCount > 0) {
-          queryParams += "&";
+    if (queryParamMap.isNotEmpty) {
+      final StringBuffer queryParams = StringBuffer("?");
+      final entries = queryParamMap.entries.toList();
+      for (int i = 0; i < entries.length; i++) {
+        final entry = entries[i];
+        queryParams.write('${entry.key}=${entry.value}');
+        if (i < entries.length - 1) {
+          queryParams.write("&");
         }
-      });
-    }
-
-    // If server already has http(s) don't add it again
-    if (server.contains("http://") || server.contains("https://")) {
-      // ignore: join_return_with_assignment
-      curlCmd += "${compressed ? " --compressed " : " "}${"'$server$endpoint$queryParams'"}";
+      }
+      
+      // Build final URL with proper escaping
+      final String baseUrl;
+      if (server.contains("http://") || server.contains("https://")) {
+        baseUrl = server;
+      } else {
+        baseUrl = "${secure ? 'https://' : 'http://'}$server";
+      }
+      
+      curlCmd.write(compressed ? " --compressed " : " ");
+      curlCmd.write("'$baseUrl$endpoint$queryParams'");
     } else {
-      // ignore: join_return_with_assignment
-      curlCmd +=
-          "${compressed ? " --compressed " : " "}${"'${secure ? 'https://' : 'http://'}$server$endpoint$queryParams'"}";
+      final String baseUrl;
+      if (server.contains("http://") || server.contains("https://")) {
+        baseUrl = server;
+      } else {
+        baseUrl = "${secure ? 'https://' : 'http://'}$server";
+      }
+      
+      curlCmd.write(compressed ? " --compressed " : " ");
+      curlCmd.write("'$baseUrl$endpoint'");
     }
 
-    return curlCmd;
+    return curlCmd.toString();
   }
 }
