@@ -51,7 +51,13 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
               List<ChuckHttpCall> calls = snapshot.data ?? [];
               final String query = _queryTextEditingController.text.trim();
               if (query.isNotEmpty) {
-                calls = calls.where((call) => call.endpoint.toLowerCase().contains(query.toLowerCase())).toList();
+                // Use case-insensitive search with better performance
+                final String lowerQuery = query.toLowerCase();
+                calls = calls.where((call) => 
+                  call.endpoint.toLowerCase().contains(lowerQuery) ||
+                  call.method.toLowerCase().contains(lowerQuery) ||
+                  call.server.toLowerCase().contains(lowerQuery)
+                ).toList();
               }
               if (calls.isNotEmpty) {
                 return _buildCallsListWidget(calls);
@@ -182,24 +188,65 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
         break;
       case ChuckSortOption.responseTime:
         if (_sortAscending) {
-          callsSorted.sort();
-          callsSorted.sort((call1, call2) => call1.response?.time.compareTo(call2.response!.time) ?? -1);
+          callsSorted.sort((call1, call2) {
+            final time1 = call1.response?.time;
+            final time2 = call2.response?.time;
+            if (time1 == null && time2 == null) return 0;
+            if (time1 == null) return -1;
+            if (time2 == null) return 1;
+            return time1.compareTo(time2);
+          });
         } else {
-          callsSorted.sort((call1, call2) => call2.response?.time.compareTo(call1.response!.time) ?? -1);
+          callsSorted.sort((call1, call2) {
+            final time1 = call1.response?.time;
+            final time2 = call2.response?.time;
+            if (time1 == null && time2 == null) return 0;
+            if (time1 == null) return 1;
+            if (time2 == null) return -1;
+            return time2.compareTo(time1);
+          });
         }
         break;
       case ChuckSortOption.responseCode:
         if (_sortAscending) {
-          callsSorted.sort((call1, call2) => call1.response?.status?.compareTo(call2.response!.status!) ?? -1);
+          callsSorted.sort((call1, call2) {
+            final status1 = call1.response?.status;
+            final status2 = call2.response?.status;
+            if (status1 == null && status2 == null) return 0;
+            if (status1 == null) return -1;
+            if (status2 == null) return 1;
+            return status1.compareTo(status2);
+          });
         } else {
-          callsSorted.sort((call1, call2) => call2.response?.status?.compareTo(call1.response!.status!) ?? -1);
+          callsSorted.sort((call1, call2) {
+            final status1 = call1.response?.status;
+            final status2 = call2.response?.status;
+            if (status1 == null && status2 == null) return 0;
+            if (status1 == null) return 1;
+            if (status2 == null) return -1;
+            return status2.compareTo(status1);
+          });
         }
         break;
       case ChuckSortOption.responseSize:
         if (_sortAscending) {
-          callsSorted.sort((call1, call2) => call1.response?.size.compareTo(call2.response!.size) ?? -1);
+          callsSorted.sort((call1, call2) {
+            final size1 = call1.response?.size;
+            final size2 = call2.response?.size;
+            if (size1 == null && size2 == null) return 0;
+            if (size1 == null) return -1;
+            if (size2 == null) return 1;
+            return size1.compareTo(size2);
+          });
         } else {
-          callsSorted.sort((call1, call2) => call2.response?.size.compareTo(call1.response!.size) ?? -1);
+          callsSorted.sort((call1, call2) {
+            final size1 = call1.response?.size;
+            final size2 = call2.response?.size;
+            if (size1 == null && size2 == null) return 0;
+            if (size1 == null) return 1;
+            if (size2 == null) return -1;
+            return size2.compareTo(size1);
+          });
         }
         break;
       case ChuckSortOption.endpoint:
@@ -214,8 +261,15 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     }
     return ListView.separated(
       itemCount: callsSorted.length,
-      itemBuilder: (_, index) => ChuckCallListItemWidget(callsSorted[index], _onListItemClicked),
-      separatorBuilder: (_, _) => const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
+      // Use const constructors where possible for better performance
+      itemBuilder: (context, index) => ChuckCallListItemWidget(callsSorted[index], _onListItemClicked),
+      separatorBuilder: (context, index) => const Divider(
+        height: 1, 
+        thickness: 1, 
+        color: ChuckConstants.grey,
+      ),
+      // Add cacheExtent for better performance with long lists
+      cacheExtent: 20.0,
     );
   }
 

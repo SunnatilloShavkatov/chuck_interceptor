@@ -98,11 +98,11 @@ class ChuckCore {
   }
 
   void _onCallsChanged() async {
-    if (callsSubject.value.isNotEmpty) {
+    if (callsSubject.value.isNotEmpty && !_notificationProcessing) {
       _notificationMessage = _getNotificationMessage();
-      if (_notificationMessage != _notificationMessageShown && !_notificationProcessing) {
+      if (_notificationMessage != _notificationMessageShown) {
         await _showLocalNotification();
-        _onCallsChanged();
+        // Remove recursive call to prevent potential stack overflow
       }
     }
   }
@@ -206,17 +206,29 @@ class ChuckCore {
 
   /// Add Chuck http call to calls subject
   void addCall(ChuckHttpCall call) {
-    final callsCount = callsSubject.value.length;
+    final List<ChuckHttpCall> currentCalls = callsSubject.value;
+    final callsCount = currentCalls.length;
+    
     if (callsCount >= maxCallsCount) {
-      final originalCalls = callsSubject.value;
-      final calls = List<ChuckHttpCall>.from(originalCalls);
-      calls.sort((call1, call2) => call1.createdTime.compareTo(call2.createdTime));
-      final indexToReplace = originalCalls.indexOf(calls.first);
-      originalCalls[indexToReplace] = call;
-
-      callsSubject.add(originalCalls);
+      // Find the oldest call by creation time without creating a new sorted list
+      ChuckHttpCall? oldestCall;
+      int oldestIndex = 0;
+      
+      for (int i = 0; i < currentCalls.length; i++) {
+        if (oldestCall == null || currentCalls[i].createdTime.isBefore(oldestCall.createdTime)) {
+          oldestCall = currentCalls[i];
+          oldestIndex = i;
+        }
+      }
+      
+      // Replace the oldest call in-place to avoid list recreation
+      final List<ChuckHttpCall> updatedCalls = List<ChuckHttpCall>.from(currentCalls);
+      updatedCalls[oldestIndex] = call;
+      callsSubject.add(updatedCalls);
     } else {
-      callsSubject.add([...callsSubject.value, call]);
+      // Use efficient list building instead of spread operator
+      final List<ChuckHttpCall> updatedCalls = List<ChuckHttpCall>.from(currentCalls)..add(call);
+      callsSubject.add(updatedCalls);
     }
   }
 
@@ -230,7 +242,9 @@ class ChuckCore {
     }
 
     selectedCall.error = error;
-    callsSubject.add([...callsSubject.value]);
+    // Only trigger update if the call was actually modified
+    final List<ChuckHttpCall> currentCalls = callsSubject.value;
+    callsSubject.add(List<ChuckHttpCall>.from(currentCalls));
   }
 
   /// Add response to existing Chuck http call
@@ -245,7 +259,9 @@ class ChuckCore {
     selectedCall.response = response;
     selectedCall.duration = response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
 
-    callsSubject.add([...callsSubject.value]);
+    // Only trigger update if the call was actually modified
+    final List<ChuckHttpCall> currentCalls = callsSubject.value;
+    callsSubject.add(List<ChuckHttpCall>.from(currentCalls));
   }
 
   /// Add Chuck http call to calls subject
@@ -260,7 +276,14 @@ class ChuckCore {
     callsSubject.add([]);
   }
 
-  ChuckHttpCall? _selectCall(int requestId) => callsSubject.value.firstWhere((call) => call.id == requestId);
+  ChuckHttpCall? _selectCall(int requestId) {
+    try {
+      return callsSubject.value.firstWhere((call) => call.id == requestId);
+    } catch (e) {
+      ChuckUtils.log("Call with ID $requestId not found");
+      return null;
+    }
+  }
 
   /// Save all calls to file
   void saveHttpRequests(BuildContext context) {

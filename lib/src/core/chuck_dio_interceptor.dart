@@ -44,26 +44,28 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
       request.body = "";
     } else {
       if (data is FormData) {
-        request.body += "Form data";
+        request.body = "Form data";
 
-        if (data.fields.isNotEmpty == true) {
-          final List<ChuckFormDataField> fields = [];
-          data.fields.forEach((entry) {
-            fields.add(ChuckFormDataField(entry.key, entry.value));
-          });
-          request.formDataFields = fields;
+        if (data.fields.isNotEmpty) {
+          // Use map instead of forEach for better performance
+          request.formDataFields = data.fields
+              .map((entry) => ChuckFormDataField(entry.key, entry.value))
+              .toList(growable: false);
         }
-        if (data.files.isNotEmpty == true) {
-          final List<ChuckFormDataFile> files = [];
-          data.files.forEach((entry) {
-            files.add(ChuckFormDataFile(entry.value.filename, entry.value.contentType.toString(), entry.value.length));
-          });
-
-          request.formDataFiles = files;
+        if (data.files.isNotEmpty) {
+          // Use map instead of forEach for better performance  
+          request.formDataFiles = data.files
+              .map((entry) => ChuckFormDataFile(
+                    entry.value.filename, 
+                    entry.value.contentType.toString(), 
+                    entry.value.length
+                  ))
+              .toList(growable: false);
         }
       } else {
-        request.size = utf8.encode(data.toString()).length;
-        request.body = data;
+        final String dataString = data.toString();
+        request.size = utf8.encode(dataString).length;
+        request.body = dataString;
       }
     }
 
@@ -89,16 +91,16 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
       httpResponse.body = "";
       httpResponse.size = 0;
     } else {
+      final String responseDataString = response.data.toString();
       httpResponse.body = response.data;
-      httpResponse.size = utf8.encode(response.data.toString()).length;
+      httpResponse.size = utf8.encode(responseDataString).length;
     }
 
     httpResponse.time = DateTime.now();
-    final Map<String, String> headers = {};
-    response.headers.forEach((header, values) {
-      headers[header] = values.toString();
-    });
-    httpResponse.headers = headers;
+    // Use map for better performance instead of forEach
+    httpResponse.headers = Map<String, String>.fromEntries(
+      response.headers.map((header, values) => MapEntry(header, values.toString()))
+    );
 
     chuckCore.addResponse(httpResponse, response.requestOptions.hashCode);
     handler.next(response);
@@ -111,24 +113,26 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
     chuckCore.addError(httpError, error.requestOptions.hashCode);
     final httpResponse = ChuckHttpResponse();
     httpResponse.time = DateTime.now();
-    if (error.response == null) {
+    
+    final errorResponse = error.response;
+    if (errorResponse == null) {
       httpResponse.status = -1;
       chuckCore.addResponse(httpResponse, error.requestOptions.hashCode);
     } else {
-      httpResponse.status = error.response!.statusCode;
-      if (error.response!.data == null) {
+      httpResponse.status = errorResponse.statusCode;
+      if (errorResponse.data == null) {
         httpResponse.body = "";
         httpResponse.size = 0;
       } else {
-        httpResponse.body = error.response!.data;
-        httpResponse.size = utf8.encode(error.response!.data.toString()).length;
+        final String errorDataString = errorResponse.data.toString();
+        httpResponse.body = errorResponse.data;
+        httpResponse.size = utf8.encode(errorDataString).length;
       }
-      final Map<String, String> headers = {};
-      error.response!.headers.forEach((header, values) {
-        headers[header] = values.toString();
-      });
-      httpResponse.headers = headers;
-      chuckCore.addResponse(httpResponse, error.response!.requestOptions.hashCode);
+      // Use map for better performance instead of forEach
+      httpResponse.headers = Map<String, String>.fromEntries(
+        errorResponse.headers.map((header, values) => MapEntry(header, values.toString()))
+      );
+      chuckCore.addResponse(httpResponse, errorResponse.requestOptions.hashCode);
     }
     handler.next(error);
   }
