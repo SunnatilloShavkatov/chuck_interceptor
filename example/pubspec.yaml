@@ -10,9 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dio: ^5.8.0+1
+  dio: ^5.9.0
   path_provider: ^2.1.5
-  connectivity_plus: ^6.1.4
+  connectivity_plus: ^7.0.0
   chuck_interceptor:
     path: ../
 
