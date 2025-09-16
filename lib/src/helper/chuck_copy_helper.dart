@@ -19,7 +19,7 @@ class ChuckCopyHelper {
       items: [
         PopupMenuItem(
           value: 'copy_curl',
-          child: const Row(children: [Icon(Icons.copy), SizedBox(width: 8), Text('Copy curl request')]),
+          child: const Row(children: [Icon(Icons.copy), SizedBox(width: 8), Text('Copy cURL request')]),
         ),
       ],
     ).then((value) {
