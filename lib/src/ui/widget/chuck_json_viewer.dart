@@ -92,7 +92,6 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
             (ex && ink)
                 ? SelectableText(
                     entry.key,
-                    style: TextStyle(color: Colors.black),
                     contextMenuBuilder: (_, editableTextState) {
                       return AdaptiveTextSelectionToolbar.buttonItems(
                         anchors: editableTextState.contextMenuAnchors,
@@ -102,7 +101,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                   )
                 : SelectableText(
                     entry.key,
-                    style: TextStyle(color: entry.value == null ? Colors.grey : Colors.black),
+                    style: TextStyle(color: entry.value == null ? Colors.grey : null),
                     contextMenuBuilder: (_, editableTextState) {
                       return AdaptiveTextSelectionToolbar.buttonItems(
                         anchors: editableTextState.contextMenuAnchors,
@@ -373,7 +372,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                     child: const Icon(Icons.arrow_right, color: Color.fromARGB(0, 0, 0, 0)),
                   ),
             (ex && ink)
-                ? getInkWell(i)
+                ? Text('[$i]')
                 : Text('[$i]', style: TextStyle(color: content == null ? Colors.grey : Colors.black)),
             const Text(':', style: TextStyle(color: Colors.grey)),
             Padding(padding: EdgeInsets.only(left: 3)),
@@ -387,10 +386,6 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       }
     }
     return list;
-  }
-
-  Widget getInkWell(int index) {
-    return Text('[$index]', style: TextStyle(color: Colors.black));
   }
 
   Widget getValueWidget(dynamic content, int index) {

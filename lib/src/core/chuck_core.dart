@@ -20,9 +20,6 @@ class ChuckCore {
   /// with sensors)
   final bool showInspectorOnShake;
 
-  /// Should inspector use dark theme
-  final bool darkTheme;
-
   /// Rx subject which contains all intercepted http calls
   final BehaviorSubject<List<ChuckHttpCall>> callsSubject = BehaviorSubject.seeded([]);
 
@@ -33,12 +30,8 @@ class ChuckCore {
   ///method queue will be used to remove elements.
   final int maxCallsCount;
 
-  ///Directionality of app. If null then directionality of context will be used.
-  final TextDirection? directionality;
-
   late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   GlobalKey<NavigatorState>? navigatorKey;
-  Brightness _brightness = Brightness.light;
   bool _isInspectorOpened = false;
   ShakeDetector? _shakeDetector;
   StreamSubscription<dynamic>? _callsSubscription;
@@ -51,10 +44,8 @@ class ChuckCore {
     this.navigatorKey, {
     required this.showNotification,
     required this.showInspectorOnShake,
-    required this.darkTheme,
     required this.notificationIcon,
     required this.maxCallsCount,
-    this.directionality,
   }) {
     if (showNotification) {
       _initializeNotificationsPlugin();
@@ -68,7 +59,6 @@ class ChuckCore {
         shakeThresholdGravity: 5,
       );
     }
-    _brightness = darkTheme ? Brightness.dark : Brightness.light;
   }
 
   /// Dispose subjects and subscriptions
@@ -77,9 +67,6 @@ class ChuckCore {
     _shakeDetector?.stopListening();
     _callsSubscription?.cancel();
   }
-
-  /// Get currently used brightness
-  Brightness get brightness => _brightness;
 
   void _initializeNotificationsPlugin() {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -208,19 +195,19 @@ class ChuckCore {
   void addCall(ChuckHttpCall call) {
     final List<ChuckHttpCall> currentCalls = callsSubject.value;
     final callsCount = currentCalls.length;
-    
+
     if (callsCount >= maxCallsCount) {
       // Find the oldest call by creation time without creating a new sorted list
       ChuckHttpCall? oldestCall;
       int oldestIndex = 0;
-      
+
       for (int i = 0; i < currentCalls.length; i++) {
         if (oldestCall == null || currentCalls[i].createdTime.isBefore(oldestCall.createdTime)) {
           oldestCall = currentCalls[i];
           oldestIndex = i;
         }
       }
-      
+
       // Replace the oldest call in-place to avoid list recreation
       final List<ChuckHttpCall> updatedCalls = List<ChuckHttpCall>.from(currentCalls);
       updatedCalls[oldestIndex] = call;
@@ -287,6 +274,6 @@ class ChuckCore {
 
   /// Save all calls to file
   void saveHttpRequests(BuildContext context) {
-    ChuckSaveHelper.saveCalls(context, callsSubject.value, _brightness);
+    ChuckSaveHelper.saveCalls(context, callsSubject.value, Theme.of(context).brightness);
   }
 }

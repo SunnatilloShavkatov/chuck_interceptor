@@ -36,37 +36,34 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: widget._chuckCore.directionality ?? Directionality.of(context),
-      child: Theme(
-        data: ThemeData(brightness: widget._chuckCore.brightness),
-        child: Scaffold(
-          appBar: AppBar(
-            title: _searchEnabled ? _buildSearchField() : _buildTitleWidget(),
-            actions: [_buildSearchButton(), _buildMenuButton()],
-          ),
-          body: StreamBuilder<List<ChuckHttpCall>>(
-            stream: chuckCore.callsSubject,
-            builder: (context, snapshot) {
-              List<ChuckHttpCall> calls = snapshot.data ?? [];
-              final String query = _queryTextEditingController.text.trim();
-              if (query.isNotEmpty) {
-                // Use case-insensitive search with better performance
-                final String lowerQuery = query.toLowerCase();
-                calls = calls.where((call) => 
-                  call.endpoint.toLowerCase().contains(lowerQuery) ||
-                  call.method.toLowerCase().contains(lowerQuery) ||
-                  call.server.toLowerCase().contains(lowerQuery)
-                ).toList();
-              }
-              if (calls.isNotEmpty) {
-                return _buildCallsListWidget(calls);
-              } else {
-                return _buildEmptyWidget();
-              }
-            },
-          ),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: _searchEnabled ? _buildSearchField() : _buildTitleWidget(),
+        actions: [_buildSearchButton(), _buildMenuButton()],
+      ),
+      body: StreamBuilder<List<ChuckHttpCall>>(
+        stream: chuckCore.callsSubject,
+        builder: (context, snapshot) {
+          List<ChuckHttpCall> calls = snapshot.data ?? [];
+          final String query = _queryTextEditingController.text.trim();
+          if (query.isNotEmpty) {
+            // Use case-insensitive search with better performance
+            final String lowerQuery = query.toLowerCase();
+            calls = calls
+                .where(
+                  (call) =>
+                      call.endpoint.toLowerCase().contains(lowerQuery) ||
+                      call.method.toLowerCase().contains(lowerQuery) ||
+                      call.server.toLowerCase().contains(lowerQuery),
+                )
+                .toList();
+          }
+          if (calls.isNotEmpty) {
+            return _buildCallsListWidget(calls);
+          } else {
+            return _buildEmptyWidget();
+          }
+        },
       ),
     );
   }
@@ -263,11 +260,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
       itemCount: callsSorted.length,
       // Use const constructors where possible for better performance
       itemBuilder: (context, index) => ChuckCallListItemWidget(callsSorted[index], _onListItemClicked),
-      separatorBuilder: (context, index) => const Divider(
-        height: 1, 
-        thickness: 1, 
-        color: ChuckConstants.grey,
-      ),
+      separatorBuilder: (context, index) => const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
       // Add cacheExtent for better performance with long lists
       cacheExtent: 20.0,
     );

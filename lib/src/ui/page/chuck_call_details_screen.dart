@@ -25,27 +25,21 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: widget.core.directionality ?? Directionality.of(context),
-      child: Theme(
-        data: ThemeData(brightness: widget.core.brightness),
-        child: StreamBuilder<List<ChuckHttpCall>>(
-          stream: widget.core.callsSubject,
-          initialData: [widget.call],
-          builder: (context, callsSnapshot) {
-            if (callsSnapshot.hasData) {
-              final call = callsSnapshot.data?.firstWhere((snapshotCall) => snapshotCall.id == widget.call.id);
-              if (call != null) {
-                return _buildMainWidget();
-              } else {
-                return _buildErrorWidget();
-              }
-            } else {
-              return _buildErrorWidget();
-            }
-          },
-        ),
-      ),
+    return StreamBuilder<List<ChuckHttpCall>>(
+      stream: widget.core.callsSubject,
+      initialData: [widget.call],
+      builder: (context, callsSnapshot) {
+        if (callsSnapshot.hasData) {
+          final call = callsSnapshot.data?.firstWhere((snapshotCall) => snapshotCall.id == widget.call.id);
+          if (call != null) {
+            return _buildMainWidget();
+          } else {
+            return _buildErrorWidget();
+          }
+        } else {
+          return _buildErrorWidget();
+        }
+      },
     );
   }
 
@@ -70,7 +64,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
               Tab(icon: Icon(Icons.info_outline), text: "Overview"),
               Tab(icon: Icon(Icons.arrow_upward), text: "Request"),
               Tab(icon: Icon(Icons.arrow_downward), text: "Response"),
-              Tab(icon: Icon(Icons.preview), text: "Preview"),
+              Tab(icon: Icon(Icons.preview_rounded), text: "Preview"),
               Tab(icon: Icon(Icons.warning), text: "Error"),
             ],
           ),

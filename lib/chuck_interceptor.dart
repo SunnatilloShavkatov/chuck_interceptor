@@ -23,18 +23,12 @@ final class Chuck {
   /// with sensors)
   final bool showInspectorOnShake;
 
-  /// Should inspector use dark theme
-  final bool darkTheme;
-
   /// Icon url for notification
   final String notificationIcon;
 
   ///Max number of calls that are stored in memory. When count is reached, FIFO
   ///method queue will be used to remove elements.
   final int maxCallsCount;
-
-  ///Directionality of app. Directionality of the app will be used if set to null.
-  final TextDirection? directionality;
 
   GlobalKey<NavigatorState>? _navigatorKey;
   late ChuckCore _chuckCore;
@@ -46,17 +40,13 @@ final class Chuck {
     GlobalKey<NavigatorState>? navigatorKey,
     this.showNotification = true,
     this.showInspectorOnShake = false,
-    this.darkTheme = false,
     this.notificationIcon = "@mipmap/ic_launcher",
     this.maxCallsCount = 1000,
-    this.directionality,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
     _chuckCore = ChuckCore(
       _navigatorKey,
-      darkTheme: darkTheme,
       maxCallsCount: maxCallsCount,
-      directionality: directionality,
       showNotification: showNotification,
       notificationIcon: notificationIcon,
       showInspectorOnShake: showInspectorOnShake,

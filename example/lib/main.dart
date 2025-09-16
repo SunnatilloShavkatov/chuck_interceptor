@@ -39,7 +39,17 @@ class _MyAppState extends State<MyApp> {
       foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
     );
     return MaterialApp(
-      theme: ThemeData(primaryColor: _primaryColor),
+      themeMode: ThemeMode.dark,
+      theme: ThemeData(
+        primaryColor: _primaryColor,
+        brightness: Brightness.light,
+        elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
+      ),
+      darkTheme: ThemeData(
+        primaryColor: _primaryColor,
+        brightness: Brightness.dark,
+        elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
+      ),
       navigatorKey: _chuck.navigatorKey,
       debugShowCheckedModeBanner: false,
       home: Scaffold(

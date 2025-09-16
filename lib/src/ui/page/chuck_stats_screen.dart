@@ -10,15 +10,9 @@ class ChuckStatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: chuckCore.directionality ?? Directionality.of(context),
-      child: Theme(
-        data: ThemeData(brightness: chuckCore.brightness),
-        child: Scaffold(
-          appBar: AppBar(title: const Text("Chuck - HTTP Inspector - Stats")),
-          body: ListView(padding: const EdgeInsets.all(8), children: _buildMainListWidgets()),
-        ),
-      ),
+    return Scaffold(
+      appBar: AppBar(title: const Text("Chuck - HTTP Inspector - Stats")),
+      body: ListView(padding: const EdgeInsets.all(8), children: _buildMainListWidgets()),
     );
   }
 
