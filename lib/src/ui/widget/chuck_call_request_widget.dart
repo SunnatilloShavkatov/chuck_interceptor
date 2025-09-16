@@ -42,15 +42,6 @@ class _ChuckCallRequestWidget extends ChuckBaseCallDetailsWidgetState<ChuckCallR
       });
     }
 
-    final headers = _call.request!.headers;
-    var headersContent = "Headers are empty";
-    if (headers.isNotEmpty) {
-      headersContent = "";
-    }
-    rows.add(getListRow("Headers: ", headersContent));
-    _call.request!.headers.forEach((header, dynamic value) {
-      rows.add(getListRow("   • $header:", value.toString()));
-    });
     final queryParameters = _call.request!.queryParameters;
     var queryParametersContent = "Query parameters are empty";
     if (queryParameters.isNotEmpty) {
@@ -60,6 +51,28 @@ class _ChuckCallRequestWidget extends ChuckBaseCallDetailsWidgetState<ChuckCallR
     _call.request!.queryParameters.forEach((query, dynamic value) {
       rows.add(getListRow("   • $query:", value.toString()));
     });
+
+    final headers = _call.request!.headers;
+    var headersContent = "Headers are empty";
+    if (headers.isNotEmpty) {
+      headersContent = "";
+    }
+    rows.add(getListRow("Headers: ", headersContent));
+
+    final sortedHeaders = Map<String, dynamic>.from(headers);
+    dynamic xTokenValue;
+    if (sortedHeaders.containsKey('X-Token')) {
+      xTokenValue = sortedHeaders.remove('X-Token');
+    }
+
+    sortedHeaders.forEach((header, dynamic value) {
+      rows.add(getListRow("   • $header:", value.toString()));
+    });
+
+    if (xTokenValue != null) {
+      rows.add(getListRow("   • X-Token:", xTokenValue.toString()));
+    }
+
     return CustomScrollView(
       slivers: [
         SliverSafeArea(
