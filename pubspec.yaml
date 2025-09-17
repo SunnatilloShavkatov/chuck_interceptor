@@ -5,7 +5,7 @@ description: "Chuck is an HTTP Inspector tool which helps debugging http request
 
 environment:
   sdk: ">=3.0.6 <4.0.0"
-  flutter: ">=3.32.0"
+  flutter: ">=3.27.0"
 
 dependencies:
   flutter:
