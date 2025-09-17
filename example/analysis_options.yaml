@@ -1,1 +1,1 @@
-include: package:analysis_lints/analysis_options.yaml
+include: package:flutter_lints/flutter.yaml

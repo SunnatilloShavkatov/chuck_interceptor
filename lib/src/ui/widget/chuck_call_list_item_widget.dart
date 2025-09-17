@@ -1,4 +1,5 @@
 import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
+import 'package:chuck_interceptor/src/helper/chuck_copy_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
@@ -14,6 +15,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => itemClickAction(call),
+      onLongPress: () => _showContextMenu(context),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Row(
@@ -160,5 +162,9 @@ class ChuckCallListItemWidget extends StatelessWidget {
       padding: const EdgeInsets.only(right: 3),
       child: Icon(iconData, color: iconColor, size: 12),
     );
+  }
+
+  void _showContextMenu(BuildContext context) {
+    ChuckCopyHelper.showCopyMenu(context, call);
   }
 }
