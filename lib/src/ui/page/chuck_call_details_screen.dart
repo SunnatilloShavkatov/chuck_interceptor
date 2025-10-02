@@ -59,6 +59,8 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
         appBar: AppBar(
           centerTitle: false,
           bottom: TabBar(
+            isScrollable: false,
+            tabAlignment: TabAlignment.fill,
             indicatorColor: ChuckConstants.lightRed,
             tabs: const [
               Tab(icon: Icon(Icons.info_outline), text: "Overview"),
