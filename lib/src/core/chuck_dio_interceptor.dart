@@ -114,7 +114,7 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
     if (error is Error) {
       stackTrace = error.stackTrace;
     }
-    
+
     final httpError = ChuckHttpError(error: error, stackTrace: stackTrace);
     chuckCore.addError(httpError, error.requestOptions.hashCode);
     final httpResponse = ChuckHttpResponse();

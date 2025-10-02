@@ -12,14 +12,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Core class that manages HTTP call interception, storage, and UI navigation.
-/// 
+///
 /// This class provides the main functionality for:
 /// - Intercepting and storing HTTP requests/responses
 /// - Managing notifications for new HTTP calls
 /// - Handling shake-to-open functionality
 /// - Memory management with configurable call limits
 /// - Navigation to the inspector UI
-/// 
+///
 /// The class uses RxDart's BehaviorSubject for reactive state management,
 /// ensuring that UI components automatically update when new HTTP calls are added.
 class ChuckCore {
@@ -210,7 +210,7 @@ class ChuckCore {
   /// Add Chuck http call to calls subject with optimized memory management
   void addCall(ChuckHttpCall call) {
     final List<ChuckHttpCall> currentCalls = callsSubject.value;
-    
+
     if (currentCalls.length >= maxCallsCount) {
       // Find and remove the oldest call more efficiently
       ChuckHttpCall? oldestCall;

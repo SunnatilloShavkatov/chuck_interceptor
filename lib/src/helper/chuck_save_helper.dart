@@ -56,15 +56,15 @@ sealed class ChuckSaveHelper {
       final File file = File("${externalDir.path}/$fileName");
       file.createSync();
       final IOSink sink = file.openWrite(mode: FileMode.append);
-      
+
       // Write header log
       sink.write(await _buildChuckLog());
-      
+
       // Write all call logs efficiently
       for (final call in calls) {
         sink.write(_buildCallLog(call));
       }
-      
+
       await sink.flush();
       await sink.close();
       if (context.mounted) {

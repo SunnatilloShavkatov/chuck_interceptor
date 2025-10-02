@@ -37,9 +37,8 @@ sealed class ChuckParser {
       var bodyContent = _emptyBody;
 
       // Check if content type indicates JSON or if body looks like JSON
-      final isJsonContent = contentType != null && 
-                           contentType.toLowerCase().contains(_applicationJson) ||
-                           _looksLikeJson(body);
+      final isJsonContent =
+          contentType != null && contentType.toLowerCase().contains(_applicationJson) || _looksLikeJson(body);
 
       if (!isJsonContent) {
         final bodyTemp = body.toString();
@@ -76,17 +75,16 @@ sealed class ChuckParser {
       return "$_parseFailedText$body (Error: $exception)";
     }
   }
-  
+
   /// Check if the body content looks like JSON
   static bool _looksLikeJson(dynamic body) {
     if (body == null) return false;
-    
+
     final bodyStr = body.toString().trim();
     if (bodyStr.isEmpty) return false;
-    
+
     // Check for JSON-like structure
-    return (bodyStr.startsWith('{') && bodyStr.endsWith('}')) ||
-           (bodyStr.startsWith('[') && bodyStr.endsWith(']'));
+    return (bodyStr.startsWith('{') && bodyStr.endsWith('}')) || (bodyStr.startsWith('[') && bodyStr.endsWith(']'));
   }
 
   static String? getContentType(Map<String, dynamic>? headers) {
@@ -98,7 +96,7 @@ sealed class ChuckParser {
           return entry.value?.toString();
         }
       }
-      
+
       // Fallback to old method for compatibility
       if (headers.containsKey(_jsonContentTypeSmall)) {
         return headers[_jsonContentTypeSmall] as String?;

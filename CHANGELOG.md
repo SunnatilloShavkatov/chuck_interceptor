@@ -1,3 +1,7 @@
+## 2.3.1
+
+* Version bump for publishing
+
 ## 2.3.0
 
 * Performance optimizations and memory management improvements
