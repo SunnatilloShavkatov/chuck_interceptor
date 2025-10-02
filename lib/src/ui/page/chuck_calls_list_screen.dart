@@ -174,7 +174,9 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
   }
 
   Widget _buildCallsListWidget(List<ChuckHttpCall> calls) {
-    final List<ChuckHttpCall> callsSorted = List.of(calls);
+    // Create a copy only once for sorting to avoid multiple allocations
+    final List<ChuckHttpCall> callsSorted = [...calls];
+    
     switch (_sortOption) {
       case ChuckSortOption.time:
         if (_sortAscending) {

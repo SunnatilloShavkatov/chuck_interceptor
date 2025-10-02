@@ -28,66 +28,97 @@ class ChuckHttpCall {
     loading = false;
   }
 
+  /// Generate a curl command string for this HTTP call
+  /// 
+  /// Returns a properly formatted curl command that can be executed in terminal
+  /// to reproduce this HTTP request. Handles special characters and escaping
+  /// for shell safety.
   String getCurlCommand() {
-    if (request == null) return "curl # No request data available";
-    
-    var compressed = false;
-    final StringBuffer curlCmd = StringBuffer("curl");
-    curlCmd.write(" -X $method");
-    
-    final headers = request!.headers;
-    headers.forEach((key, dynamic value) {
-      if ("Accept-Encoding" == key && "gzip" == value) {
-        compressed = true;
-      }
-      // Escape single quotes in header values for shell safety
-      final String escapedValue = value.toString().replaceAll("'", "'\"'\"'");
-      curlCmd.write(" -H '$key: $escapedValue'");
-    });
-
-    final String requestBody = request!.body.toString();
-    if (requestBody.isNotEmpty) {
-      // Escape single quotes and newlines for shell safety
-      final String escapedBody = requestBody
-          .replaceAll("'", "'\"'\"'")
-          .replaceAll("\n", "\\n");
-      curlCmd.write(" --data \$'$escapedBody'");
+    if (request == null) {
+      return "curl # No request data available";
     }
-
-    final queryParamMap = request!.queryParameters;
-    if (queryParamMap.isNotEmpty) {
-      final StringBuffer queryParams = StringBuffer("?");
-      final entries = queryParamMap.entries.toList();
-      for (int i = 0; i < entries.length; i++) {
-        final entry = entries[i];
-        queryParams.write('${entry.key}=${entry.value}');
-        if (i < entries.length - 1) {
-          queryParams.write("&");
-        }
+    
+    try {
+      var compressed = false;
+      final StringBuffer curlCmd = StringBuffer("curl");
+      
+      // Add HTTP method
+      if (method.isNotEmpty) {
+        curlCmd.write(" -X $method");
       }
       
-      // Build final URL with proper escaping
-      final String baseUrl;
-      if (server.contains("http://") || server.contains("https://")) {
-        baseUrl = server;
-      } else {
-        baseUrl = "${secure ? 'https://' : 'http://'}$server";
+      // Process headers
+      final headers = request!.headers;
+      for (final entry in headers.entries) {
+        final key = entry.key;
+        final value = entry.value;
+        
+        if (key == "Accept-Encoding" && value.toString().contains("gzip")) {
+          compressed = true;
+        }
+        
+        // Escape single quotes in header values for shell safety
+        final String escapedValue = value.toString().replaceAll("'", "'\"'\"'");
+        curlCmd.write(" -H '$key: $escapedValue'");
       }
+
+      // Add request body if present
+      final String requestBody = request!.body?.toString() ?? "";
+      if (requestBody.isNotEmpty) {
+        // Escape single quotes and newlines for shell safety
+        final String escapedBody = requestBody
+            .replaceAll("'", "'\"'\"'")
+            .replaceAll("\n", "\\n");
+        curlCmd.write(" --data \$'$escapedBody'");
+      }
+
+      // Build URL with query parameters
+      final String baseUrl = _buildBaseUrl();
+      final String queryParams = _buildQueryParameters();
       
       curlCmd.write(compressed ? " --compressed " : " ");
       curlCmd.write("'$baseUrl$endpoint$queryParams'");
-    } else {
-      final String baseUrl;
-      if (server.contains("http://") || server.contains("https://")) {
-        baseUrl = server;
-      } else {
-        baseUrl = "${secure ? 'https://' : 'http://'}$server";
-      }
-      
-      curlCmd.write(compressed ? " --compressed " : " ");
-      curlCmd.write("'$baseUrl$endpoint'");
-    }
 
-    return curlCmd.toString();
+      return curlCmd.toString();
+    } catch (e) {
+      return "curl # Error generating curl command: $e";
+    }
+  }
+  
+  /// Build the base URL for the curl command
+  String _buildBaseUrl() {
+    if (server.contains("http://") || server.contains("https://")) {
+      return server;
+    }
+    return "${secure ? 'https://' : 'http://'}$server";
+  }
+  
+  /// Build query parameters string for the curl command
+  String _buildQueryParameters() {
+    final queryParamMap = request?.queryParameters;
+    if (queryParamMap == null || queryParamMap.isEmpty) {
+      return "";
+    }
+    
+    final StringBuffer queryParams = StringBuffer("?");
+    final entries = queryParamMap.entries.toList();
+    
+    for (int i = 0; i < entries.length; i++) {
+      final entry = entries[i];
+      final key = entry.key;
+      final value = entry.value?.toString() ?? "";
+      
+      // URL encode the key and value
+      final encodedKey = Uri.encodeComponent(key);
+      final encodedValue = Uri.encodeComponent(value);
+      
+      queryParams.write('$encodedKey=$encodedValue');
+      
+      if (i < entries.length - 1) {
+        queryParams.write("&");
+      }
+    }
+    
+    return queryParams.toString();
   }
 }

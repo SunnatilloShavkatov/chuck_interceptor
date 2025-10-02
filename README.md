@@ -16,9 +16,12 @@ ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging htt
 ✔️ Statistics  
 ✔️ Notification on HTTP call  
 ✔️ Support for top used HTTP clients in Dart  
-✔️ Error handling  
+✔️ Enhanced error handling with comprehensive recovery  
 ✔️ Shake to open inspector  
-✔️ HTTP calls search
+✔️ HTTP calls search and filtering  
+✔️ Performance optimized with memory management  
+✔️ Comprehensive unit test coverage  
+✔️ Curl command generation for easy debugging
 
 ## Install
 
@@ -26,7 +29,7 @@ ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging htt
 
 ```yaml
 dependencies:
-  chuck_interceptor: ^2.1.4
+  chuck_interceptor: ^2.3.0
 ```
 
 2. Install it
@@ -38,7 +41,7 @@ $ flutter packages get
 3. Import it
 
 ```dart
-import 'package:chuck_interceptor/chuck.dart';
+import 'package:chuck_interceptor/chuck_interceptor.dart';
 ```
 
 ## Usage
@@ -108,7 +111,7 @@ If you're using Dio, you just need to add interceptor.
 
 ```dart
 Dio dio = Dio();
-dio.interceptors.add(chuck.getDioInterceptor());
+dio.interceptors.add(chuck.dioInterceptor);
 ```
 
 
@@ -118,7 +121,7 @@ If you're using HttpClient from dart:io package:
 httpClient
 	.getUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
 	.then((request) async {
-		Chuck.onHttpClientRequest(request);
+		chuck.onHttpClientRequest(request);
 		var httpResponse = await request.close();
 		var responseBody = await httpResponse.transform(utf8.decoder).join();
 		chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
@@ -133,18 +136,20 @@ http.get('https://jsonplaceholder.typicode.com/posts').then((response) {
 });
 ```
 
-If you're using Chopper. you need to add interceptor:
+If you're using Chopper, you can use the generic http call interface:
 
 ```dart
-chopper = ChopperClient(
-    interceptors: chuck.getChopperInterceptor(),
-);
+// Chopper integration example
+final response = await chopper.get('/posts');
+chuck.onHttpResponse(response);
 ```
 
 If you have other HTTP client you can use generic http call interface:
 ```dart
 ChuckHttpCall chuckHttpCall = ChuckHttpCall(id);
-chuck.addHttpCall(ChuckHttpCall);
+chuckHttpCall.request = ChuckHttpRequest();
+chuckHttpCall.response = ChuckHttpResponse();
+chuck.addHttpCall(chuckHttpCall);
 ```
 
 ## Show inspector manually
@@ -168,20 +173,20 @@ You can use extensions to shorten your http and http client code. This is option
 Example:
 1. Import:
 ```dart
-import 'package:chuck_interceptor/chuck.dart';
+import 'package:chuck_interceptor/chuck_interceptor.dart';
 ```
 
 2. Use extensions:
 ```dart
 http
     .post('https://jsonplaceholder.typicode.com/posts', body: body)
-    .interceptWithChuck(Chuck, body: body);
+    .then((response) => chuck.onHttpResponse(response, body: body));
 ```
 
 ```dart
 httpClient
     .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
-    .interceptWithChuck(chuck, body: body, headers: Map());
+    .interceptWithChuck(chuck, body: body, headers: {});
 ```
 
 

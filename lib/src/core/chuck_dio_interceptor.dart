@@ -107,10 +107,15 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
     handler.next(response);
   }
 
-  /// Handles error and adds data to Chuck http call
+  /// Handles error and adds data to Chuck http call with improved null safety
   @override
   void onError(DioException error, ErrorInterceptorHandler handler) {
-    final httpError = ChuckHttpError(error: error, stackTrace: error is Error ? (error as Error).stackTrace : null);
+    StackTrace? stackTrace;
+    if (error is Error) {
+      stackTrace = error.stackTrace;
+    }
+    
+    final httpError = ChuckHttpError(error: error, stackTrace: stackTrace);
     chuckCore.addError(httpError, error.requestOptions.hashCode);
     final httpResponse = ChuckHttpResponse();
     httpResponse.time = DateTime.now();
