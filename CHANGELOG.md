@@ -1,3 +1,8 @@
+## 2.3.2
+
+* Version bump for publishing
+* 
+
 ## 2.3.1
 
 * Version bump for publishing
