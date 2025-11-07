@@ -1,12 +1,14 @@
+// ignore_for_file: discarded_futures, avoid_dynamic_calls
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class JsonViewer extends StatefulWidget {
-  final dynamic jsonObj;
-
   const JsonViewer(this.jsonObj, {super.key});
+
+  final dynamic jsonObj;
 
   @override
   State<JsonViewer> createState() => _JsonViewerState();
@@ -14,34 +16,31 @@ class JsonViewer extends StatefulWidget {
 
 class _JsonViewerState extends State<JsonViewer> {
   @override
-  Widget build(BuildContext context) {
-    return getContentWidget(widget.jsonObj);
-  }
+  Widget build(BuildContext context) => getContentWidget(widget.jsonObj);
 
-  static StatefulWidget getContentWidget(dynamic content) {
+  static Widget getContentWidget(Object? content) {
     if (content == null) {
       return SelectableText(
         '{}',
-        contextMenuBuilder: (_, editableTextState) {
-          return AdaptiveTextSelectionToolbar.buttonItems(
-            anchors: editableTextState.contextMenuAnchors,
-            buttonItems: editableTextState.contextMenuButtonItems,
-          );
-        },
+        contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+          anchors: editableTextState.contextMenuAnchors,
+          buttonItems: editableTextState.contextMenuButtonItems,
+        ),
       );
     } else if (content is List) {
-      return JsonArrayViewer(content, notRoot: false);
-    } else {
-      return JsonObjectViewer(content, notRoot: false);
+      return JsonArrayViewer(content);
+    } else if (content is Map<String, dynamic>) {
+      return JsonObjectViewer(content);
     }
+    return const SizedBox.shrink();
   }
 }
 
 class JsonObjectViewer extends StatefulWidget {
+  const JsonObjectViewer(this.jsonObj, {super.key, this.notRoot = false});
+
   final Map<String, dynamic> jsonObj;
   final bool notRoot;
-
-  const JsonObjectViewer(this.jsonObj, {super.key, this.notRoot = false});
 
   @override
   JsonObjectViewerState createState() => JsonObjectViewerState();
@@ -54,7 +53,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
   Widget build(BuildContext context) {
     if (widget.notRoot) {
       return Padding(
-        padding: const EdgeInsets.only(left: 14.0),
+        padding: const EdgeInsets.only(left: 14),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: _getList()),
       );
     }
@@ -62,60 +61,59 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
   }
 
   List<Widget> _getList() {
-    List<Widget> list = [];
-    for (MapEntry<String, dynamic> entry in widget.jsonObj.entries) {
-      bool ex = isExtensible(entry.value);
-      bool ink = isInkWell(entry.value);
-      list.add(
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ex
-                ? (openFlag[entry.key] ?? false)
-                      ? InkWell(
-                          onTap: () {
-                            setState(() {
-                              openFlag[entry.key] = !(openFlag[entry.key] ?? false);
-                            });
-                          },
-                          child: Icon(Icons.arrow_drop_down, color: Colors.grey[700]),
-                        )
-                      : InkWell(
-                          onTap: () {
-                            setState(() {
-                              openFlag[entry.key] = !(openFlag[entry.key] ?? false);
-                            });
-                          },
-                          child: Icon(Icons.arrow_right, color: Colors.grey[700]),
-                        )
-                : SizedBox.shrink(),
-            (ex && ink)
-                ? SelectableText(
-                    entry.key,
-                    contextMenuBuilder: (_, editableTextState) {
-                      return AdaptiveTextSelectionToolbar.buttonItems(
-                        anchors: editableTextState.contextMenuAnchors,
-                        buttonItems: editableTextState.contextMenuButtonItems,
-                      );
-                    },
-                  )
-                : SelectableText(
-                    entry.key,
-                    style: TextStyle(color: entry.value == null ? Colors.grey : null),
-                    contextMenuBuilder: (_, editableTextState) {
-                      return AdaptiveTextSelectionToolbar.buttonItems(
-                        anchors: editableTextState.contextMenuAnchors,
-                        buttonItems: editableTextState.contextMenuButtonItems,
-                      );
-                    },
+    final List<Widget> list = [];
+    for (final MapEntry<String, dynamic> entry in widget.jsonObj.entries) {
+      final bool ex = isExtensible(entry.value);
+      final bool ink = isInkWell(entry.value);
+      list
+        ..add(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              if (ex)
+                (openFlag[entry.key] ?? false)
+                    ? InkWell(
+                        onTap: () {
+                          setState(() {
+                            openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+                          });
+                        },
+                        child: Icon(Icons.arrow_drop_down, color: Colors.grey[700]),
+                      )
+                    : InkWell(
+                        onTap: () {
+                          setState(() {
+                            openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+                          });
+                        },
+                        child: Icon(Icons.arrow_right, color: Colors.grey[700]),
+                      )
+              else
+                const SizedBox.shrink(),
+              if (ex && ink)
+                SelectableText(
+                  entry.key,
+                  contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+                    anchors: editableTextState.contextMenuAnchors,
+                    buttonItems: editableTextState.contextMenuButtonItems,
                   ),
-            const Text(':', style: TextStyle(color: Colors.grey)),
-            Padding(padding: EdgeInsets.only(left: 3)),
-            getValueWidget(entry),
-          ],
-        ),
-      );
-      list.add(Padding(padding: EdgeInsets.only(top: 4)));
+                )
+              else
+                SelectableText(
+                  entry.key,
+                  style: TextStyle(color: entry.value == null ? Colors.grey : null),
+                  contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+                    anchors: editableTextState.contextMenuAnchors,
+                    buttonItems: editableTextState.contextMenuButtonItems,
+                  ),
+                ),
+              const Text(':', style: TextStyle(color: Colors.grey)),
+              const Padding(padding: EdgeInsets.only(left: 3)),
+              getValueWidget(entry),
+            ],
+          ),
+        )
+        ..add(const Padding(padding: EdgeInsets.only(top: 4)));
       if (openFlag[entry.key] ?? false) {
         list.add(getContentWidget(entry.value));
       }
@@ -123,15 +121,16 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
     return list;
   }
 
-  static StatefulWidget getContentWidget(dynamic content) {
+  static Widget getContentWidget(Object? content) {
     if (content is List) {
       return JsonArrayViewer(content, notRoot: true);
-    } else {
+    } else if (content is Map<String, dynamic>) {
       return JsonObjectViewer(content, notRoot: true);
     }
+    return const SizedBox.shrink();
   }
 
-  static bool isInkWell(dynamic content) {
+  static bool isInkWell(Object? content) {
     if (content == null) {
       return false;
     } else if (content is int) {
@@ -157,13 +156,11 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Expanded(
         child: SelectableText(
           'undefined',
-          style: TextStyle(color: Colors.grey),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          style: const TextStyle(color: Colors.grey),
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (entry.value is int) {
@@ -171,25 +168,21 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         child: SelectableText(
           entry.value.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (entry.value is String) {
       return Expanded(
         child: SelectableText(
-          "\"${entry.value}\"",
+          '"${entry.value}"',
           style: const TextStyle(color: Color(0xff6a8759)),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (entry.value is bool) {
@@ -197,12 +190,10 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         child: SelectableText(
           entry.value.toString(),
           style: const TextStyle(color: Color(0xffca7832)),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (entry.value is double) {
@@ -210,16 +201,14 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         child: SelectableText(
           entry.value.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (entry.value is List) {
-      if (entry.value.isEmpty) {
+      if ((entry.value as List).isEmpty) {
         return InkWell(
           onTap: () {
             setState(() {
@@ -273,7 +262,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
     );
   }
 
-  static bool isExtensible(dynamic content) {
+  static bool isExtensible(Object? content) {
     if (content == null) {
       return false;
     } else if (content is int) {
@@ -288,7 +277,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
     return true;
   }
 
-  static String getTypeName(dynamic content) {
+  static String getTypeName(Object? content) {
     if (content is int) {
       return 'int';
     } else if (content is String) {
@@ -305,11 +294,11 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
 }
 
 class JsonArrayViewer extends StatefulWidget {
+  const JsonArrayViewer(this.jsonArray, {super.key, this.notRoot = false});
+
   final List<dynamic> jsonArray;
 
   final bool notRoot;
-
-  const JsonArrayViewer(this.jsonArray, {super.key, this.notRoot = false});
 
   @override
   State<JsonArrayViewer> createState() => _JsonArrayViewerState();
@@ -322,7 +311,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
   Widget build(BuildContext context) {
     if (widget.notRoot) {
       return Padding(
-        padding: const EdgeInsets.only(left: 14.0),
+        padding: const EdgeInsets.only(left: 14),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: _getList()),
       );
     }
@@ -336,51 +325,54 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
   }
 
   List<Widget> _getList() {
-    List<Widget> list = [];
+    final List<Widget> list = [];
     for (int i = 0; i < widget.jsonArray.length; i++) {
       final content = widget.jsonArray[i];
-      bool ex = JsonObjectViewerState.isExtensible(content);
-      bool ink = JsonObjectViewerState.isInkWell(content);
-      list.add(
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ex
-                ? (openFlag[i])
-                      ? InkWell(
-                          onTap: () {
-                            setState(() {
-                              openFlag[i] = !(openFlag[i]);
-                            });
-                          },
-                          child: Icon(Icons.arrow_drop_down, color: Colors.grey[700]),
-                        )
-                      : InkWell(
-                          onTap: () {
-                            setState(() {
-                              openFlag[i] = !(openFlag[i]);
-                            });
-                          },
-                          child: Icon(Icons.arrow_right, color: Colors.grey[700]),
-                        )
-                : InkWell(
-                    onTap: () {
-                      setState(() {
-                        openFlag[i] = !(openFlag[i]);
-                      });
-                    },
-                    child: const Icon(Icons.arrow_right, color: Color.fromARGB(0, 0, 0, 0)),
-                  ),
-            (ex && ink)
-                ? Text('[$i]')
-                : Text('[$i]', style: TextStyle(color: content == null ? Colors.grey : Colors.black)),
-            const Text(':', style: TextStyle(color: Colors.grey)),
-            Padding(padding: EdgeInsets.only(left: 3)),
-            getValueWidget(content, i),
-          ],
-        ),
-      );
-      list.add(Padding(padding: EdgeInsets.only(top: 4)));
+      final bool ex = JsonObjectViewerState.isExtensible(content);
+      final bool ink = JsonObjectViewerState.isInkWell(content);
+      list
+        ..add(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              if (ex)
+                (openFlag[i])
+                    ? InkWell(
+                        onTap: () {
+                          setState(() {
+                            openFlag[i] = !openFlag[i];
+                          });
+                        },
+                        child: Icon(Icons.arrow_drop_down, color: Colors.grey[700]),
+                      )
+                    : InkWell(
+                        onTap: () {
+                          setState(() {
+                            openFlag[i] = !openFlag[i];
+                          });
+                        },
+                        child: Icon(Icons.arrow_right, color: Colors.grey[700]),
+                      )
+              else
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      openFlag[i] = !openFlag[i];
+                    });
+                  },
+                  child: const Icon(Icons.arrow_right, color: Color.fromARGB(0, 0, 0, 0)),
+                ),
+              if (ex && ink)
+                Text('[$i]')
+              else
+                Text('[$i]', style: TextStyle(color: content == null ? Colors.grey : Colors.black)),
+              const Text(':', style: TextStyle(color: Colors.grey)),
+              const Padding(padding: EdgeInsets.only(left: 3)),
+              getValueWidget(content, i),
+            ],
+          ),
+        )
+        ..add(const Padding(padding: EdgeInsets.only(top: 4)));
       if (openFlag[i]) {
         list.add(JsonObjectViewerState.getContentWidget(content));
       }
@@ -388,18 +380,16 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
     return list;
   }
 
-  Widget getValueWidget(dynamic content, int index) {
+  Widget getValueWidget(Object? content, int index) {
     if (content == null) {
       return Expanded(
         child: SelectableText(
           'undefined',
-          style: TextStyle(color: Colors.grey),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          style: const TextStyle(color: Colors.grey),
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (content is int) {
@@ -407,25 +397,21 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         child: SelectableText(
           content.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (content is String) {
       return Expanded(
         child: SelectableText(
-          "\"$content\"",
+          '"$content"',
           style: const TextStyle(color: Color(0xff6a8759)),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (content is bool) {
@@ -433,12 +419,10 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         child: SelectableText(
           content.toString(),
           style: const TextStyle(color: Color(0xffca7832)),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (content is double) {
@@ -446,12 +430,10 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         child: SelectableText(
           content.toString(),
           style: const TextStyle(color: Color(0xff6491b3)),
-          contextMenuBuilder: (_, editableTextState) {
-            return AdaptiveTextSelectionToolbar.buttonItems(
-              anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
-            );
-          },
+          contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
+            anchors: editableTextState.contextMenuAnchors,
+            buttonItems: editableTextState.contextMenuButtonItems,
+          ),
         ),
       );
     } else if (content is List) {
@@ -501,7 +483,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       onDoubleTap: () {
         Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar());
+            ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
           }
         });
       },
@@ -517,7 +499,5 @@ class CustomSnackBar extends SnackBar {
     super.content = const Text('Copied to your clipboard !', style: TextStyle(color: Colors.black)),
   });
 
-  Widget build(BuildContext context) {
-    return SnackBar(backgroundColor: backgroundColor, content: content);
-  }
+  Widget build(BuildContext context) => SnackBar(backgroundColor: backgroundColor, content: content);
 }

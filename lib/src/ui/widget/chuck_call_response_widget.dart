@@ -34,7 +34,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
       return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [CircularProgressIndicator(), SizedBox(height: 16), Text("Awaiting response...")],
+          children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Awaiting response...')],
         ),
       );
     }
@@ -46,31 +46,32 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
   }
 
   List<Widget> _buildGeneralDataRows() {
-    final List<Widget> rows = [];
-    rows.add(getListRow("Received:", _call.response!.time.toString()));
-    rows.add(getListRow("Bytes received:", formatBytes(_call.response!.size)));
+    final List<Widget> rows = [
+      getListRow('Received:', _call.response!.time.toString()),
+      getListRow('Bytes received:', formatBytes(_call.response!.size)),
+    ];
 
     final status = _call.response!.status;
-    var statusText = "$status";
+    var statusText = '$status';
     if (status == -1) {
-      statusText = "Error";
+      statusText = 'Error';
     }
 
-    rows.add(getListRow("Status:", statusText));
+    rows.add(getListRow('Status:', statusText));
     return rows;
   }
 
   List<Widget> _buildHeadersRows() {
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
-    var headersContent = "Headers are empty";
+    var headersContent = 'Headers are empty';
     if (headers != null && headers.isNotEmpty) {
-      headersContent = "";
+      headersContent = '';
     }
-    rows.add(getListRow("Headers: ", headersContent));
+    rows.add(getListRow('Headers: ', headersContent));
     if (_call.response!.headers != null) {
       _call.response!.headers!.forEach((header, value) {
-        rows.add(getListRow("   • $header:", value.toString()));
+        rows.add(getListRow('   • $header:', value));
       });
     }
     return rows;
@@ -83,7 +84,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
     final headers = _call.response!.headers;
     final bodyContent = formatBody(_call.response!.body, getContentType(headers));
 
-    rows.add(getListRow("Body:", bodyContent));
+    rows.add(getListRow('Body:', bodyContent));
 
     return rows;
   }

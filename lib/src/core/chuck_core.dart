@@ -1,9 +1,11 @@
+// ignore_for_file: discarded_futures
+
 import 'dart:async';
 
 import 'package:chuck_interceptor/src/core/chuck_utils.dart';
 import 'package:chuck_interceptor/src/helper/chuck_save_helper.dart';
-import 'package:chuck_interceptor/src/model/chuck_http_error.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_error.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/src/ui/page/chuck_calls_list_screen.dart';
 import 'package:chuck_interceptor/src/utils/shake_detector.dart';
@@ -23,6 +25,28 @@ import 'package:rxdart/rxdart.dart';
 /// The class uses RxDart's BehaviorSubject for reactive state management,
 /// ensuring that UI components automatically update when new HTTP calls are added.
 class ChuckCore {
+  /// Creates Chuck core instance
+  ChuckCore(
+    this.navigatorKey, {
+    required this.showNotification,
+    required this.showInspectorOnShake,
+    required this.notificationIcon,
+    required this.maxCallsCount,
+  }) {
+    if (showNotification) {
+      _initializeNotificationsPlugin();
+      _callsSubscription = callsSubject.listen((_) => _onCallsChanged());
+    }
+    if (showInspectorOnShake) {
+      _shakeDetector = ShakeDetector.autoStart(
+        onPhoneShake: () {
+          navigateToCallListScreen();
+        },
+        shakeThresholdGravity: 5,
+      );
+    }
+  }
+
   /// Whether to show notifications when new HTTP requests are intercepted
   final bool showNotification;
 
@@ -50,33 +74,13 @@ class ChuckCore {
   String? _notificationMessageShown;
   bool _notificationProcessing = false;
 
-  /// Creates Chuck core instance
-  ChuckCore(
-    this.navigatorKey, {
-    required this.showNotification,
-    required this.showInspectorOnShake,
-    required this.notificationIcon,
-    required this.maxCallsCount,
-  }) {
-    if (showNotification) {
-      _initializeNotificationsPlugin();
-      _callsSubscription = callsSubject.listen((_) => _onCallsChanged());
-    }
-    if (showInspectorOnShake) {
-      _shakeDetector = ShakeDetector.autoStart(
-        onPhoneShake: () {
-          navigateToCallListScreen();
-        },
-        shakeThresholdGravity: 5,
-      );
-    }
-  }
-
   /// Dispose subjects and subscriptions
   void dispose() {
-    callsSubject.close();
+    unawaited(callsSubject.close());
     _shakeDetector?.stopListening();
-    _callsSubscription?.cancel();
+    if (_callsSubscription != null) {
+      unawaited(_callsSubscription!.cancel());
+    }
   }
 
   void _initializeNotificationsPlugin() {
@@ -87,15 +91,17 @@ class ChuckCore {
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsIOS,
       android: initializationSettingsAndroid,
-      linux: LinuxInitializationSettings(defaultActionName: 'default'),
+      linux: const LinuxInitializationSettings(defaultActionName: 'default'),
     );
-    _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: _onSelectedNotification,
+    unawaited(
+      _flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: _onSelectedNotification,
+      ),
     );
   }
 
-  void _onCallsChanged() async {
+  Future<void> _onCallsChanged() async {
     if (callsSubject.value.isNotEmpty && !_notificationProcessing) {
       _notificationMessage = _getNotificationMessage();
       if (_notificationMessage != _notificationMessageShown) {
@@ -115,7 +121,7 @@ class ChuckCore {
   void navigateToCallListScreen() {
     final context = getContext();
     if (context == null) {
-      ChuckUtils.log("Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application");
+      ChuckUtils.log('Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application');
       return;
     }
     if (!_isInspectorOpened) {
@@ -151,22 +157,25 @@ class ChuckCore {
 
     final StringBuffer notificationsMessage = StringBuffer();
     if (loadingCalls > 0) {
-      notificationsMessage.write("Loading: $loadingCalls");
-      notificationsMessage.write(" | ");
+      notificationsMessage
+        ..write('Loading: $loadingCalls')
+        ..write(' | ');
     }
     if (successCalls > 0) {
-      notificationsMessage.write("Success: $successCalls");
-      notificationsMessage.write(" | ");
+      notificationsMessage
+        ..write('Success: $successCalls')
+        ..write(' | ');
     }
     if (redirectCalls > 0) {
-      notificationsMessage.write("Redirect: $redirectCalls");
-      notificationsMessage.write(" | ");
+      notificationsMessage
+        ..write('Redirect: $redirectCalls')
+        ..write(' | ');
     }
     if (errorCalls > 0) {
-      notificationsMessage.write("Error: $errorCalls");
+      notificationsMessage.write('Error: $errorCalls');
     }
     String notificationMessageString = notificationsMessage.toString();
-    if (notificationMessageString.endsWith(" | ")) {
+    if (notificationMessageString.endsWith(' | ')) {
       notificationMessageString = notificationMessageString.substring(0, notificationMessageString.length - 3);
     }
 
@@ -177,8 +186,8 @@ class ChuckCore {
   Future<void> _showLocalNotification() async {
     try {
       _notificationProcessing = true;
-      const channelId = "Chuck";
-      const channelName = "Chuck";
+      const channelId = 'Chuck';
+      const channelName = 'Chuck';
       final androidPlatformChannelSpecifics = AndroidNotificationDetails(
         channelId,
         channelName,
@@ -194,14 +203,14 @@ class ChuckCore {
       final String? message = _notificationMessage;
       await _flutterLocalNotificationsPlugin.show(
         0,
-        "Chuck (total: ${callsSubject.value.length} requests)",
+        'Chuck (total: ${callsSubject.value.length} requests)',
         message,
         platformChannelSpecifics,
-        payload: "",
+        payload: '',
       );
       _notificationMessageShown = message;
     } catch (e) {
-      ChuckUtils.log("Error showing notification: $e");
+      ChuckUtils.log('Error showing notification: $e');
     } finally {
       _notificationProcessing = false;
     }
@@ -244,7 +253,7 @@ class ChuckCore {
       final ChuckHttpCall? selectedCall = _selectCall(requestId);
 
       if (selectedCall == null) {
-        ChuckUtils.log("Warning: Call with ID $requestId not found when adding error");
+        ChuckUtils.log('Warning: Call with ID $requestId not found when adding error');
         return;
       }
 
@@ -253,7 +262,7 @@ class ChuckCore {
       final List<ChuckHttpCall> currentCalls = callsSubject.value;
       callsSubject.add([...currentCalls]);
     } catch (e) {
-      ChuckUtils.log("Error adding error to call $requestId: $e");
+      ChuckUtils.log('Error adding error to call $requestId: $e');
     }
   }
 
@@ -263,24 +272,25 @@ class ChuckCore {
       final ChuckHttpCall? selectedCall = _selectCall(requestId);
 
       if (selectedCall == null) {
-        ChuckUtils.log("Warning: Call with ID $requestId not found when adding response");
+        ChuckUtils.log('Warning: Call with ID $requestId not found when adding response');
         return;
       }
 
       if (selectedCall.request == null) {
-        ChuckUtils.log("Warning: Request is null for call $requestId");
+        ChuckUtils.log('Warning: Request is null for call $requestId');
         return;
       }
 
-      selectedCall.loading = false;
-      selectedCall.response = response;
-      selectedCall.duration = response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
+      selectedCall
+        ..loading = false
+        ..response = response
+        ..duration = response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
 
       // Trigger update with the modified call
       final List<ChuckHttpCall> currentCalls = callsSubject.value;
       callsSubject.add([...currentCalls]);
     } catch (e) {
-      ChuckUtils.log("Error adding response to call $requestId: $e");
+      ChuckUtils.log('Error adding response to call $requestId: $e');
     }
   }
 
@@ -307,7 +317,7 @@ class ChuckCore {
       }
       return null;
     } catch (e) {
-      ChuckUtils.log("Error finding call with ID $requestId: $e");
+      ChuckUtils.log('Error finding call with ID $requestId: $e');
       return null;
     }
   }

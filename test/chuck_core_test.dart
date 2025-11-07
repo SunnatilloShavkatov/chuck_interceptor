@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:chuck_interceptor/src/core/chuck_core.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_request.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ChuckCore Tests', () {
@@ -14,7 +14,7 @@ void main() {
         GlobalKey<NavigatorState>(),
         showNotification: false, // Disable notifications for testing
         showInspectorOnShake: false,
-        notificationIcon: "@mipmap/ic_launcher",
+        notificationIcon: '@mipmap/ic_launcher',
         maxCallsCount: 5, // Small limit for testing
       );
     });
@@ -29,12 +29,12 @@ void main() {
 
     test('should add HTTP call successfully', () {
       // Arrange
-      final call = ChuckHttpCall(1);
-      call.method = "GET";
-      call.endpoint = "/test";
-      call.server = "example.com";
-      call.request = ChuckHttpRequest();
-      call.response = ChuckHttpResponse();
+      final call = ChuckHttpCall(1)
+        ..method = 'GET'
+        ..endpoint = '/test'
+        ..server = 'example.com'
+        ..request = ChuckHttpRequest()
+        ..response = ChuckHttpResponse();
 
       // Act
       chuckCore.addCall(call);
@@ -42,18 +42,18 @@ void main() {
       // Assert
       expect(chuckCore.callsSubject.value.length, equals(1));
       expect(chuckCore.callsSubject.value.first.id, equals(1));
-      expect(chuckCore.callsSubject.value.first.method, equals("GET"));
+      expect(chuckCore.callsSubject.value.first.method, equals('GET'));
     });
 
     test('should respect maxCallsCount limit', () {
       // Arrange & Act
       for (int i = 0; i < 7; i++) {
-        final call = ChuckHttpCall(i);
-        call.method = "GET";
-        call.endpoint = "/test$i";
-        call.server = "example.com";
-        call.request = ChuckHttpRequest();
-        call.response = ChuckHttpResponse();
+        final call = ChuckHttpCall(i)
+          ..method = 'GET'
+          ..endpoint = '/test$i'
+          ..server = 'example.com'
+          ..request = ChuckHttpRequest()
+          ..response = ChuckHttpResponse();
         chuckCore.addCall(call);
       }
 
@@ -67,17 +67,17 @@ void main() {
 
     test('should add response to existing call', () {
       // Arrange
-      final call = ChuckHttpCall(1);
-      call.method = "GET";
-      call.endpoint = "/test";
-      call.server = "example.com";
-      call.request = ChuckHttpRequest();
-      call.response = ChuckHttpResponse();
+      final call = ChuckHttpCall(1)
+        ..method = 'GET'
+        ..endpoint = '/test'
+        ..server = 'example.com'
+        ..request = ChuckHttpRequest()
+        ..response = ChuckHttpResponse();
       chuckCore.addCall(call);
 
-      final response = ChuckHttpResponse();
-      response.status = 200;
-      response.time = DateTime.now();
+      final response = ChuckHttpResponse()
+        ..status = 200
+        ..time = DateTime.now();
 
       // Act
       chuckCore.addResponse(response, 1);
@@ -91,8 +91,7 @@ void main() {
 
     test('should handle non-existent call gracefully', () {
       // Arrange
-      final response = ChuckHttpResponse();
-      response.status = 200;
+      final response = ChuckHttpResponse()..status = 200;
 
       // Act & Assert - should not throw
       expect(() => chuckCore.addResponse(response, 999), returnsNormally);
@@ -100,16 +99,16 @@ void main() {
 
     test('should clear all calls', () {
       // Arrange
-      final call = ChuckHttpCall(1);
-      call.method = "GET";
-      call.endpoint = "/test";
-      call.server = "example.com";
-      call.request = ChuckHttpRequest();
-      call.response = ChuckHttpResponse();
-      chuckCore.addCall(call);
-
-      // Act
-      chuckCore.removeCalls();
+      final call = ChuckHttpCall(1)
+        ..method = 'GET'
+        ..endpoint = '/test'
+        ..server = 'example.com'
+        ..request = ChuckHttpRequest()
+        ..response = ChuckHttpResponse();
+      chuckCore
+        ..addCall(call)
+        // Act
+        ..removeCalls();
 
       // Assert
       expect(chuckCore.callsSubject.value, isEmpty);
@@ -134,28 +133,28 @@ void main() {
 
     test('should generate correct curl command', () {
       // Arrange
-      final call = ChuckHttpCall(1);
-      call.method = "POST";
-      call.endpoint = "/api/test";
-      call.server = "example.com";
-      call.secure = true;
+      final call = ChuckHttpCall(1)
+        ..method = 'POST'
+        ..endpoint = '/api/test'
+        ..server = 'example.com'
+        ..secure = true;
 
-      final request = ChuckHttpRequest();
-      request.headers = {"Content-Type": "application/json"};
-      request.body = '{"test": "data"}';
-      request.queryParameters = {"param1": "value1"};
+      final request = ChuckHttpRequest()
+        ..headers = {'Content-Type': 'application/json'}
+        ..body = '{"test": "data"}'
+        ..queryParameters = {'param1': 'value1'};
       call.request = request;
 
       // Act
       final curlCommand = call.getCurlCommand();
 
       // Assert
-      expect(curlCommand, contains("curl"));
-      expect(curlCommand, contains("-X POST"));
-      expect(curlCommand, contains("https://example.com/api/test"));
-      expect(curlCommand, contains("Content-Type: application/json"));
+      expect(curlCommand, contains('curl'));
+      expect(curlCommand, contains('-X POST'));
+      expect(curlCommand, contains('https://example.com/api/test'));
+      expect(curlCommand, contains('Content-Type: application/json'));
       expect(curlCommand, contains('{"test": "data"}'));
-      expect(curlCommand, contains("param1=value1"));
+      expect(curlCommand, contains('param1=value1'));
     });
   });
 }

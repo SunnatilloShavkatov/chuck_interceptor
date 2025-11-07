@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:chuck_interceptor/src/core/chuck_http_adapter.dart';
-import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 
 import 'package:chuck_interceptor/src/core/chuck_core.dart';
 import 'package:chuck_interceptor/src/core/chuck_dio_interceptor.dart';
+import 'package:chuck_interceptor/src/core/chuck_http_adapter.dart';
 import 'package:chuck_interceptor/src/core/chuck_http_client_adapter.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +15,26 @@ export 'package:chuck_interceptor/src/core/chuck_http_client_adapter.dart';
 export 'package:chuck_interceptor/src/core/chuck_http_client_extensions.dart';
 
 final class Chuck {
+  /// Creates Chuck instance.
+  Chuck({
+    GlobalKey<NavigatorState>? navigatorKey,
+    this.showNotification = true,
+    this.showInspectorOnShake = false,
+    this.notificationIcon = '@mipmap/ic_launcher',
+    this.maxCallsCount = 1000,
+  }) {
+    _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
+    _chuckCore = ChuckCore(
+      _navigatorKey,
+      maxCallsCount: maxCallsCount,
+      showNotification: showNotification,
+      notificationIcon: notificationIcon,
+      showInspectorOnShake: showInspectorOnShake,
+    );
+    _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
+    _httpAdapter = ChuckHttpAdapter(_chuckCore);
+  }
+
   /// Should user be notified with notification if there's new request catched
   /// by Chuck
   final bool showNotification;
@@ -35,26 +55,6 @@ final class Chuck {
   late ChuckHttpClientAdapter _httpClientAdapter;
   late ChuckHttpAdapter _httpAdapter;
 
-  /// Creates Chuck instance.
-  Chuck({
-    GlobalKey<NavigatorState>? navigatorKey,
-    this.showNotification = true,
-    this.showInspectorOnShake = false,
-    this.notificationIcon = "@mipmap/ic_launcher",
-    this.maxCallsCount = 1000,
-  }) {
-    _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
-    _chuckCore = ChuckCore(
-      _navigatorKey,
-      maxCallsCount: maxCallsCount,
-      showNotification: showNotification,
-      notificationIcon: notificationIcon,
-      showInspectorOnShake: showInspectorOnShake,
-    );
-    _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
-    _httpAdapter = ChuckHttpAdapter(_chuckCore);
-  }
-
   /// Set custom navigation key. This will help if there's route library.
   void setNavigatorKey(GlobalKey<NavigatorState> navigatorKey) {
     _navigatorKey = navigatorKey;
@@ -68,17 +68,17 @@ final class Chuck {
   ChuckDioInterceptor get dioInterceptor => ChuckDioInterceptor(_chuckCore);
 
   /// Handle request from HttpClient
-  void onHttpClientRequest(HttpClientRequest request, {dynamic body}) {
+  void onHttpClientRequest(HttpClientRequest request, {Object? body}) {
     _httpClientAdapter.onRequest(request, body: body);
   }
 
   /// Handle response from HttpClient
-  void onHttpClientResponse(HttpClientResponse response, HttpClientRequest request, {dynamic body}) {
-    _httpClientAdapter.onResponse(response, request, body: body);
+  Future<void> onHttpClientResponse(HttpClientResponse response, HttpClientRequest request, {Object? body}) async {
+    await _httpClientAdapter.onResponse(response, request, body: body);
   }
 
   /// Handle both request and response from http package
-  void onHttpResponse(http.Response response, {dynamic body}) {
+  void onHttpResponse(http.Response response, {Object? body}) {
     _httpAdapter.onResponse(response, body: body);
   }
 

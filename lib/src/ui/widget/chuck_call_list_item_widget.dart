@@ -5,45 +5,43 @@ import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
 import 'package:flutter/material.dart';
 
 class ChuckCallListItemWidget extends StatelessWidget {
-  final ChuckHttpCall call;
-  final Function itemClickAction;
-
   const ChuckCallListItemWidget(this.call, this.itemClickAction, {super.key});
 
+  final ChuckHttpCall call;
+  final void Function(ChuckHttpCall) itemClickAction;
+
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => itemClickAction(call),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildMethodAndEndpointRow(context),
-                  const SizedBox(height: 4),
-                  _buildServerRow(),
-                  const SizedBox(height: 4),
-                  _buildStatsRow(),
-                ],
-              ),
+  Widget build(BuildContext context) => InkWell(
+    onTap: () => itemClickAction(call),
+    child: Padding(
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildMethodAndEndpointRow(context),
+                const SizedBox(height: 4),
+                _buildServerRow(),
+                const SizedBox(height: 4),
+                _buildStatsRow(),
+              ],
             ),
-            _buildResponseColumn(context),
-          ],
-        ),
+          ),
+          _buildResponseColumn(context),
+        ],
       ),
-    );
-  }
+    ),
+  );
 
   Widget _buildMethodAndEndpointRow(BuildContext context) {
     final Color? textColor = _getEndpointTextColor(context);
     return Row(
       children: [
         Text(call.method, style: TextStyle(fontSize: 16, color: textColor)),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Flexible(
           child: Text(
             call.endpoint,
@@ -56,56 +54,50 @@ class ChuckCallListItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildServerRow() {
-    return Row(
-      children: [
-        _getSecuredConnectionIcon(call.secure),
-        Expanded(
-          child: Text(call.server, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 14)),
+  Widget _buildServerRow() => Row(
+    children: [
+      _getSecuredConnectionIcon(call.secure),
+      Expanded(
+        child: Text(call.server, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 14)),
+      ),
+    ],
+  );
+
+  Widget _buildStatsRow() => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Flexible(child: Text(_formatTime(call.request!.time), style: const TextStyle(fontSize: 12))),
+      Flexible(child: Text(ChuckConversionHelper.formatTime(call.duration), style: const TextStyle(fontSize: 12))),
+      Flexible(
+        child: Text(
+          '${ChuckConversionHelper.formatBytes(call.request!.size)} / '
+          '${ChuckConversionHelper.formatBytes(call.response!.size)}',
+          style: const TextStyle(fontSize: 12),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 
-  Widget _buildStatsRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(child: Text(_formatTime(call.request!.time), style: const TextStyle(fontSize: 12))),
-        Flexible(child: Text(ChuckConversionHelper.formatTime(call.duration), style: const TextStyle(fontSize: 12))),
-        Flexible(
-          child: Text(
-            "${ChuckConversionHelper.formatBytes(call.request!.size)} / "
-            "${ChuckConversionHelper.formatBytes(call.response!.size)}",
-            style: const TextStyle(fontSize: 12),
-          ),
-        ),
-      ],
-    );
-  }
+  String _formatTime(DateTime time) =>
+      '${formatTimeUnit(time.hour)}:'
+      '${formatTimeUnit(time.minute)}:'
+      '${formatTimeUnit(time.second)}:'
+      '${formatTimeUnit(time.millisecond)}';
 
-  String _formatTime(DateTime time) {
-    return "${formatTimeUnit(time.hour)}:"
-        "${formatTimeUnit(time.minute)}:"
-        "${formatTimeUnit(time.second)}:"
-        "${formatTimeUnit(time.millisecond)}";
-  }
-
-  String formatTimeUnit(int timeUnit) {
-    return (timeUnit < 10) ? "0$timeUnit" : "$timeUnit";
-  }
+  String formatTimeUnit(int timeUnit) => (timeUnit < 10) ? '0$timeUnit' : '$timeUnit';
 
   Widget _buildResponseColumn(BuildContext context) {
     final List<Widget> widgets = [];
     if (call.loading) {
-      widgets.add(
-        SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(ChuckConstants.lightRed)),
-        ),
-      );
-      widgets.add(const SizedBox(height: 4));
+      widgets
+        ..add(
+          const SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(ChuckConstants.lightRed)),
+          ),
+        )
+        ..add(const SizedBox(height: 4));
     }
     widgets.add(Text(_getStatus(call.response!), style: TextStyle(fontSize: 16, color: _getStatusTextColor(context))));
     return SizedBox(width: 50, child: Column(children: widgets));
@@ -138,11 +130,11 @@ class ChuckCallListItemWidget extends StatelessWidget {
 
   String _getStatus(ChuckHttpResponse response) {
     if (response.status == -1) {
-      return "ERR";
+      return 'ERR';
     } else if (response.status == 0) {
-      return "???";
+      return '???';
     } else {
-      return "${response.status}";
+      return '${response.status}';
     }
   }
 

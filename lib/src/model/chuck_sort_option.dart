@@ -5,15 +5,15 @@ extension ChuckSortOptionsExtension on ChuckSortOption {
   String get name {
     switch (this) {
       case ChuckSortOption.time:
-        return "Create time (default)";
+        return 'Create time (default)';
       case ChuckSortOption.responseTime:
-        return "Response time";
+        return 'Response time';
       case ChuckSortOption.responseCode:
-        return "Response code";
+        return 'Response code';
       case ChuckSortOption.responseSize:
-        return "Response size";
+        return 'Response size';
       case ChuckSortOption.endpoint:
-        return "Endpoint";
+        return 'Endpoint';
     }
   }
 }

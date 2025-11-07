@@ -1,6 +1,4 @@
-///Code from https://github.com/deven98/shake
-///Seems to be not maintained for almost 2 years... (01.03.2021).
-library;
+// ignore_for_file: discarded_futures
 
 import 'dart:async';
 
@@ -9,6 +7,20 @@ typedef PhoneShakeCallback = Null Function();
 
 /// ShakeDetector class for phone shake functionality
 class ShakeDetector {
+  ShakeDetector.waitForStart({
+    this.onPhoneShake,
+    this.shakeThresholdGravity = 2.7,
+    this.shakeSlopTimeMS = 500,
+    this.shakeCountResetTime = 3000,
+  });
+
+  ShakeDetector.autoStart({
+    this.onPhoneShake,
+    this.shakeThresholdGravity = 2.7,
+    this.shakeSlopTimeMS = 500,
+    this.shakeCountResetTime = 3000,
+  });
+
   /// User callback for phone shake
   final PhoneShakeCallback? onPhoneShake;
 
@@ -26,24 +38,6 @@ class ShakeDetector {
 
   /// StreamSubscription for Accelerometer events
   StreamSubscription<dynamic>? streamSubscription;
-
-  /// This constructor waits until [startListening] is called
-  ShakeDetector.waitForStart({
-    this.onPhoneShake,
-    this.shakeThresholdGravity = 2.7,
-    this.shakeSlopTimeMS = 500,
-    this.shakeCountResetTime = 3000,
-  });
-
-  /// This constructor automatically calls [startListening] and starts detection and callbacks.\
-  ShakeDetector.autoStart({
-    this.onPhoneShake,
-    this.shakeThresholdGravity = 2.7,
-    this.shakeSlopTimeMS = 500,
-    this.shakeCountResetTime = 3000,
-  }) {
-    // startListening();
-  }
 
   /// Stops listening to accelerometer events
   void stopListening() {

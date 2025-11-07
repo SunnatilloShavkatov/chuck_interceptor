@@ -3,16 +3,16 @@ import 'dart:convert';
 sealed class ChuckParser {
   const ChuckParser._();
 
-  static const String _emptyBody = "Body is empty";
-  static const String _unknownContentType = "Unknown";
-  static const String _jsonContentTypeSmall = "content-type";
-  static const String _jsonContentTypeBig = "Content-Type";
-  static const String _stream = "Stream";
-  static const String _applicationJson = "application/json";
-  static const String _parseFailedText = "Failed to parse ";
+  static const String _emptyBody = 'Body is empty';
+  static const String _unknownContentType = 'Unknown';
+  static const String _jsonContentTypeSmall = 'content-type';
+  static const String _jsonContentTypeBig = 'Content-Type';
+  static const String _stream = 'Stream';
+  static const String _applicationJson = 'application/json';
+  static const String _parseFailedText = 'Failed to parse ';
   static const JsonEncoder encoder = JsonEncoder.withIndent('  ');
 
-  static String _parseJson(dynamic json) {
+  static String _parseJson(Object? json) {
     try {
       return encoder.convert(json);
     } catch (exception) {
@@ -20,7 +20,10 @@ sealed class ChuckParser {
     }
   }
 
-  static dynamic _decodeJson(dynamic body) {
+  static dynamic _decodeJson(Object? body) {
+    if (body == null) {
+      return null;
+    }
     try {
       return json.decode(body as String);
     } catch (exception) {
@@ -28,7 +31,7 @@ sealed class ChuckParser {
     }
   }
 
-  static String formatBody(dynamic body, String? contentType) {
+  static String formatBody(Object? body, String? contentType) {
     try {
       if (body == null) {
         return _emptyBody;
@@ -46,7 +49,7 @@ sealed class ChuckParser {
           bodyContent = bodyTemp;
         }
       } else {
-        if (body is String && body.contains("\n")) {
+        if (body is String && body.contains('\n')) {
           bodyContent = body;
         } else {
           if (body is String) {
@@ -72,16 +75,20 @@ sealed class ChuckParser {
 
       return bodyContent;
     } catch (exception) {
-      return "$_parseFailedText$body (Error: $exception)";
+      return '$_parseFailedText$body (Error: $exception)';
     }
   }
 
   /// Check if the body content looks like JSON
-  static bool _looksLikeJson(dynamic body) {
-    if (body == null) return false;
+  static bool _looksLikeJson(Object? body) {
+    if (body == null) {
+      return false;
+    }
 
     final bodyStr = body.toString().trim();
-    if (bodyStr.isEmpty) return false;
+    if (bodyStr.isEmpty) {
+      return false;
+    }
 
     // Check for JSON-like structure
     return (bodyStr.startsWith('{') && bodyStr.endsWith('}')) || (bodyStr.startsWith('[') && bodyStr.endsWith(']'));
