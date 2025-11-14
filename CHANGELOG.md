@@ -1,7 +1,13 @@
+## 2.3.3
+
+* Updated dependencies: share_plus to ^12.0.1, flutter_local_notifications to ^19.5.0
+* Migrated from flutter_lints to analysis_lints for better code analysis
+* Minor improvements and code quality enhancements
+* Version bump for publishing
+
 ## 2.3.2
 
 * Version bump for publishing
-* 
 
 ## 2.3.1
 

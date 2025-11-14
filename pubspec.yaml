@@ -1,5 +1,5 @@
 name: chuck_interceptor
-version: 2.3.2
+version: 2.3.3
 homepage: https://github.com/SunnatilloShavkatov/chuck_interceptor
 description: "Chuck is an HTTP Inspector tool which helps debugging http requests. It catches and stores http requests and responses, which can be viewed via simple UI."
 
