@@ -8,40 +8,41 @@ sealed class ChuckAlertHelper {
     BuildContext context,
     String title,
     String description, {
-    String firstButtonTitle = "Accept",
+    String firstButtonTitle = 'Accept',
     String? secondButtonTitle,
-    Function? firstButtonAction,
-    Function? secondButtonAction,
+    void Function()? firstButtonAction,
+    void Function()? secondButtonAction,
     Brightness? brightness,
   }) {
-    final List<Widget> actions = [];
-    actions.add(
-      TextButton(
-        onPressed: () {
-          if (firstButtonAction != null) {
-            firstButtonAction();
-          }
-          Navigator.of(context).pop();
-        },
-        child: Text(firstButtonTitle),
-      ),
-    );
-    if (secondButtonTitle != null) {
-      actions.add(
-        TextButton(
-          onPressed: () {
-            if (secondButtonAction != null) {
-              secondButtonAction();
-            }
-            Navigator.of(context).pop();
-          },
-          child: Text(secondButtonTitle),
-        ),
-      );
-    }
     showDialog<void>(
       context: context,
-      builder: (BuildContext buildContext) {
+      builder: (BuildContext dialogContext) {
+        final List<Widget> actions = [
+          TextButton(
+            onPressed: () {
+              if (firstButtonAction != null) {
+                firstButtonAction();
+              }
+              Navigator.of(dialogContext).pop();
+            },
+            child: Text(firstButtonTitle),
+          ),
+        ];
+
+        if (secondButtonTitle != null) {
+          actions.add(
+            TextButton(
+              onPressed: () {
+                if (secondButtonAction != null) {
+                  secondButtonAction();
+                }
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(secondButtonTitle),
+            ),
+          );
+        }
+
         return Theme(
           data: ThemeData(brightness: brightness ?? Brightness.light),
           child: AlertDialog(title: Text(title), content: Text(description), actions: actions),
