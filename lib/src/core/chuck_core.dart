@@ -95,7 +95,7 @@ class ChuckCore {
     );
     unawaited(
       _flutterLocalNotificationsPlugin.initialize(
-        initializationSettings,
+        settings: initializationSettings,
         onDidReceiveNotificationResponse: _onSelectedNotification,
       ),
     );
@@ -202,10 +202,10 @@ class ChuckCore {
       );
       final String? message = _notificationMessage;
       await _flutterLocalNotificationsPlugin.show(
-        0,
-        'Chuck (total: ${callsSubject.value.length} requests)',
-        message,
-        platformChannelSpecifics,
+        id: 0,
+        title: 'Chuck (total: ${callsSubject.value.length} requests)',
+        body: message,
+        notificationDetails: platformChannelSpecifics,
         payload: '',
       );
       _notificationMessageShown = message;

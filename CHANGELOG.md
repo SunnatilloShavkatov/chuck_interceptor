@@ -1,3 +1,7 @@
+## 2.4.0
+
+* Updated dependencies: flutter_local_notifications to ^20.0.0
+
 ## 2.3.3
 
 * Updated dependencies: share_plus to ^12.0.1, flutter_local_notifications to ^19.5.0
