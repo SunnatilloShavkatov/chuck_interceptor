@@ -1,4 +1,5 @@
 import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
+import 'package:chuck_interceptor/src/helper/chuck_copy_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
@@ -11,23 +12,26 @@ class ChuckCallListItemWidget extends StatelessWidget {
   final void Function(ChuckHttpCall) itemClickAction;
 
   @override
-  Widget build(BuildContext context) => InkWell(
-    onTap: () => itemClickAction(call),
-    child: Padding(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildMethodAndEndpointRow(context),
-                const SizedBox(height: 4),
-                _buildServerRow(),
-                const SizedBox(height: 4),
-                _buildStatsRow(),
-              ],
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => itemClickAction(call),
+      onLongPress: () => _showContextMenu(context),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildMethodAndEndpointRow(context),
+                  const SizedBox(height: 4),
+                  _buildServerRow(),
+                  const SizedBox(height: 4),
+                  _buildStatsRow(),
+                ],
+              ),
             ),
           ),
           _buildResponseColumn(context),
@@ -152,5 +156,9 @@ class ChuckCallListItemWidget extends StatelessWidget {
       padding: const EdgeInsets.only(right: 3),
       child: Icon(iconData, color: iconColor, size: 12),
     );
+  }
+
+  void _showContextMenu(BuildContext context) {
+    ChuckCopyHelper.showCopyMenu(context, call);
   }
 }
