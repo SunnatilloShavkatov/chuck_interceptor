@@ -3,9 +3,9 @@ import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.d
 import 'package:flutter/material.dart';
 
 class ChuckCallOverviewWidget extends StatefulWidget {
-  final ChuckHttpCall call;
-
   const ChuckCallOverviewWidget(this.call, {super.key});
+
+  final ChuckHttpCall call;
 
   @override
   State<StatefulWidget> createState() => _ChuckCallOverviewWidget();
@@ -16,17 +16,18 @@ class _ChuckCallOverviewWidget extends ChuckBaseCallDetailsWidgetState<ChuckCall
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> rows = [];
-    rows.add(getListRow("Method: ", _call.method));
-    rows.add(getListRow("Server: ", _call.server));
-    rows.add(getListRow("Endpoint: ", _call.endpoint));
-    rows.add(getListRow("Started:", _call.request!.time.toString()));
-    rows.add(getListRow("Finished:", _call.response!.time.toString()));
-    rows.add(getListRow("Duration:", formatDuration(_call.duration)));
-    rows.add(getListRow("Bytes sent:", formatBytes(_call.request!.size)));
-    rows.add(getListRow("Bytes received:", formatBytes(_call.response!.size)));
-    rows.add(getListRow("Client:", _call.client));
-    rows.add(getListRow("Secure:", _call.secure.toString()));
+    final List<Widget> rows = [
+      getListRow('Method: ', _call.method),
+      getListRow('Server: ', _call.server),
+      getListRow('Endpoint: ', _call.endpoint),
+      getListRow('Started:', _call.request!.time.toString()),
+      getListRow('Finished:', _call.response!.time.toString()),
+      getListRow('Duration:', formatDuration(_call.duration)),
+      getListRow('Bytes sent:', formatBytes(_call.request!.size)),
+      getListRow('Bytes received:', formatBytes(_call.response!.size)),
+      getListRow('Client:', _call.client),
+      getListRow('Secure:', _call.secure.toString()),
+    ];
     return CustomScrollView(
       slivers: [
         SliverSafeArea(

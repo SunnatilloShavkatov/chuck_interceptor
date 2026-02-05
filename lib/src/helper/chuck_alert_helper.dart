@@ -1,3 +1,5 @@
+// ignore_for_file: discarded_futures
+
 import 'package:flutter/material.dart';
 
 sealed class ChuckAlertHelper {
@@ -8,14 +10,13 @@ sealed class ChuckAlertHelper {
     BuildContext context,
     String title,
     String description, {
-    String firstButtonTitle = "Accept",
+    String firstButtonTitle = 'Accept',
     String? secondButtonTitle,
-    Function? firstButtonAction,
-    Function? secondButtonAction,
+    void Function()? firstButtonAction,
+    void Function()? secondButtonAction,
     Brightness? brightness,
   }) {
-    final List<Widget> actions = [];
-    actions.add(
+    final List<Widget> actions = [
       TextButton(
         onPressed: () {
           if (firstButtonAction != null) {
@@ -25,7 +26,7 @@ sealed class ChuckAlertHelper {
         },
         child: Text(firstButtonTitle),
       ),
-    );
+    ];
     if (secondButtonTitle != null) {
       actions.add(
         TextButton(
@@ -41,12 +42,10 @@ sealed class ChuckAlertHelper {
     }
     showDialog<void>(
       context: context,
-      builder: (BuildContext buildContext) {
-        return Theme(
-          data: ThemeData(brightness: brightness ?? Brightness.light),
-          child: AlertDialog(title: Text(title), content: Text(description), actions: actions),
-        );
-      },
+      builder: (BuildContext buildContext) => Theme(
+        data: ThemeData(brightness: brightness ?? Brightness.light),
+        child: AlertDialog(title: Text(title), content: Text(description), actions: actions),
+      ),
     );
   }
 }

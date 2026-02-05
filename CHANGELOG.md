@@ -1,3 +1,58 @@
+## 2.4.0
+
+* Updated dependencies: flutter_local_notifications to ^20.0.0
+
+## 2.3.3
+
+* Updated dependencies: share_plus to ^12.0.1, flutter_local_notifications to ^19.5.0
+* Migrated from flutter_lints to analysis_lints for better code analysis
+* Minor improvements and code quality enhancements
+* Version bump for publishing
+
+## 2.3.2
+
+* Version bump for publishing
+
+## 2.3.1
+
+* Version bump for publishing
+
+## 2.3.0
+
+* Performance optimizations and memory management improvements
+* Enhanced error handling with comprehensive try-catch blocks
+* Improved null safety patterns and defensive programming
+* Added comprehensive code documentation and inline comments
+* Created unit test suite for core functionality
+* Fixed README.md documentation errors and API inconsistencies
+* Optimized list operations and reduced memory allocations
+* Better user feedback and error recovery mechanisms
+* Fixed JSON parsing issues in response preview widgets
+* Enhanced JSON detection and validation logic
+* Improved error handling for malformed JSON responses
+* Better fallback display for JSON parsing failures
+* Added detailed error messages for debugging JSON issues
+* Fixed Content-Type detection when headers show "unknown"
+* Enhanced Content-Type header parsing for different HTTP client formats
+* Improved JSON detection logic to work even with unknown content types
+* Better fallback to structure-based JSON detection
+* Enhanced text response detection for unknown content types
+* Improved JSON display with interactive JsonViewer widget
+* Added beautiful styling and formatting for JSON responses
+* Enhanced JSON readability with expandable/collapsible structure
+* Better visual separation and container styling for JSON content
+* Fixed JSON parsing to show structured view instead of raw text
+* Removed Preview tab from HTTP call details screen
+* Simplified UI by removing redundant preview functionality
+* Updated tab controller to use 4 tabs instead of 5
+* Cleaned up unused preview widget code
+* Restored Preview tab to HTTP call details screen
+* Simplified ChuckCallResponseWidget to show single view (raw body)
+* Enhanced ChuckCallResponsePreviewWidget with interactive JSON viewer
+* Separated concerns: Response tab shows raw data, Preview tab shows formatted view
+* Improved user experience with dedicated preview functionality
+* Updated dependencies
+
 ## 2.2.7
 
 * Updated dependencies.
@@ -102,13 +157,13 @@
 
 * Updates minimum supported SDK version to Flutter 3.13/Dart 3.1.0
 
+## 2.0.0+2
+
+* http bug fixed
+
 ## 2.0.0+1
 
 * Updated dependencies
-
-## 2.0.0+1
-
-* http bug fixed
 
 ## 2.0.0
 

@@ -3,9 +3,9 @@ import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.d
 import 'package:flutter/material.dart';
 
 class ChuckCallRequestWidget extends StatefulWidget {
-  final ChuckHttpCall call;
-
   const ChuckCallRequestWidget(this.call, {super.key});
+
+  final ChuckHttpCall call;
 
   @override
   State<StatefulWidget> createState() => _ChuckCallRequestWidget();
@@ -16,40 +16,41 @@ class _ChuckCallRequestWidget extends ChuckBaseCallDetailsWidgetState<ChuckCallR
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> rows = [];
-    rows.add(getListRow("Started:", _call.request!.time.toString()));
-    rows.add(getListRow("Bytes sent:", formatBytes(_call.request!.size)));
-    rows.add(getListRow("Content type:", getContentType(_call.request!.headers)!));
+    final List<Widget> rows = [
+      getListRow('Started:', _call.request!.time.toString()),
+      getListRow('Bytes sent:', formatBytes(_call.request!.size)),
+      getListRow('Content type:', getContentType(_call.request!.headers)!),
+    ];
 
     final dynamic body = _call.request!.body;
-    var bodyContent = "Body is empty";
+    var bodyContent = 'Body is empty';
     if (body != null) {
       bodyContent = formatBody(body, getContentType(_call.request!.headers));
     }
-    rows.add(getListRow("Body:", bodyContent));
+    rows.add(getListRow('Body:', bodyContent));
     final formDataFields = _call.request!.formDataFields;
-    if (formDataFields?.isNotEmpty == true) {
-      rows.add(getListRow("Form data fields: ", ""));
-      formDataFields!.forEach((field) {
-        rows.add(getListRow("   • ${field.name}:", field.value));
-      });
+    if (formDataFields?.isNotEmpty ?? false) {
+      rows.add(getListRow('Form data fields: ', ''));
+      for (final field in formDataFields!) {
+        rows.add(getListRow('   • ${field.name}:', field.value));
+      }
     }
     final formDataFiles = _call.request!.formDataFiles;
-    if (formDataFiles?.isNotEmpty == true) {
-      rows.add(getListRow("Form data files: ", ""));
-      formDataFiles!.forEach((field) {
-        rows.add(getListRow("   • ${field.fileName}:", "${field.contentType} / ${field.length} B"));
-      });
+    if (formDataFiles?.isNotEmpty ?? false) {
+      rows.add(getListRow('Form data files: ', ''));
+      for (final field in formDataFiles!) {
+        rows.add(getListRow('   • ${field.fileName}:', '${field.contentType} / ${field.length} B'));
+      }
     }
 
     final queryParameters = _call.request!.queryParameters;
-    var queryParametersContent = "Query parameters are empty";
+    var queryParametersContent = 'Query parameters are empty';
     if (queryParameters.isNotEmpty) {
-      queryParametersContent = "";
+      queryParametersContent = '';
     }
-    rows.add(getListRow("Query Parameters: ", queryParametersContent));
-    _call.request!.queryParameters.forEach((query, dynamic value) {
-      rows.add(getListRow("   • $query:", value.toString()));
+    rows.add(getListRow('Query Parameters: ', queryParametersContent));
+    _call.request!.queryParameters.forEach((query, value) {
+      rows.add(getListRow('   • $query:', value.toString()));
     });
 
     final headers = _call.request!.headers;

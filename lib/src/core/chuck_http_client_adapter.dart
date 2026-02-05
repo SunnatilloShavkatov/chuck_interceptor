@@ -14,63 +14,69 @@ class ChuckHttpClientAdapter {
   final ChuckCore chuckCore;
 
   /// Handles httpClientRequest and creates http Chuck call from it
-  void onRequest(HttpClientRequest request, {dynamic body}) {
-    final ChuckHttpCall call = ChuckHttpCall(request.hashCode);
-    call.loading = true;
-    call.client = "HttpClient (io package)";
-    call.method = request.method;
-    call.uri = request.uri.toString();
+  void onRequest(HttpClientRequest request, {Object? body}) {
+    final ChuckHttpCall call = ChuckHttpCall(request.hashCode)
+      ..loading = true
+      ..client = 'HttpClient (io package)'
+      ..method = request.method
+      ..uri = request.uri.toString();
 
     var path = request.uri.path;
     if (path.isEmpty) {
-      path = "/";
+      path = '/';
     }
 
-    call.endpoint = path;
-    call.server = request.uri.host;
-    if (request.uri.scheme == "https") {
+    call
+      ..endpoint = path
+      ..server = request.uri.host;
+    if (request.uri.scheme == 'https') {
       call.secure = true;
     }
     final ChuckHttpRequest httpRequest = ChuckHttpRequest();
     if (body == null) {
-      httpRequest.size = 0;
-      httpRequest.body = "";
+      httpRequest
+        ..size = 0
+        ..body = '';
     } else {
-      httpRequest.size = utf8.encode(body.toString()).length;
-      httpRequest.body = body;
+      httpRequest
+        ..size = utf8.encode(body.toString()).length
+        ..body = body;
     }
     httpRequest.time = DateTime.now();
     final Map<String, dynamic> headers = <String, dynamic>{};
 
-    httpRequest.headers.forEach((header, dynamic value) {
+    httpRequest.headers.forEach((header, Object? value) {
       headers[header] = value;
     });
 
     httpRequest.headers = headers;
-    String? contentType = "unknown";
-    if (headers.containsKey("Content-Type")) {
-      contentType = headers["Content-Type"] as String?;
+    String? contentType = 'unknown';
+    if (headers.containsKey('Content-Type')) {
+      contentType = headers['Content-Type'] as String?;
     }
 
-    httpRequest.contentType = contentType;
-    httpRequest.cookies = request.cookies;
+    httpRequest
+      ..contentType = contentType
+      ..cookies = request.cookies;
 
-    call.request = httpRequest;
-    call.response = ChuckHttpResponse();
+    call
+      ..request = httpRequest
+      ..response = ChuckHttpResponse();
     chuckCore.addCall(call);
   }
 
   /// Handles httpClientRequest and adds response to http Chuck call
-  void onResponse(HttpClientResponse response, HttpClientRequest request, {dynamic body}) async {
-    final ChuckHttpResponse httpResponse = ChuckHttpResponse();
-    httpResponse.status = response.statusCode;
+  Future<void> onResponse(HttpClientResponse response, HttpClientRequest request, {Object? body}) async {
+    final ChuckHttpResponse httpResponse = ChuckHttpResponse()..status = response.statusCode;
 
     if (body != null) {
-      httpResponse.body = body;
-      httpResponse.size = utf8.encode(body.toString()).length;
+      httpResponse
+        ..body = body
+        ..size = utf8.encode(body.toString()).length;
     } else {
-      httpResponse.body = "";
-      httpResponse.size = 0;
+      httpResponse
+        ..body = ''
+        ..size = 0;
     }
     httpResponse.time = DateTime.now();
     final Map<String, String> headers = {};

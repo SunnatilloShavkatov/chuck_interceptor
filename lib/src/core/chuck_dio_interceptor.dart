@@ -10,11 +10,11 @@ import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 import 'package:dio/dio.dart';
 
 class ChuckDioInterceptor extends InterceptorsWrapper {
-  /// ChuckCore instance
-  final ChuckCore chuckCore;
-
   /// Creates dio interceptor
   ChuckDioInterceptor(this.chuckCore);
+
+  /// ChuckCore instance
+  final ChuckCore chuckCore;
 
   /// Handles dio request and creates Chuck http call based on it
   @override
@@ -25,14 +25,15 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
     call.method = options.method;
     var path = options.uri.path;
     if (path.isEmpty) {
-      path = "/";
+      path = '/';
     }
-    call.endpoint = path;
-    call.server = uri.host;
-    call.client = "Dio";
-    call.uri = options.uri.toString();
+    call
+      ..endpoint = path
+      ..server = uri.host
+      ..client = 'Dio'
+      ..uri = options.uri.toString();
 
-    if (uri.scheme == "https") {
+    if (uri.scheme == 'https') {
       call.secure = true;
     }
 
@@ -40,11 +41,12 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
 
     final dynamic data = options.data;
     if (data == null) {
-      request.size = 0;
-      request.body = "";
+      request
+        ..size = 0
+        ..body = '';
     } else {
       if (data is FormData) {
-        request.body = "Form data";
+        request.body = 'Form data';
 
         if (data.fields.isNotEmpty) {
           // Use map instead of forEach for better performance
@@ -63,18 +65,21 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
         }
       } else {
         final String dataString = data.toString();
-        request.size = utf8.encode(dataString).length;
-        request.body = dataString;
+        request
+          ..size = utf8.encode(dataString).length
+          ..body = dataString;
       }
     }
 
-    request.time = DateTime.now();
-    request.headers = options.headers;
-    request.contentType = options.contentType.toString();
-    request.queryParameters = options.queryParameters;
+    request
+      ..time = DateTime.now()
+      ..headers = options.headers
+      ..contentType = options.contentType.toString()
+      ..queryParameters = options.queryParameters;
 
-    call.request = request;
-    call.response = ChuckHttpResponse();
+    call
+      ..request = request
+      ..response = ChuckHttpResponse();
 
     chuckCore.addCall(call);
     handler.next(options);
@@ -83,23 +88,24 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
   /// Handles dio response and adds data to Chuck http call
   @override
   void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
-    final httpResponse = ChuckHttpResponse();
-    httpResponse.status = response.statusCode;
+    final httpResponse = ChuckHttpResponse()..status = response.statusCode;
 
     if (response.data == null) {
-      httpResponse.body = "";
-      httpResponse.size = 0;
+      httpResponse
+        ..body = ''
+        ..size = 0;
     } else {
       final String responseDataString = response.data.toString();
-      httpResponse.body = response.data;
-      httpResponse.size = utf8.encode(responseDataString).length;
+      httpResponse
+        ..body = response.data
+        ..size = utf8.encode(responseDataString).length;
     }
 
     httpResponse.time = DateTime.now();
     // Use map for better performance instead of forEach
     final Map<String, String> headers = {};
     httpResponse.headers?.forEach((header, values) {
-      headers[header] = values.toString();
+      headers[header] = values;
     });
     httpResponse.headers = headers;
 
@@ -107,13 +113,17 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
     handler.next(response);
   }
 
-  /// Handles error and adds data to Chuck http call
+  /// Handles error and adds data to Chuck http call with improved null safety
   @override
   void onError(DioException error, ErrorInterceptorHandler handler) {
-    final httpError = ChuckHttpError(error: error, stackTrace: error is Error ? (error as Error).stackTrace : null);
+    StackTrace? stackTrace;
+    if (error is Error) {
+      stackTrace = error.stackTrace;
+    }
+
+    final httpError = ChuckHttpError(error: error, stackTrace: stackTrace);
     chuckCore.addError(httpError, error.requestOptions.hashCode);
-    final httpResponse = ChuckHttpResponse();
-    httpResponse.time = DateTime.now();
+    final httpResponse = ChuckHttpResponse()..time = DateTime.now();
 
     final errorResponse = error.response;
     if (errorResponse == null) {
@@ -122,17 +132,19 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
     } else {
       httpResponse.status = errorResponse.statusCode;
       if (errorResponse.data == null) {
-        httpResponse.body = "";
-        httpResponse.size = 0;
+        httpResponse
+          ..body = ''
+          ..size = 0;
       } else {
         final String errorDataString = errorResponse.data.toString();
-        httpResponse.body = errorResponse.data;
-        httpResponse.size = utf8.encode(errorDataString).length;
+        httpResponse
+          ..body = errorResponse.data
+          ..size = utf8.encode(errorDataString).length;
       }
       // Use map for better performance instead of forEach
       final Map<String, String> headers = {};
       httpResponse.headers?.forEach((header, values) {
-        headers[header] = values.toString();
+        headers[header] = values;
       });
       httpResponse.headers = headers;
       chuckCore.addResponse(httpResponse, errorResponse.requestOptions.hashCode);
