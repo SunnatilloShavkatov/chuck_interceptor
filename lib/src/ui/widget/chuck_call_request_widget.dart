@@ -54,11 +54,11 @@ class _ChuckCallRequestWidget extends ChuckBaseCallDetailsWidgetState<ChuckCallR
     });
 
     final headers = _call.request!.headers;
-    var headersContent = "Headers are empty";
+    var headersContent = 'Headers are empty';
     if (headers.isNotEmpty) {
-      headersContent = "";
+      headersContent = '';
     }
-    rows.add(getListRow("Headers: ", headersContent));
+    rows.add(getListRow('Headers: ', headersContent));
 
     final sortedHeaders = Map<String, dynamic>.from(headers);
     dynamic xTokenValue;
@@ -67,11 +67,11 @@ class _ChuckCallRequestWidget extends ChuckBaseCallDetailsWidgetState<ChuckCallR
     }
 
     sortedHeaders.forEach((header, dynamic value) {
-      rows.add(getListRow("   • $header:", value.toString()));
+      rows.add(getListRow('   • $header:', value.toString()));
     });
 
     if (xTokenValue != null) {
-      rows.add(getListRow("   • X-Token:", xTokenValue.toString()));
+      rows.add(getListRow('   • X-Token:', xTokenValue.toString()));
     }
 
     return CustomScrollView(

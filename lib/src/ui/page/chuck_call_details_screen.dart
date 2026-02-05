@@ -84,5 +84,5 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
 
   Widget _buildErrorWidget() => const Center(child: Text('Failed to load data'));
 
-  Future<String> _getSharableResponseString() async => ChuckSaveHelper.buildCallLog(widget.call);
+  Future<String> _getSharableResponseString() => ChuckSaveHelper.buildCallLog(widget.call);
 }

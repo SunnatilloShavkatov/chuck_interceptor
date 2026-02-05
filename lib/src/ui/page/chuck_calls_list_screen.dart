@@ -1,4 +1,4 @@
-// ignore_for_file: discarded_futures, deprecated_member_use
+// ignore_for_file: deprecated_member_use
 
 import 'package:chuck_interceptor/src/core/chuck_core.dart';
 import 'package:chuck_interceptor/src/helper/chuck_alert_helper.dart';
@@ -38,29 +38,27 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
   bool _sortAscending = false;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _searchEnabled ? _buildSearchField() : _buildTitleWidget(),
-        actions: [_buildSearchButton(), _buildMenuButton()],
-      ),
-      body: StreamBuilder<List<ChuckHttpCall>>(
-        stream: chuckCore.callsSubject,
-        builder: (context, snapshot) {
-          List<ChuckHttpCall> calls = snapshot.data ?? [];
-          final String query = _queryTextEditingController.text.trim();
-          if (query.isNotEmpty) {
-            calls = _filterCallsByQuery(calls, query);
-          }
-          if (calls.isNotEmpty) {
-            return _buildCallsListWidget(calls);
-          } else {
-            return _buildEmptyWidget();
-          }
-        },
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: _searchEnabled ? _buildSearchField() : _buildTitleWidget(),
+      actions: [_buildSearchButton(), _buildMenuButton()],
+    ),
+    body: StreamBuilder<List<ChuckHttpCall>>(
+      stream: chuckCore.callsSubject,
+      builder: (context, snapshot) {
+        List<ChuckHttpCall> calls = snapshot.data ?? [];
+        final String query = _queryTextEditingController.text.trim();
+        if (query.isNotEmpty) {
+          calls = _filterCallsByQuery(calls, query);
+        }
+        if (calls.isNotEmpty) {
+          return _buildCallsListWidget(calls);
+        } else {
+          return _buildEmptyWidget();
+        }
+      },
+    ),
+  );
 
   @override
   void dispose() {
@@ -68,23 +66,21 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     _queryTextEditingController.dispose();
   }
 
-  Widget _buildSearchButton() {
-    return Tooltip(
-      key: _tooltipKey,
-      message:
-          "Search tips:\n"
-          "• Use commas to search multiple terms\n"
-          "• Use ! to exclude terms (e.g., !error)\n"
-          "• Search works on URL, method, and status",
-      preferBelow: false,
-      showDuration: const Duration(seconds: 3),
-      triggerMode: TooltipTriggerMode.manual,
-      child: IconButton(icon: const Icon(Icons.search), onPressed: _onSearchClicked),
-    );
-  }
+  Widget _buildSearchButton() => Tooltip(
+    key: _tooltipKey,
+    message:
+        'Search tips:\n'
+        '• Use commas to search multiple terms\n'
+        '• Use ! to exclude terms (e.g., !error)\n'
+        '• Search works on URL, method, and status',
+    preferBelow: false,
+    showDuration: const Duration(seconds: 3),
+    triggerMode: TooltipTriggerMode.manual,
+    child: IconButton(icon: const Icon(Icons.search), onPressed: _onSearchClicked),
+  );
 
   void _onSearchClicked() {
-    if (_searchEnabled == false) {
+    if (!_searchEnabled) {
       _tooltipKey.currentState?.ensureTooltipVisible();
     }
 
@@ -116,19 +112,17 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
 
   Widget _buildTitleWidget() => const Text('Chuck');
 
-  Widget _buildSearchField() {
-    return TextField(
-      controller: _queryTextEditingController,
-      autofocus: true,
-      decoration: InputDecoration(
-        hintText: "Search... (commas for multiple terms, ! to exclude)",
-        hintStyle: TextStyle(fontSize: 16.0, color: ChuckConstants.grey),
-        border: InputBorder.none,
-      ),
-      style: const TextStyle(fontSize: 16.0),
-      onChanged: _updateSearchQuery,
-    );
-  }
+  Widget _buildSearchField() => TextField(
+    controller: _queryTextEditingController,
+    autofocus: true,
+    decoration: const InputDecoration(
+      hintText: 'Search... (commas for multiple terms, ! to exclude)',
+      hintStyle: TextStyle(fontSize: 16, color: ChuckConstants.grey),
+      border: InputBorder.none,
+    ),
+    style: const TextStyle(fontSize: 16),
+    onChanged: _updateSearchQuery,
+  );
 
   void _onMenuItemSelected(ChuckMenuItem menuItem) {
     if (menuItem.title == 'Sort') {
@@ -141,7 +135,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
       _showStatsScreen();
     }
     if (menuItem.title == 'Save') {
-      _saveToFile();
+      _saveToFile().ignore();
     }
   }
 
@@ -302,7 +296,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     Navigator.push<void>(
       widget._chuckCore.getContext()!,
       MaterialPageRoute(builder: (context) => ChuckCallDetailsScreen(call, widget._chuckCore)),
-    );
+    ).ignore();
   }
 
   void _showRemoveDialog() {
@@ -325,7 +319,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     Navigator.push<void>(
       chuckCore.getContext()!,
       MaterialPageRoute(builder: (context) => ChuckStatsScreen(widget._chuckCore)),
-    );
+    ).ignore();
   }
 
   Future<void> _saveToFile() async {
@@ -346,7 +340,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     final List<String> includeTerms = [];
     final List<String> excludeTerms = [];
 
-    for (String term in allTerms) {
+    for (final String term in allTerms) {
       if (term.startsWith('!') && term.length > 1) {
         excludeTerms.add(term.substring(1).toLowerCase());
       } else {
@@ -359,7 +353,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
       final String method = call.method.toLowerCase();
       final String server = call.server.toLowerCase();
 
-      for (String excludeTerm in excludeTerms) {
+      for (final String excludeTerm in excludeTerms) {
         if (endpoint.contains(excludeTerm) || method.contains(excludeTerm) || server.contains(excludeTerm)) {
           return false;
         }
@@ -432,7 +426,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
           ],
         ),
       ),
-    );
+    ).ignore();
   }
 
   void sortCalls() {

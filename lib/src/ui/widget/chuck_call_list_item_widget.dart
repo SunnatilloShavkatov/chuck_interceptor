@@ -12,26 +12,24 @@ class ChuckCallListItemWidget extends StatelessWidget {
   final void Function(ChuckHttpCall) itemClickAction;
 
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => itemClickAction(call),
-      onLongPress: () => _showContextMenu(context),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildMethodAndEndpointRow(context),
-                  const SizedBox(height: 4),
-                  _buildServerRow(),
-                  const SizedBox(height: 4),
-                  _buildStatsRow(),
-                ],
-              ),
+  Widget build(BuildContext context) => InkWell(
+    onTap: () => itemClickAction(call),
+    onLongPress: () => _showContextMenu(context),
+    child: Padding(
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildMethodAndEndpointRow(context),
+                const SizedBox(height: 4),
+                _buildServerRow(),
+                const SizedBox(height: 4),
+                _buildStatsRow(),
+              ],
             ),
           ),
           _buildResponseColumn(context),

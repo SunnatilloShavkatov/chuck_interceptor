@@ -1,8 +1,6 @@
-// ignore_for_file: discarded_futures
-
 import 'package:flutter/material.dart';
 
-sealed class ChuckAlertHelper {
+final class ChuckAlertHelper {
   const ChuckAlertHelper._();
 
   ///Helper method used to open alarm with given title and description.

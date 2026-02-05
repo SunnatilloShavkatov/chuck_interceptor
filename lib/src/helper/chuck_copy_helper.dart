@@ -1,10 +1,12 @@
+import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 
-class ChuckCopyHelper {
+final class ChuckCopyHelper {
+  const ChuckCopyHelper._();
+
   static void showCopyMenu(BuildContext context, ChuckHttpCall call) {
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final RenderBox renderBox = context.findRenderObject()! as RenderBox;
     final position = renderBox.localToGlobal(Offset.zero);
     final size = renderBox.size;
 
@@ -17,14 +19,14 @@ class ChuckCopyHelper {
         position.dy + size.height,
       ),
       items: [
-        PopupMenuItem(
+        const PopupMenuItem(
           value: 'copy_curl',
-          child: const Row(children: [Icon(Icons.copy), SizedBox(width: 8), Text('Copy cURL request')]),
+          child: Row(children: [Icon(Icons.copy), SizedBox(width: 8), Text('Copy cURL request')]),
         ),
       ],
     ).then((value) {
       if (value == 'copy_curl' && context.mounted) {
-        _copyCurlToClipboard(context, call);
+        _copyCurlToClipboard(context, call).ignore();
       }
     });
   }
