@@ -1,3 +1,7 @@
+## 2.4.1
+
+* update version to 2.4.1 and upgrade flutter_local_notifications to 21.0.0
+
 ## 2.4.0
 
 * Updated dependencies: flutter_local_notifications to ^20.0.0
