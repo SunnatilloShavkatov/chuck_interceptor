@@ -96,9 +96,8 @@ class ChuckCore {
       macOS: initializationSettingsIOS,
     );
     _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
+      settings: initializationSettings,
       onDidReceiveNotificationResponse: _onSelectedNotification,
-      // onDidReceiveBackgroundNotificationResponse: _onSelectedNotification,
     );
   }
 
@@ -203,11 +202,11 @@ class ChuckCore {
     );
     final String? message = _notificationMessage;
     await _flutterLocalNotificationsPlugin.show(
-      0,
-      "Chuck (total: ${callsSubject.value.length} requests)",
-      message,
-      platformChannelSpecifics,
+      id: 0,
+      body: message,
       payload: "chuck_interceptor",
+      title: "Chuck (total: ${callsSubject.value.length} requests)",
+      notificationDetails: platformChannelSpecifics,
     );
     _notificationMessageShown = message;
     _notificationProcessing = false;
