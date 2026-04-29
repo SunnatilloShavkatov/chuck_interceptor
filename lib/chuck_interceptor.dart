@@ -13,6 +13,9 @@ export 'package:chuck_interceptor/src/core/chuck_core.dart';
 export 'package:chuck_interceptor/src/core/chuck_dio_interceptor.dart';
 export 'package:chuck_interceptor/src/core/chuck_http_client_adapter.dart';
 export 'package:chuck_interceptor/src/core/chuck_http_client_extensions.dart';
+export 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+export 'package:chuck_interceptor/src/model/chuck_http_request.dart';
+export 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 
 final class Chuck {
   /// Creates Chuck instance.

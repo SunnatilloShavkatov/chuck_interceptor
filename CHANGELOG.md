@@ -1,3 +1,7 @@
+## 2.4.2
+
+* Version bump for publishing
+
 ## 2.4.1
 
 * update version to 2.4.1 and upgrade flutter_local_notifications to 21.0.0
