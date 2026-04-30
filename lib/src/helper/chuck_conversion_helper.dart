@@ -1,4 +1,4 @@
-sealed class ChuckConversionHelper {
+final class ChuckConversionHelper {
   const ChuckConversionHelper._();
 
   static const int _kilobyteAsByte = 1000;
