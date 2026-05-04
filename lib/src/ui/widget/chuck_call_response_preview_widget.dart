@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_json_viewer.dart';
 import 'package:flutter/material.dart';
@@ -68,9 +69,9 @@ class _ChuckCallResponsePreviewWidgetState extends ChuckBaseCallDetailsWidgetSta
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.red[50],
+                color: context.chuckTheme.errorPreviewBackground,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.red[300]!),
+                border: Border.all(color: context.chuckTheme.errorPreviewBorder),
               ),
               child: SelectableText(bodyContent),
             ),

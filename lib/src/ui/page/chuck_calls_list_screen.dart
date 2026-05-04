@@ -5,10 +5,11 @@ import 'package:chuck_interceptor/src/helper/chuck_alert_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/model/chuck_menu_item.dart';
 import 'package:chuck_interceptor/src/model/chuck_sort_option.dart';
+import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
+import 'package:chuck_interceptor/src/theme/chuck_theme_data.dart';
 import 'package:chuck_interceptor/src/ui/page/chuck_call_details_screen.dart';
 import 'package:chuck_interceptor/src/ui/page/chuck_stats_screen.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_list_item_widget.dart';
-import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
 import 'package:flutter/material.dart';
 
 class ChuckCallsListScreen extends StatefulWidget {
@@ -96,11 +97,11 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     onSelected: _onMenuItemSelected,
     itemBuilder: (BuildContext context) => _menuItems
         .map(
-          (ChuckMenuItem item) => PopupMenuItem<ChuckMenuItem>(
+          (item) => PopupMenuItem<ChuckMenuItem>(
             value: item,
             child: Row(
               children: [
-                Icon(item.iconData, color: ChuckConstants.lightRed),
+                Icon(item.iconData, color: context.chuckTheme.accent),
                 const Padding(padding: EdgeInsets.only(left: 10)),
                 Text(item.title),
               ],
@@ -115,12 +116,12 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
   Widget _buildSearchField() => TextField(
     controller: _queryTextEditingController,
     autofocus: true,
-    decoration: const InputDecoration(
+    decoration: InputDecoration(
       hintText: 'Search... (commas for multiple terms, ! to exclude)',
-      hintStyle: TextStyle(fontSize: 16, color: ChuckConstants.grey),
+      hintStyle: TextStyle(fontSize: 16, color: context.chuckTheme.secondaryText),
       border: InputBorder.none,
     ),
-    style: const TextStyle(fontSize: 16),
+    style: TextStyle(fontSize: 16, color: context.chuckTheme.primaryText),
     onChanged: _updateSearchQuery,
   );
 
@@ -139,26 +140,34 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     }
   }
 
-  Widget _buildEmptyWidget() => const Padding(
-    padding: EdgeInsets.symmetric(horizontal: 32),
+  Widget _buildEmptyWidget() => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 32),
     child: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error_outline, color: ChuckConstants.orange),
-          SizedBox(height: 6),
-          Text('There are no calls to show', style: TextStyle(fontSize: 18)),
-          SizedBox(height: 12),
+          Icon(Icons.error_outline, color: context.chuckTheme.warning),
+          const SizedBox(height: 6),
+          Text('There are no calls to show', style: TextStyle(fontSize: 18, color: context.chuckTheme.primaryText)),
+          const SizedBox(height: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('• Check if you send any http request', style: TextStyle(fontSize: 12), textAlign: TextAlign.center),
               Text(
-                '• Check your ChuckInterceptor configuration',
-                style: TextStyle(fontSize: 12),
+                '• Check if you send any http request',
+                style: TextStyle(fontSize: 12, color: context.chuckTheme.secondaryText),
                 textAlign: TextAlign.center,
               ),
-              Text('• Check search filters', style: TextStyle(fontSize: 12), textAlign: TextAlign.center),
+              Text(
+                '• Check your ChuckInterceptor configuration',
+                style: TextStyle(fontSize: 12, color: context.chuckTheme.secondaryText),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                '• Check search filters',
+                style: TextStyle(fontSize: 12, color: context.chuckTheme.secondaryText),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ],
@@ -286,7 +295,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
       itemCount: callsSorted.length,
       // Use const constructors where possible for better performance
       itemBuilder: (context, index) => ChuckCallListItemWidget(callsSorted[index], _onListItemClicked),
-      separatorBuilder: (context, index) => const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
+      separatorBuilder: (context, index) => Divider(height: 1, thickness: 1, color: context.chuckTheme.neutral),
       // Add cacheExtent for better performance with long lists
       cacheExtent: 20,
     );
@@ -371,7 +380,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     showDialog<void>(
       context: context,
       builder: (BuildContext buildContext) => Theme(
-        data: ThemeData(brightness: Brightness.light),
+        data: ChuckThemeData.attach(Theme.of(context)),
         child: AlertDialog(
           title: const Text('Select filter'),
           content: StatefulBuilder(
@@ -400,8 +409,8 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
                           _sortAscending = value;
                         });
                       },
-                      activeTrackColor: Colors.grey,
-                      activeThumbColor: Colors.white,
+                      activeTrackColor: context.chuckTheme.neutral,
+                      activeThumbColor: context.chuckTheme.onInverseSurface,
                     ),
                     const Text('Ascending'),
                   ],

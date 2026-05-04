@@ -1,12 +1,12 @@
 import 'package:chuck_interceptor/src/core/chuck_core.dart';
 import 'package:chuck_interceptor/src/helper/chuck_save_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_error_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_overview_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_request_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_response_preview_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_response_widget.dart';
-import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -45,8 +45,8 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
     length: 5,
     child: Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: ChuckConstants.lightRed,
-        foregroundColor: Colors.white,
+        backgroundColor: context.chuckTheme.accent,
+        foregroundColor: context.chuckTheme.onAccent,
         key: const Key('share_key'),
         onPressed: () async {
           await SharePlus.instance.share(
@@ -57,10 +57,10 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
       ),
       appBar: AppBar(
         centerTitle: false,
-        bottom: const TabBar(
+        bottom: TabBar(
           tabAlignment: TabAlignment.fill,
-          indicatorColor: ChuckConstants.lightRed,
-          tabs: [
+          indicatorColor: context.chuckTheme.accent,
+          tabs: const [
             Tab(icon: Icon(Icons.info_outline), text: 'Overview'),
             Tab(icon: Icon(Icons.arrow_upward), text: 'Request'),
             Tab(icon: Icon(Icons.arrow_downward), text: 'Response'),

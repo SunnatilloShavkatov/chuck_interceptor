@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -78,7 +79,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                             openFlag[entry.key] = !(openFlag[entry.key] ?? false);
                           });
                         },
-                        child: Icon(Icons.arrow_drop_down, color: Colors.grey[700]),
+                        child: Icon(Icons.arrow_drop_down, color: context.chuckTheme.secondaryText),
                       )
                     : InkWell(
                         onTap: () {
@@ -86,7 +87,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                             openFlag[entry.key] = !(openFlag[entry.key] ?? false);
                           });
                         },
-                        child: Icon(Icons.arrow_right, color: Colors.grey[700]),
+                        child: Icon(Icons.arrow_right, color: context.chuckTheme.secondaryText),
                       )
               else
                 const SizedBox.shrink(),
@@ -101,13 +102,13 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
               else
                 SelectableText(
                   entry.key,
-                  style: TextStyle(color: entry.value == null ? Colors.grey : null),
+                  style: TextStyle(color: entry.value == null ? context.chuckTheme.neutral : context.chuckTheme.primaryText),
                   contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
                     anchors: editableTextState.contextMenuAnchors,
                     buttonItems: editableTextState.contextMenuButtonItems,
                   ),
                 ),
-              const Text(':', style: TextStyle(color: Colors.grey)),
+              Text(':', style: TextStyle(color: context.chuckTheme.neutral)),
               const Padding(padding: EdgeInsets.only(left: 3)),
               getValueWidget(entry),
             ],
@@ -156,7 +157,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Expanded(
         child: SelectableText(
           'undefined',
-          style: const TextStyle(color: Colors.grey),
+          style: TextStyle(color: context.chuckTheme.neutral),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -218,11 +219,11 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
               }
             });
           },
-          child: const Text('Array[0]', style: TextStyle(color: Colors.grey)),
+          child: Text('Array[0]', style: TextStyle(color: context.chuckTheme.neutral)),
         );
       } else {
         return InkWell(
@@ -234,13 +235,13 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
               }
             });
           },
           child: Text(
             'Array<${getTypeName(entry.value[0])}>[${entry.value.length}]',
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: context.chuckTheme.neutral),
           ),
         );
       }
@@ -254,11 +255,11 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       onDoubleTap: () {
         Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
           }
         });
       },
-      child: const Text('Object', style: TextStyle(color: Colors.grey)),
+      child: Text('Object', style: TextStyle(color: context.chuckTheme.neutral)),
     );
   }
 
@@ -343,7 +344,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                             openFlag[i] = !openFlag[i];
                           });
                         },
-                        child: Icon(Icons.arrow_drop_down, color: Colors.grey[700]),
+                        child: Icon(Icons.arrow_drop_down, color: context.chuckTheme.secondaryText),
                       )
                     : InkWell(
                         onTap: () {
@@ -351,7 +352,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                             openFlag[i] = !openFlag[i];
                           });
                         },
-                        child: Icon(Icons.arrow_right, color: Colors.grey[700]),
+                        child: Icon(Icons.arrow_right, color: context.chuckTheme.secondaryText),
                       )
               else
                 InkWell(
@@ -365,8 +366,13 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
               if (ex && ink)
                 Text('[$i]')
               else
-                Text('[$i]', style: TextStyle(color: content == null ? Colors.grey : Colors.black)),
-              const Text(':', style: TextStyle(color: Colors.grey)),
+                Text(
+                  '[$i]',
+                  style: TextStyle(
+                    color: content == null ? context.chuckTheme.neutral : context.chuckTheme.primaryText,
+                  ),
+                ),
+              Text(':', style: TextStyle(color: context.chuckTheme.neutral)),
               const Padding(padding: EdgeInsets.only(left: 3)),
               getValueWidget(content, i),
             ],
@@ -385,7 +391,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       return Expanded(
         child: SelectableText(
           'undefined',
-          style: const TextStyle(color: Colors.grey),
+          style: TextStyle(color: context.chuckTheme.neutral),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -447,11 +453,11 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
               }
             });
           },
-          child: const Text('Array[0]', style: TextStyle(color: Colors.grey)),
+          child: Text('Array[0]', style: TextStyle(color: context.chuckTheme.neutral)),
         );
       } else {
         return InkWell(
@@ -463,13 +469,13 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
               }
             });
           },
           child: Text(
             'Array<${JsonObjectViewerState.getTypeName(content)}>[${content.length}]',
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: context.chuckTheme.neutral),
           ),
         );
       }
@@ -483,21 +489,26 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       onDoubleTap: () {
         Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
           }
         });
       },
-      child: const Text('Object', style: TextStyle(color: Colors.grey)),
+      child: Text('Object', style: TextStyle(color: context.chuckTheme.neutral)),
     );
   }
 }
 
 class CustomSnackBar extends SnackBar {
-  const CustomSnackBar({
+  CustomSnackBar({
     super.key,
-    super.backgroundColor = Colors.yellow,
-    super.content = const Text('Copied to your clipboard !', style: TextStyle(color: Colors.black)),
-  });
+    required BuildContext context,
+  }) : super(
+         backgroundColor: context.chuckTheme.inverseSurface,
+         content: Text(
+           'Copied to your clipboard !',
+           style: TextStyle(color: context.chuckTheme.onInverseSurface),
+         ),
+       );
 
   Widget build(BuildContext context) => SnackBar(backgroundColor: backgroundColor, content: content);
 }

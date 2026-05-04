@@ -1,3 +1,5 @@
+import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
+import 'package:chuck_interceptor/src/theme/chuck_theme_data.dart';
 import 'package:flutter/material.dart';
 
 final class ChuckAlertHelper {
@@ -14,6 +16,8 @@ final class ChuckAlertHelper {
     void Function()? secondButtonAction,
     Brightness? brightness,
   }) {
+    final Brightness resolvedBrightness = brightness ?? Theme.of(context).brightness;
+    final ChuckThemeExtension resolvedChuckTheme = ChuckThemeExtension.fallback(resolvedBrightness);
     final List<Widget> actions = [
       TextButton(
         onPressed: () {
@@ -41,7 +45,10 @@ final class ChuckAlertHelper {
     showDialog<void>(
       context: context,
       builder: (BuildContext buildContext) => Theme(
-        data: ThemeData(brightness: brightness ?? Brightness.light),
+        data: ChuckThemeData.attach(
+          Theme.of(context).copyWith(brightness: resolvedBrightness),
+          extension: resolvedChuckTheme,
+        ),
         child: AlertDialog(title: Text(title), content: Text(description), actions: actions),
       ),
     );

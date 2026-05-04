@@ -1,3 +1,11 @@
+## 2.4.3
+
+* Added `ChuckThemeExtension` and `ChuckThemeData` exports for package-level Chuck UI theming.
+* Fixed Chuck dialogs and screens to respect host app light/dark theme without forcing light mode.
+* Fixed theme token propagation so custom Chuck theme overrides are preserved when attaching to `ThemeData`.
+* Added `onAccent` theme token to ensure readable foreground content on accent-colored surfaces.
+* Updated core Chuck UI widgets to use Chuck theme tokens instead of relying on host text theme colors.
+
 ## 2.4.2
 
 * Version bump for publishing

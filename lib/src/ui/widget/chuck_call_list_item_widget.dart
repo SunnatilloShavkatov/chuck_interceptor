@@ -2,7 +2,7 @@ import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/src/helper/chuck_copy_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
-import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
+import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:flutter/material.dart';
 
 class ChuckCallListItemWidget extends StatelessWidget {
@@ -26,9 +26,9 @@ class ChuckCallListItemWidget extends StatelessWidget {
               children: [
                 _buildMethodAndEndpointRow(context),
                 const SizedBox(height: 4),
-                _buildServerRow(),
+                _buildServerRow(context),
                 const SizedBox(height: 4),
-                _buildStatsRow(),
+                _buildStatsRow(context),
               ],
             ),
           ),
@@ -56,25 +56,40 @@ class ChuckCallListItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildServerRow() => Row(
+  Widget _buildServerRow(BuildContext context) => Row(
     children: [
-      _getSecuredConnectionIcon(call.secure),
+      _getSecuredConnectionIcon(context, call.secure),
       Expanded(
-        child: Text(call.server, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 14)),
+        child: Text(
+          call.server,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 14, color: context.chuckTheme.secondaryText),
+        ),
       ),
     ],
   );
 
-  Widget _buildStatsRow() => Row(
+  Widget _buildStatsRow(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Flexible(child: Text(_formatTime(call.request!.time), style: const TextStyle(fontSize: 12))),
-      Flexible(child: Text(ChuckConversionHelper.formatTime(call.duration), style: const TextStyle(fontSize: 12))),
+      Flexible(
+        child: Text(
+          _formatTime(call.request!.time),
+          style: TextStyle(fontSize: 12, color: context.chuckTheme.secondaryText),
+        ),
+      ),
+      Flexible(
+        child: Text(
+          ChuckConversionHelper.formatTime(call.duration),
+          style: TextStyle(fontSize: 12, color: context.chuckTheme.secondaryText),
+        ),
+      ),
       Flexible(
         child: Text(
           '${ChuckConversionHelper.formatBytes(call.request!.size)} / '
           '${ChuckConversionHelper.formatBytes(call.response!.size)}',
-          style: const TextStyle(fontSize: 12),
+          style: TextStyle(fontSize: 12, color: context.chuckTheme.secondaryText),
         ),
       ),
     ],
@@ -93,10 +108,10 @@ class ChuckCallListItemWidget extends StatelessWidget {
     if (call.loading) {
       widgets
         ..add(
-          const SizedBox(
+          SizedBox(
             width: 20,
             height: 20,
-            child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(ChuckConstants.lightRed)),
+            child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(context.chuckTheme.accent)),
           ),
         )
         ..add(const SizedBox(height: 4));
@@ -108,23 +123,23 @@ class ChuckCallListItemWidget extends StatelessWidget {
   Color? _getStatusTextColor(BuildContext context) {
     final int? status = call.response!.status;
     if (status == -1) {
-      return ChuckConstants.red;
+      return context.chuckTheme.error;
     } else if (status! < 200) {
-      return Theme.of(context).textTheme.bodyLarge!.color;
+      return context.chuckTheme.primaryText;
     } else if (status >= 200 && status < 300) {
-      return ChuckConstants.green;
+      return context.chuckTheme.success;
     } else if (status >= 300 && status < 400) {
-      return ChuckConstants.orange;
+      return context.chuckTheme.warning;
     } else if (status >= 400 && status < 600) {
-      return ChuckConstants.red;
+      return context.chuckTheme.error;
     } else {
-      return Theme.of(context).textTheme.bodyLarge!.color;
+      return context.chuckTheme.primaryText;
     }
   }
 
   Color? _getEndpointTextColor(BuildContext context) {
     if (call.loading) {
-      return ChuckConstants.grey;
+      return context.chuckTheme.neutral;
     } else {
       return _getStatusTextColor(context);
     }
@@ -140,15 +155,15 @@ class ChuckCallListItemWidget extends StatelessWidget {
     }
   }
 
-  Widget _getSecuredConnectionIcon(bool secure) {
+  Widget _getSecuredConnectionIcon(BuildContext context, bool secure) {
     IconData iconData;
     Color iconColor;
     if (secure) {
       iconData = Icons.lock_outline;
-      iconColor = ChuckConstants.green;
+      iconColor = context.chuckTheme.success;
     } else {
       iconData = Icons.lock_open;
-      iconColor = ChuckConstants.red;
+      iconColor = context.chuckTheme.error;
     }
     return Padding(
       padding: const EdgeInsets.only(right: 3),
