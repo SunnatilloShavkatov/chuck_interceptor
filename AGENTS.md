@@ -93,4 +93,4 @@ lib/src/
 ## Testing Strategy
 Focus on unit tests for `ChuckCore` logic (call management, FIFO limits, response correlation). UI tests avoided due to navigator/notification dependencies. Mock ChuckCore for adapter tests if needed.
 ---
-*Last updated: 2026-04-29 | Version: 2.4.2*
+*Last updated: 2026-04-29 | Version: 2.5.0*
