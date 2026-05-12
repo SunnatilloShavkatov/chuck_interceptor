@@ -56,14 +56,14 @@ import 'package:chuck_interceptor/chuck_interceptor.dart';
 
 1. Create chuck instance:
 
-```dart
+```
 
 Chuck chuck = Chuck();
 ```
 
 2. Add navigator key to your application:
 
-```dart
+```
 MaterialApp
 (
 navigatorKey: chuck.getNavigatorKey(), home: ...)
@@ -72,18 +72,15 @@ navigatorKey: chuck.getNavigatorKey(), home: ...)
 You need to add this navigator key in order to show inspector UI.
 You can use also your navigator key in Chuck:
 
-```dart
+```
 
 Chuck chuck = Chuck(showNotification: true, navigatorKey: yourNavigatorKeyHere);
 ```
 
 If you need to pass navigatorKey lazily, you can use:
 
-```dart
-chuck.setNavigatorKey
-(
-yourNavigatorKeyHere
-);
+```
+chuck.setNavigatorKey(yourNavigatorKeyHere);
 ```
 
 This is minimal configuration required to run Chuck. Can set optional settings in Chuck constructor,
@@ -95,7 +92,7 @@ configuration.
 You can set `showNotification` in Chuck constructor to show notification. Clicking on this
 notification will open inspector.
 
-```dart
+```
 
 Chuck chuck = Chuck(..., showNotification: true);
 ```
@@ -103,14 +100,14 @@ Chuck chuck = Chuck(..., showNotification: true);
 You can set `showInspectorOnShake` in Chuck constructor to open inspector by shaking your device (
 default disabled):
 
-```dart
+```
 
 Chuck chuck = Chuck(..., showInspectorOnShake: true);
 ```
 
 If you want to use dark mode just add `darkTheme` flag:
 
-```dart
+```
 
 Chuck chuck = Chuck(..., darkTheme: true);
 ```
@@ -118,7 +115,7 @@ Chuck chuck = Chuck(..., darkTheme: true);
 If you want to pass another notification icon, you can use `notificationIcon` parameter. Default
 value is @mipmap/ic_launcher.
 
-```dart
+```
 
 Chuck chuck = Chuck(..., notificationIcon: "myNotificationIconResourceName");
 ```
@@ -126,7 +123,7 @@ Chuck chuck = Chuck(..., notificationIcon: "myNotificationIconResourceName");
 If you want to limit max numbers of HTTP calls saved in memory, you may use `maxCallsCount`
 parameter.
 
-```dart
+```
 
 Chuck chuck = Chuck(..., maxCallsCount: 1000));
 ```
@@ -134,7 +131,7 @@ Chuck chuck = Chuck(..., maxCallsCount: 1000));
 If you want to change the Directionality of Chuck, you can use the `directionality` parameter. If
 the parameter is set to null, the Directionality of the app will be used.
 
-```dart
+```
 
 Chuck chuck = Chuck(..., directionality: TextDirection.ltr);
 ```
@@ -143,7 +140,7 @@ Chuck chuck = Chuck(..., directionality: TextDirection.ltr);
 
 If you're using Dio, you just need to add interceptor.
 
-```dart
+```
 
 Dio dio = Dio();
 dio.interceptors.add
@@ -156,7 +153,7 @@ dioInterceptor
 
 If you're using HttpClient from dart:io package:
 
-```dart
+```
 httpClient
     .getUrl
 (
@@ -171,7 +168,7 @@ chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
 
 If you're using http from http/http package:
 
-```dart
+```
 http.get
 ('https://jsonplaceholder.typicode.com/posts
 '
@@ -183,7 +180,7 @@ chuck.onHttpResponse(response);
 
 If you're using Chopper, you can use the generic http call interface:
 
-```dart
+```
 // Chopper integration example
 final response = await
 chopper.get
@@ -198,7 +195,7 @@ response
 
 If you have other HTTP client you can use generic http call interface:
 
-```dart
+```
 
 ChuckHttpCall chuckHttpCall = ChuckHttpCall(id);
 chuckHttpCall.request =
@@ -217,9 +214,8 @@ chuckHttpCall
 
 You may need that if you won't use shake or notification:
 
-```dart
-chuck.showInspector
-();
+```
+chuck.showInspector();
 ```
 
 ## Saving calls
@@ -240,26 +236,19 @@ Example:
 
 1. Import:
 
-```dart
+```
 import 'package:chuck_interceptor/chuck_interceptor.dart';
 ```
 
 2. Use extensions:
 
-```dart
-http
-    .post
-('https://jsonplaceholder.typicode.com/posts
-'
-, body: body)
+```
+http.post('https://jsonplaceholder.typicode.com/posts', body: body)
     .then((response) => chuck.onHttpResponse(response, body: body));
 ```
 
-```dart
-httpClient
-    .postUrl
-(
-Uri.parse("https://jsonplaceholder.typicode.com/posts"))
+```
+httpClient.postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
     .interceptWithChuck(chuck, body: body, headers: {});
 ```
 
