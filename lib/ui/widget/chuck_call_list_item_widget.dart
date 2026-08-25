@@ -27,11 +27,11 @@ class ChuckCallListItemWidget extends StatelessWidget {
                   const SizedBox(height: 4),
                   _buildServerRow(),
                   const SizedBox(height: 4),
-                  _buildStatsRow()
+                  _buildStatsRow(),
                 ],
               ),
             ),
-            _buildResponseColumn(context)
+            _buildResponseColumn(context),
           ],
         ),
       ),
@@ -51,7 +51,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 16, color: textColor),
           ),
-        )
+        ),
       ],
     );
   }
@@ -95,7 +95,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
             "${ChuckConversionHelper.formatBytes(call.response!.size)}",
             style: const TextStyle(fontSize: 12),
           ),
-        )
+        ),
       ],
     );
   }

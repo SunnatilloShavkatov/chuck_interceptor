@@ -60,7 +60,11 @@ class ChuckHttpClientAdapter {
   }
 
   /// Handles httpClientRequest and adds response to http Chuck call
-  void onResponse(HttpClientResponse response, HttpClientRequest request, {dynamic body}) async {
+  void onResponse(
+    HttpClientResponse response,
+    HttpClientRequest request, {
+    dynamic body,
+  }) async {
     final ChuckHttpResponse httpResponse = ChuckHttpResponse();
     httpResponse.status = response.statusCode;
 

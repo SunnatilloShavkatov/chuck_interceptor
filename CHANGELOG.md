@@ -1,3 +1,22 @@
+## 2.3.0
+
+* The cache box is now bounded. Previously every response and every error was appended to the box
+  and nothing was ever removed, so the box grew without limit across app launches and slowed the
+  host app down over time.
+* Added a cache size picker to the inspector menu. Pick between off, 100, 200, 300 and 1000 calls.
+  The choice is stored in the cache box itself and is applied on the next launch.
+* Caching is off by default. An existing cache is emptied on startup until a size is picked, so
+  upgrading does not leave an oversized box behind.
+* A call is now stored under a key derived from its creation time instead of being appended, so
+  writing the response and then the error of the same call no longer produces duplicate entries.
+* Cached calls are decoded once and reused while unchanged. A box write used to force every
+  listening screen to decode the whole box again.
+* Fixed a crash when opening a cached call that is no longer in the box.
+* Failed cache writes are logged instead of surfacing as unhandled errors in the host app, which
+  could happen when the box was closed while a write was still in flight.
+* `Chuck` takes a new `maxCacheCount` argument for the initial cache size. It defaults to 0.
+* Raised the minimum SDK to Dart 3.11 and Flutter 3.41. Updated dependencies.
+
 ## 2.2.1
 
 * Updated dependencies.

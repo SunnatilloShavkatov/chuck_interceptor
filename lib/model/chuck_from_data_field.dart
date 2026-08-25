@@ -5,10 +5,7 @@ class ChuckFormDataField {
   final String value;
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'value': value,
-    };
+    return {'name': name, 'value': value};
   }
 
   factory ChuckFormDataField.fromJson(Map<dynamic, dynamic> json) {

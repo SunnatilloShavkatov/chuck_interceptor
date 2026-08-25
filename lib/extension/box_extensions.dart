@@ -12,7 +12,8 @@ extension BoxX<T> on Box<T> {
   ///
   /// If [keys] filter is provided, only changes to entries with the
   /// specified keys notify the listeners.
-  ValueListenable<Box<T>> listenable({List<dynamic>? keys}) => _BoxListenable(this, keys?.toSet());
+  ValueListenable<Box<T>> listenable({List<dynamic>? keys}) =>
+      _BoxListenable(this, keys?.toSet());
 }
 
 /// Flutter extensions for lazy boxes.
@@ -22,7 +23,8 @@ extension LazyBoxX<T> on LazyBox<T> {
   ///
   /// If [keys] filter is provided, only changes to entries with the
   /// specified keys notify the listeners.
-  ValueListenable<LazyBox<T>> listenable({List<dynamic>? keys}) => _BoxListenable(this, keys?.toSet());
+  ValueListenable<LazyBox<T>> listenable({List<dynamic>? keys}) =>
+      _BoxListenable(this, keys?.toSet());
 }
 
 class _BoxListenable<B extends BoxBase> extends ValueListenable<B> {

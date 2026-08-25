@@ -29,6 +29,10 @@ class Chuck {
   ///method queue will be used to remove elements.
   final int maxCallsCount;
 
+  ///Initial max number of calls persisted in [cacheBox], used until the user
+  ///picks a size in the inspector. Zero, the default, keeps the cache off.
+  final int maxCacheCount;
+
   ///Directionality of app. Directionality of the app will be used if set to null.
   final TextDirection? directionality;
 
@@ -47,18 +51,20 @@ class Chuck {
     this.darkTheme = false,
     this.notificationIcon = "@mipmap/ic_launcher",
     this.maxCallsCount = 1000,
+    this.maxCacheCount = 0,
     this.directionality,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
     _chuckCore = ChuckCore(
       _navigatorKey,
       cacheBox: cacheBox,
+      darkTheme: darkTheme,
+      maxCallsCount: maxCallsCount,
+      maxCacheCount: maxCacheCount,
+      directionality: directionality,
+      notificationIcon: notificationIcon,
       showNotification: showNotification,
       showInspectorOnShake: showInspectorOnShake,
-      darkTheme: darkTheme,
-      notificationIcon: notificationIcon,
-      maxCallsCount: maxCallsCount,
-      directionality: directionality,
     );
     _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
     _httpAdapter = ChuckHttpAdapter(_chuckCore);

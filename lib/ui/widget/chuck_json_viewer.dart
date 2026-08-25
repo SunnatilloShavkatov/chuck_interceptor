@@ -80,28 +80,30 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           children: <Widget>[
             ex
                 ? (openFlag[entry.key] ?? false)
-                    ? InkWell(
-                        onTap: () {
-                          setState(() {
-                            openFlag[entry.key] = !(openFlag[entry.key] ?? false);
-                          });
-                        },
-                        child: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.grey[700],
-                        ),
-                      )
-                    : InkWell(
-                        onTap: () {
-                          setState(() {
-                            openFlag[entry.key] = !(openFlag[entry.key] ?? false);
-                          });
-                        },
-                        child: Icon(
-                          Icons.arrow_right,
-                          color: Colors.grey[700],
-                        ),
-                      )
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              openFlag[entry.key] =
+                                  !(openFlag[entry.key] ?? false);
+                            });
+                          },
+                          child: Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.grey[700],
+                          ),
+                        )
+                      : InkWell(
+                          onTap: () {
+                            setState(() {
+                              openFlag[entry.key] =
+                                  !(openFlag[entry.key] ?? false);
+                            });
+                          },
+                          child: Icon(
+                            Icons.arrow_right,
+                            color: Colors.grey[700],
+                          ),
+                        )
                 : SizedBox.shrink(),
             (ex && ink)
                 ? SelectableText(
@@ -116,7 +118,9 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                   )
                 : SelectableText(
                     entry.key,
-                    style: TextStyle(color: entry.value == null ? Colors.grey : Colors.black),
+                    style: TextStyle(
+                      color: entry.value == null ? Colors.grey : Colors.black,
+                    ),
                     contextMenuBuilder: (_, editableTextState) {
                       return AdaptiveTextSelectionToolbar.buttonItems(
                         anchors: editableTextState.contextMenuAnchors,
@@ -124,12 +128,9 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                       );
                     },
                   ),
-            const Text(
-              ':',
-              style: TextStyle(color: Colors.grey),
-            ),
+            const Text(':', style: TextStyle(color: Colors.grey)),
             Padding(padding: EdgeInsets.only(left: 3)),
-            getValueWidget(entry)
+            getValueWidget(entry),
           ],
         ),
       );
@@ -245,16 +246,15 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
             });
           },
           onDoubleTap: () {
-            Clipboard.setData(ClipboardData(
-              text: jsonEncode(entry.value),
-            )).then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+            Clipboard.setData(
+              ClipboardData(text: jsonEncode(entry.value)),
+            ).then((_) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const CustomSnackBar());
             });
           },
-          child: const Text(
-            'Array[0]',
-            style: TextStyle(color: Colors.grey),
-          ),
+          child: const Text('Array[0]', style: TextStyle(color: Colors.grey)),
         );
       } else {
         return InkWell(
@@ -264,8 +264,12 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
             });
           },
           onDoubleTap: () {
-            Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+            Clipboard.setData(
+              ClipboardData(text: jsonEncode(entry.value)),
+            ).then((_) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const CustomSnackBar());
             });
           },
           child: Text(
@@ -282,14 +286,13 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         });
       },
       onDoubleTap: () {
-        Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
+        Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((
+          _,
+        ) {
           ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
         });
       },
-      child: const Text(
-        'Object',
-        style: TextStyle(color: Colors.grey),
-      ),
+      child: const Text('Object', style: TextStyle(color: Colors.grey)),
     );
   }
 
@@ -373,28 +376,28 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           children: <Widget>[
             ex
                 ? (openFlag[i])
-                    ? InkWell(
-                        onTap: () {
-                          setState(() {
-                            openFlag[i] = !(openFlag[i]);
-                          });
-                        },
-                        child: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.grey[700],
-                        ),
-                      )
-                    : InkWell(
-                        onTap: () {
-                          setState(() {
-                            openFlag[i] = !(openFlag[i]);
-                          });
-                        },
-                        child: Icon(
-                          Icons.arrow_right,
-                          color: Colors.grey[700],
-                        ),
-                      )
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              openFlag[i] = !(openFlag[i]);
+                            });
+                          },
+                          child: Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.grey[700],
+                          ),
+                        )
+                      : InkWell(
+                          onTap: () {
+                            setState(() {
+                              openFlag[i] = !(openFlag[i]);
+                            });
+                          },
+                          child: Icon(
+                            Icons.arrow_right,
+                            color: Colors.grey[700],
+                          ),
+                        )
                 : InkWell(
                     onTap: () {
                       setState(() {
@@ -414,12 +417,9 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                       color: content == null ? Colors.grey : Colors.black,
                     ),
                   ),
-            const Text(
-              ':',
-              style: TextStyle(color: Colors.grey),
-            ),
+            const Text(':', style: TextStyle(color: Colors.grey)),
             Padding(padding: EdgeInsets.only(left: 3)),
-            getValueWidget(content, i)
+            getValueWidget(content, i),
           ],
         ),
       );
@@ -510,14 +510,15 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
             });
           },
           onDoubleTap: () {
-            Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+            Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((
+              _,
+            ) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const CustomSnackBar());
             });
           },
-          child: const Text(
-            'Array[0]',
-            style: TextStyle(color: Colors.grey),
-          ),
+          child: const Text('Array[0]', style: TextStyle(color: Colors.grey)),
         );
       } else {
         return InkWell(
@@ -527,8 +528,12 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
             });
           },
           onDoubleTap: () {
-            Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(const CustomSnackBar());
+            Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((
+              _,
+            ) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const CustomSnackBar());
             });
           },
           child: Text(
@@ -549,10 +554,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar());
         });
       },
-      child: const Text(
-        'Object',
-        style: TextStyle(color: Colors.grey),
-      ),
+      child: const Text('Object', style: TextStyle(color: Colors.grey)),
     );
   }
 }
@@ -563,16 +565,11 @@ class CustomSnackBar extends SnackBar {
     super.backgroundColor = Colors.yellow,
     super.content = const Text(
       'Copied to your clipboard !',
-      style: TextStyle(
-        color: Colors.black,
-      ),
+      style: TextStyle(color: Colors.black),
     ),
   });
 
   Widget build(BuildContext context) {
-    return SnackBar(
-      backgroundColor: backgroundColor,
-      content: content,
-    );
+    return SnackBar(backgroundColor: backgroundColor, content: content);
   }
 }

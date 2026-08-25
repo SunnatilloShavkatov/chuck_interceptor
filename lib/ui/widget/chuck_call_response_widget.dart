@@ -51,7 +51,7 @@ class _ChuckCallResponseWidgetState
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
             CircularProgressIndicator(),
-            Text("Awaiting response...")
+            Text("Awaiting response..."),
           ],
         ),
       );
@@ -121,7 +121,7 @@ class _ChuckCallResponseWidgetState
               Text(
                 "Body: Image",
                 style: TextStyle(fontWeight: FontWeight.bold),
-              )
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -129,18 +129,22 @@ class _ChuckCallResponseWidgetState
             _call.uri,
             fit: BoxFit.fill,
             headers: _buildRequestHeaders(),
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: CircularProgressIndicator(
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
-                ),
-              );
-            },
+            loadingBuilder:
+                (
+                  BuildContext context,
+                  Widget child,
+                  ImageChunkEvent? loadingProgress,
+                ) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
           ),
           const SizedBox(height: 8),
         ],
@@ -154,8 +158,12 @@ class _ChuckCallResponseWidgetState
     if (_showLargeBody) {
       return _buildTextBodyRows();
     } else {
-      rows.add(getListRow("Body:",
-          "Too large to show (${_call.response!.body.toString().length} Bytes)"));
+      rows.add(
+        getListRow(
+          "Body:",
+          "Too large to show (${_call.response!.body.toString().length} Bytes)",
+        ),
+      );
       rows.add(const SizedBox(height: 8));
       rows.add(
         ElevatedButton(
@@ -163,9 +171,7 @@ class _ChuckCallResponseWidgetState
             backgroundColor: WidgetStatePropertyAll<Color>(
               ChuckConstants.lightRed,
             ),
-            foregroundColor: WidgetStatePropertyAll<Color>(
-              Colors.white,
-            ),
+            foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
           ),
           onPressed: () {
             setState(() {
@@ -184,8 +190,10 @@ class _ChuckCallResponseWidgetState
   List<Widget> _buildTextBodyRows() {
     final List<Widget> rows = [];
     final headers = _call.response!.headers;
-    final bodyContent =
-        formatBody(_call.response!.body, getContentType(headers));
+    final bodyContent = formatBody(
+      _call.response!.body,
+      getContentType(headers),
+    );
     rows.add(getListRow("Body:", bodyContent));
     return rows;
   }
@@ -196,8 +204,10 @@ class _ChuckCallResponseWidgetState
     final contentType = getContentType(headers) ?? "<unknown>";
 
     if (_showUnsupportedBody) {
-      final bodyContent =
-          formatBody(_call.response!.body, getContentType(headers));
+      final bodyContent = formatBody(
+        _call.response!.body,
+        getContentType(headers),
+      );
       rows.add(getListRow("Body:", bodyContent));
     } else {
       rows.add(
@@ -215,9 +225,7 @@ class _ChuckCallResponseWidgetState
             backgroundColor: WidgetStatePropertyAll<Color>(
               ChuckConstants.lightRed,
             ),
-            foregroundColor: WidgetStatePropertyAll<Color>(
-              Colors.white,
-            ),
+            foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
           ),
           onPressed: () {
             setState(() {
@@ -235,25 +243,23 @@ class _ChuckCallResponseWidgetState
     final Map<String, String> requestHeaders = {};
     if (_call.request?.headers != null) {
       requestHeaders.addAll(
-        _call.request!.headers.map(
-          (String key, dynamic value) {
-            return MapEntry(key, value.toString());
-          },
-        ),
+        _call.request!.headers.map((String key, dynamic value) {
+          return MapEntry(key, value.toString());
+        }),
       );
     }
     return requestHeaders;
   }
 
   bool _isImageResponse() {
-    return _getContentTypeOfResponse()!
-        .toLowerCase()
-        .contains(_imageContentType);
+    return _getContentTypeOfResponse()!.toLowerCase().contains(
+      _imageContentType,
+    );
   }
 
   bool _isTextResponse() {
-    final String responseContentTypeLowerCase =
-        _getContentTypeOfResponse()!.toLowerCase();
+    final String responseContentTypeLowerCase = _getContentTypeOfResponse()!
+        .toLowerCase();
 
     return responseContentTypeLowerCase.contains(_jsonContentType) ||
         responseContentTypeLowerCase.contains(_xmlContentType) ||

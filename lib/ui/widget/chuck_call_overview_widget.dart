@@ -33,7 +33,7 @@ class _ChuckCallOverviewWidget
         SliverSafeArea(
           minimum: const EdgeInsets.all(6),
           sliver: SliverList.list(children: rows),
-        )
+        ),
       ],
     );
   }

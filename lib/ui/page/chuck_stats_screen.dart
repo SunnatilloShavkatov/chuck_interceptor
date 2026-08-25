@@ -15,9 +15,7 @@ class ChuckStatsScreen extends StatelessWidget {
       child: Theme(
         data: ThemeData(brightness: chuckCore.brightness),
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text("Chuck - HTTP Inspector - Stats"),
-          ),
+          appBar: AppBar(title: const Text("Chuck - HTTP Inspector - Stats")),
           body: ListView(
             padding: const EdgeInsets.all(8),
             children: _buildMainListWidgets(),
@@ -35,15 +33,25 @@ class ChuckStatsScreen extends StatelessWidget {
       _getRow("Redirection requests:", "${_getRedirectionRequests()}"),
       _getRow("Error requests:", "${_getErrorRequests()}"),
       _getRow(
-          "Bytes send:", ChuckConversionHelper.formatBytes(_getBytesSent())),
-      _getRow("Bytes received:",
-          ChuckConversionHelper.formatBytes(_getBytesReceived())),
-      _getRow("Average request time:",
-          ChuckConversionHelper.formatTime(_getAverageRequestTime())),
-      _getRow("Max request time:",
-          ChuckConversionHelper.formatTime(_getMaxRequestTime())),
-      _getRow("Min request time:",
-          ChuckConversionHelper.formatTime(_getMinRequestTime())),
+        "Bytes send:",
+        ChuckConversionHelper.formatBytes(_getBytesSent()),
+      ),
+      _getRow(
+        "Bytes received:",
+        ChuckConversionHelper.formatBytes(_getBytesReceived()),
+      ),
+      _getRow(
+        "Average request time:",
+        ChuckConversionHelper.formatTime(_getAverageRequestTime()),
+      ),
+      _getRow(
+        "Max request time:",
+        ChuckConversionHelper.formatTime(_getMaxRequestTime()),
+      ),
+      _getRow(
+        "Min request time:",
+        ChuckConversionHelper.formatTime(_getMinRequestTime()),
+      ),
       _getRow("Get requests:", "${_getRequests("GET")} "),
       _getRow("Post requests:", "${_getRequests("POST")} "),
       _getRow("Delete requests:", "${_getRequests("DELETE")} "),
@@ -57,17 +65,9 @@ class ChuckStatsScreen extends StatelessWidget {
   Widget _getRow(String label, String value) {
     return Row(
       children: <Widget>[
-        Text(
-          label,
-          style: _getLabelTextStyle(),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(left: 10),
-        ),
-        Text(
-          value,
-          style: _getValueTextStyle(),
-        )
+        Text(label, style: _getLabelTextStyle()),
+        const Padding(padding: EdgeInsets.only(left: 10)),
+        Text(value, style: _getValueTextStyle()),
       ],
     );
   }
@@ -85,26 +85,32 @@ class ChuckStatsScreen extends StatelessWidget {
   }
 
   int _getSuccessRequests() => calls
-      .where((call) =>
-          call.response != null &&
-          call.response!.status! >= 200 &&
-          call.response!.status! < 300)
+      .where(
+        (call) =>
+            call.response != null &&
+            call.response!.status! >= 200 &&
+            call.response!.status! < 300,
+      )
       .toList()
       .length;
 
   int _getRedirectionRequests() => calls
-      .where((call) =>
-          call.response != null &&
-          call.response!.status! >= 300 &&
-          call.response!.status! < 400)
+      .where(
+        (call) =>
+            call.response != null &&
+            call.response!.status! >= 300 &&
+            call.response!.status! < 400,
+      )
       .toList()
       .length;
 
   int _getErrorRequests() => calls
-      .where((call) =>
-          call.response != null &&
-          call.response!.status! >= 400 &&
-          call.response!.status! < 600)
+      .where(
+        (call) =>
+            call.response != null &&
+            call.response!.status! >= 400 &&
+            call.response!.status! < 600,
+      )
       .toList()
       .length;
 

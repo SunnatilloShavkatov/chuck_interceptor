@@ -33,25 +33,21 @@ class _ChuckCallRequestWidget
     final formDataFields = _call.request!.formDataFields;
     if (formDataFields?.isNotEmpty == true) {
       rows.add(getListRow("Form data fields: ", ""));
-      formDataFields!.forEach(
-        (field) {
-          rows.add(getListRow("   • ${field.name}:", field.value));
-        },
-      );
+      formDataFields!.forEach((field) {
+        rows.add(getListRow("   • ${field.name}:", field.value));
+      });
     }
     final formDataFiles = _call.request!.formDataFiles;
     if (formDataFiles?.isNotEmpty == true) {
       rows.add(getListRow("Form data files: ", ""));
-      formDataFiles!.forEach(
-        (field) {
-          rows.add(
-            getListRow(
-              "   • ${field.fileName}:",
-              "${field.contentType} / ${field.length} B",
-            ),
-          );
-        },
-      );
+      formDataFiles!.forEach((field) {
+        rows.add(
+          getListRow(
+            "   • ${field.fileName}:",
+            "${field.contentType} / ${field.length} B",
+          ),
+        );
+      });
     }
 
     final headers = _call.request!.headers;
@@ -60,28 +56,24 @@ class _ChuckCallRequestWidget
       headersContent = "";
     }
     rows.add(getListRow("Headers: ", headersContent));
-    _call.request!.headers.forEach(
-      (header, dynamic value) {
-        rows.add(getListRow("   • $header:", value.toString()));
-      },
-    );
+    _call.request!.headers.forEach((header, dynamic value) {
+      rows.add(getListRow("   • $header:", value.toString()));
+    });
     final queryParameters = _call.request!.queryParameters;
     var queryParametersContent = "Query parameters are empty";
     if (queryParameters.isNotEmpty) {
       queryParametersContent = "";
     }
     rows.add(getListRow("Query Parameters: ", queryParametersContent));
-    _call.request!.queryParameters.forEach(
-      (query, dynamic value) {
-        rows.add(getListRow("   • $query:", value.toString()));
-      },
-    );
+    _call.request!.queryParameters.forEach((query, dynamic value) {
+      rows.add(getListRow("   • $query:", value.toString()));
+    });
     return CustomScrollView(
       slivers: [
         SliverSafeArea(
           minimum: const EdgeInsets.all(6),
           sliver: SliverList.list(children: rows),
-        )
+        ),
       ],
     );
   }

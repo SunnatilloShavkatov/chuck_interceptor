@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/extension/box_extensions.dart';
 import 'package:chuck_interceptor/helper/chuck_save_helper.dart';
@@ -21,10 +19,12 @@ class ChuckHiveCallDetailsScreen extends StatefulWidget {
   const ChuckHiveCallDetailsScreen(this.call, this.core);
 
   @override
-  _ChuckHiveCallDetailsScreenState createState() => _ChuckHiveCallDetailsScreenState();
+  _ChuckHiveCallDetailsScreenState createState() =>
+      _ChuckHiveCallDetailsScreenState();
 }
 
-class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen> with SingleTickerProviderStateMixin {
+class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
+    with SingleTickerProviderStateMixin {
   ChuckHttpCall get call => widget.call;
 
   @override
@@ -44,15 +44,12 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
         child: ValueListenableBuilder<Box<dynamic>>(
           valueListenable: widget.core.cacheBox!.listenable(),
           builder: (_, callsSnapshot, __) {
-            final List<dynamic> boxCalls = callsSnapshot.values.toList();
-            List<ChuckHttpCall> calls = [];
-            for (final dynamic boxCall in boxCalls) {
-              if (boxCall is String) {
-                calls.add(ChuckHttpCall.fromJson(jsonDecode(boxCall)));
-              }
-            }
-            final ChuckHttpCall? call = calls.firstWhere((snapshotCall) => snapshotCall.id == widget.call.id);
-            if (call != null) {
+            final List<ChuckHttpCall> calls = widget.core.cacheDecoder
+                .decodeCalls(callsSnapshot);
+            final bool callExists = calls.any(
+              (snapshotCall) => snapshotCall.id == widget.call.id,
+            );
+            if (callExists) {
               return _buildMainWidget();
             } else {
               return _buildErrorWidget();
@@ -73,7 +70,10 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
           key: const Key('share_key'),
           onPressed: () async {
             SharePlus.instance.share(
-              ShareParams(text: await _getSharableResponseString(), title: 'Request Details'),
+              ShareParams(
+                text: await _getSharableResponseString(),
+                title: 'Request Details',
+              ),
             );
           },
           child: const Icon(Icons.share),
