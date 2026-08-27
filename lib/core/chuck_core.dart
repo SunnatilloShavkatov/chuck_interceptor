@@ -60,7 +60,10 @@ class ChuckCore {
   ///
   ///Changes through [setMaxCacheCount] notify listeners, so the inspector
   ///reflects a new size right away.
-  late final ValueNotifier<int> maxCacheCountNotifier;
+  ///
+  ///Initialized at the declaration rather than in the constructor so a hot
+  ///reload that lands on an already built core still finds it set.
+  final ValueNotifier<int> maxCacheCountNotifier = ValueNotifier<int>(0);
 
   ///Currently applied cache size. See [maxCacheCountNotifier].
   int get maxCacheCount => maxCacheCountNotifier.value;
@@ -108,9 +111,7 @@ class ChuckCore {
       );
     }
     _brightness = darkTheme ? Brightness.dark : Brightness.light;
-    maxCacheCountNotifier = ValueNotifier<int>(
-      _persistedMaxCacheCount() ?? maxCacheCount,
-    );
+    maxCacheCountNotifier.value = _persistedMaxCacheCount() ?? maxCacheCount;
     // Applies the stored size to a box written before it was set, and empties
     // the box outright while the cache is disabled.
     _trimCache();
