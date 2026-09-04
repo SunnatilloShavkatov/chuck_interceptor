@@ -19,6 +19,11 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
   /// Handles dio request and creates Chuck http call based on it
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    if (!chuckCore.enabled) {
+      handler.next(options);
+      return;
+    }
+
     final ChuckHttpCall call = ChuckHttpCall(options.hashCode);
 
     final Uri uri = options.uri;
@@ -49,13 +54,11 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
         request.body = 'Form data';
 
         if (data.fields.isNotEmpty) {
-          // Use map instead of forEach for better performance
           request.formDataFields = data.fields
               .map((entry) => ChuckFormDataField(entry.key, entry.value))
               .toList(growable: false);
         }
         if (data.files.isNotEmpty) {
-          // Use map instead of forEach for better performance
           request.formDataFiles = data.files
               .map(
                 (entry) =>
@@ -63,11 +66,32 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
               )
               .toList(growable: false);
         }
+      } else if (data is String) {
+        request
+          ..size = data.length
+          ..body = data.length > chuckCore.maxBodySize
+              ? '${data.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+              : data;
+      } else if (data is Map || data is List) {
+        try {
+          final String jsonStr = jsonEncode(data);
+          request
+            ..size = jsonStr.length
+            ..body = jsonStr.length > chuckCore.maxBodySize
+                ? '${jsonStr.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+                : data;
+        } catch (_) {
+          request
+            ..body = data
+            ..size = 0;
+        }
       } else {
         final String dataString = data.toString();
         request
-          ..size = utf8.encode(dataString).length
-          ..body = dataString;
+          ..size = dataString.length
+          ..body = dataString.length > chuckCore.maxBodySize
+              ? '${dataString.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+              : dataString;
       }
     }
 
@@ -88,24 +112,45 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
   /// Handles dio response and adds data to Chuck http call
   @override
   void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+    if (!chuckCore.enabled) {
+      handler.next(response);
+      return;
+    }
+
     final httpResponse = ChuckHttpResponse()..status = response.statusCode;
 
     if (response.data == null) {
       httpResponse
         ..body = ''
         ..size = 0;
+    } else if (response.data is String) {
+      final String str = response.data as String;
+      httpResponse
+        ..size = str.length
+        ..body = str.length > chuckCore.maxBodySize
+            ? '${str.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+            : str;
+    } else if (response.data is Map || response.data is List) {
+      httpResponse.body = response.data;
+      try {
+        final String jsonStr = jsonEncode(response.data);
+        httpResponse.size = jsonStr.length;
+      } catch (_) {
+        httpResponse.size = 0;
+      }
     } else {
       final String responseDataString = response.data.toString();
       httpResponse
-        ..body = response.data
-        ..size = utf8.encode(responseDataString).length;
+        ..size = responseDataString.length
+        ..body = responseDataString.length > chuckCore.maxBodySize
+            ? '${responseDataString.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+            : responseDataString;
     }
 
     httpResponse.time = DateTime.now();
-    // Use map for better performance instead of forEach
     final Map<String, String> headers = {};
-    httpResponse.headers?.forEach((header, values) {
-      headers[header] = values;
+    response.headers.map.forEach((header, values) {
+      headers[header] = values.join(', ');
     });
     httpResponse.headers = headers;
 
@@ -116,6 +161,11 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
   /// Handles error and adds data to Chuck http call with improved null safety
   @override
   void onError(DioException error, ErrorInterceptorHandler handler) {
+    if (!chuckCore.enabled) {
+      handler.next(error);
+      return;
+    }
+
     StackTrace? stackTrace;
     if (error is Error) {
       stackTrace = error.stackTrace;
@@ -135,16 +185,32 @@ class ChuckDioInterceptor extends InterceptorsWrapper {
         httpResponse
           ..body = ''
           ..size = 0;
+      } else if (errorResponse.data is String) {
+        final String str = errorResponse.data as String;
+        httpResponse
+          ..size = str.length
+          ..body = str.length > chuckCore.maxBodySize
+              ? '${str.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+              : str;
+      } else if (errorResponse.data is Map || errorResponse.data is List) {
+        httpResponse.body = errorResponse.data;
+        try {
+          final String jsonStr = jsonEncode(errorResponse.data);
+          httpResponse.size = jsonStr.length;
+        } catch (_) {
+          httpResponse.size = 0;
+        }
       } else {
         final String errorDataString = errorResponse.data.toString();
         httpResponse
-          ..body = errorResponse.data
-          ..size = utf8.encode(errorDataString).length;
+          ..size = errorDataString.length
+          ..body = errorDataString.length > chuckCore.maxBodySize
+              ? '${errorDataString.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+              : errorDataString;
       }
-      // Use map for better performance instead of forEach
       final Map<String, String> headers = {};
-      httpResponse.headers?.forEach((header, values) {
-        headers[header] = values;
+      errorResponse.headers.map.forEach((header, values) {
+        headers[header] = values.join(', ');
       });
       httpResponse.headers = headers;
       chuckCore.addResponse(httpResponse, errorResponse.requestOptions.hashCode);

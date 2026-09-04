@@ -39,25 +39,33 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
   bool _sortAscending = false;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: _searchEnabled ? _buildSearchField() : _buildTitleWidget(),
-      actions: [_buildSearchButton(), _buildMenuButton()],
-    ),
-    body: StreamBuilder<List<ChuckHttpCall>>(
-      stream: chuckCore.callsSubject,
-      builder: (context, snapshot) {
-        List<ChuckHttpCall> calls = snapshot.data ?? [];
-        final String query = _queryTextEditingController.text.trim();
-        if (query.isNotEmpty) {
-          calls = _filterCallsByQuery(calls, query);
-        }
-        if (calls.isNotEmpty) {
-          return _buildCallsListWidget(calls);
-        } else {
-          return _buildEmptyWidget();
-        }
-      },
+  Widget build(BuildContext context) => Theme(
+    data: ChuckThemeData.attach(Theme.of(context)),
+    child: Builder(
+      builder: (context) => Scaffold(
+        backgroundColor: context.chuckTheme.background,
+        appBar: AppBar(
+          backgroundColor: context.chuckTheme.background,
+          surfaceTintColor: context.chuckTheme.background,
+          title: _searchEnabled ? _buildSearchField(context) : _buildTitleWidget(context),
+          actions: [_buildSearchButton(), _buildMenuButton(context)],
+        ),
+        body: StreamBuilder<List<ChuckHttpCall>>(
+          stream: chuckCore.callsSubject,
+          builder: (context, snapshot) {
+            List<ChuckHttpCall> calls = snapshot.data ?? [];
+            final String query = _queryTextEditingController.text.trim();
+            if (query.isNotEmpty) {
+              calls = _filterCallsByQuery(calls, query);
+            }
+            if (calls.isNotEmpty) {
+              return _buildCallsListWidget(context, calls);
+            } else {
+              return _buildEmptyWidget(context);
+            }
+          },
+        ),
+      ),
     ),
   );
 
@@ -93,7 +101,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     });
   }
 
-  Widget _buildMenuButton() => PopupMenuButton<ChuckMenuItem>(
+  Widget _buildMenuButton(BuildContext context) => PopupMenuButton<ChuckMenuItem>(
     onSelected: _onMenuItemSelected,
     itemBuilder: (BuildContext context) => _menuItems
         .map(
@@ -111,17 +119,27 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
         .toList(),
   );
 
-  Widget _buildTitleWidget() => const Text('Chuck');
+  Widget _buildTitleWidget(BuildContext context) => Text(
+    'Chuck Inspector',
+    style: TextStyle(fontWeight: FontWeight.bold, color: context.chuckTheme.primaryText),
+  );
 
-  Widget _buildSearchField() => TextField(
+  Widget _buildSearchField(BuildContext context) => TextField(
     controller: _queryTextEditingController,
     autofocus: true,
     decoration: InputDecoration(
-      hintText: 'Search... (commas for multiple terms, ! to exclude)',
-      hintStyle: TextStyle(fontSize: 16, color: context.chuckTheme.secondaryText),
+      hintText: 'Search (path, method, host, !tag)...',
+      hintStyle: TextStyle(fontSize: 14, color: context.chuckTheme.secondaryText),
       border: InputBorder.none,
+      suffixIcon: IconButton(
+        icon: const Icon(Icons.clear, size: 18),
+        onPressed: () {
+          _queryTextEditingController.clear();
+          setState(() {});
+        },
+      ),
     ),
-    style: TextStyle(fontSize: 16, color: context.chuckTheme.primaryText),
+    style: TextStyle(fontSize: 14, color: context.chuckTheme.primaryText),
     onChanged: _updateSearchQuery,
   );
 
@@ -140,42 +158,30 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     }
   }
 
-  Widget _buildEmptyWidget() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 32),
+  Widget _buildEmptyWidget(BuildContext context) => Padding(
+    padding: EdgeInsets.fromLTRB(32, 0, 32, MediaQuery.paddingOf(context).bottom + 16),
     child: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error_outline, color: context.chuckTheme.warning),
-          const SizedBox(height: 6),
-          Text('There are no calls to show', style: TextStyle(fontSize: 18, color: context.chuckTheme.primaryText)),
+          Icon(Icons.wifi_tethering_off, size: 48, color: context.chuckTheme.neutral),
           const SizedBox(height: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '• Check if you send any http request',
-                style: TextStyle(fontSize: 12, color: context.chuckTheme.secondaryText),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                '• Check your ChuckInterceptor configuration',
-                style: TextStyle(fontSize: 12, color: context.chuckTheme.secondaryText),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                '• Check search filters',
-                style: TextStyle(fontSize: 12, color: context.chuckTheme.secondaryText),
-                textAlign: TextAlign.center,
-              ),
-            ],
+          Text(
+            'No HTTP calls to display',
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: context.chuckTheme.primaryText),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Requests will appear here as they are intercepted.\nCheck your active filter or search query if calls are missing.',
+            style: TextStyle(fontSize: 13, color: context.chuckTheme.secondaryText),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
     ),
   );
 
-  Widget _buildCallsListWidget(List<ChuckHttpCall> calls) {
+  Widget _buildCallsListWidget(BuildContext context, List<ChuckHttpCall> calls) {
     // Create a copy only once for sorting to avoid multiple allocations
     final List<ChuckHttpCall> callsSorted = [...calls];
 
@@ -291,12 +297,12 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
       case null:
         break;
     }
+    final double bottomPadding = MediaQuery.paddingOf(context).bottom + 16;
     return ListView.separated(
+      padding: EdgeInsets.only(top: 6, bottom: bottomPadding),
       itemCount: callsSorted.length,
-      // Use const constructors where possible for better performance
       itemBuilder: (context, index) => ChuckCallListItemWidget(callsSorted[index], _onListItemClicked),
-      separatorBuilder: (context, index) => Divider(height: 1, thickness: 1, color: context.chuckTheme.neutral),
-      // Add cacheExtent for better performance with long lists
+      separatorBuilder: (context, index) => const SizedBox(height: 2),
       cacheExtent: 20,
     );
   }

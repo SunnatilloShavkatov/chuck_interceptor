@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:chuck_interceptor/src/core/chuck_core.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_request.dart';
@@ -15,6 +13,9 @@ class ChuckHttpAdapter {
 
   /// Handles http response. It creates both request and response from http call
   void onResponse(http.Response response, {Object? body}) {
+    if (!chuckCore.enabled) {
+      return;
+    }
     if (response.request == null) {
       return;
     }
@@ -39,28 +40,34 @@ class ChuckHttpAdapter {
     final ChuckHttpRequest httpRequest = ChuckHttpRequest();
 
     if (response.request is http.Request) {
-      // we are guaranteed` the existence of body and headers
-      if (body != null) {
-        httpRequest.body = body;
-      }
+      // we are guaranteed the existence of body and headers
+      final Object reqBody = body ?? (response.request! as http.Request).body;
+      final String bodyStr = reqBody.toString();
       httpRequest
-        ..body = body ?? (response.request! as http.Request).body
-        ..size = utf8.encode(httpRequest.body.toString()).length
+        ..size = bodyStr.length
+        ..body = bodyStr.length > chuckCore.maxBodySize
+            ? '${bodyStr.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+            : reqBody
         ..headers = Map<String, dynamic>.from(response.request!.headers);
     } else if (body == null) {
       httpRequest
         ..size = 0
         ..body = '';
     } else {
+      final String bodyStr = body.toString();
       httpRequest
-        ..size = utf8.encode(body.toString()).length
-        ..body = body;
+        ..size = bodyStr.length
+        ..body = bodyStr.length > chuckCore.maxBodySize
+            ? '${bodyStr.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+            : body;
     }
 
     httpRequest.time = DateTime.now();
 
     String? contentType = 'unknown';
-    if (httpRequest.headers.containsKey('Content-Type')) {
+    if (httpRequest.headers.containsKey('content-type')) {
+      contentType = httpRequest.headers['content-type'] as String?;
+    } else if (httpRequest.headers.containsKey('Content-Type')) {
       contentType = httpRequest.headers['Content-Type'] as String?;
     }
 
@@ -68,10 +75,13 @@ class ChuckHttpAdapter {
       ..contentType = contentType
       ..queryParameters = response.request!.url.queryParameters;
 
+    final String resBody = response.body;
     final ChuckHttpResponse httpResponse = ChuckHttpResponse()
       ..status = response.statusCode
-      ..body = response.body
-      ..size = utf8.encode(response.body).length
+      ..size = resBody.length
+      ..body = resBody.length > chuckCore.maxBodySize
+          ? '${resBody.substring(0, chuckCore.maxBodySize)}\n\n[Body truncated: exceeds ${chuckCore.maxBodySize} bytes]'
+          : resBody
       ..time = DateTime.now();
     final Map<String, String> responseHeaders = {};
     response.headers.forEach((header, values) {

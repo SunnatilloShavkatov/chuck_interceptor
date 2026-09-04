@@ -9,7 +9,7 @@ import 'package:chuck_interceptor/src/utils/chuck_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 
 sealed class ChuckSaveHelper {
   const ChuckSaveHelper._();
@@ -19,26 +19,7 @@ sealed class ChuckSaveHelper {
 
   /// Top level method used to save calls to file
   static Future<void> saveCalls(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
-    await _checkPermissions(context, calls, brightness);
-  }
-
-  static Future<void> _checkPermissions(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
-    final status = await Permission.storage.status;
-    if (status.isGranted && context.mounted) {
-      await _saveToFile(context, calls, brightness);
-    } else {
-      final status = await Permission.storage.request();
-      if (status.isGranted && context.mounted) {
-        await _saveToFile(context, calls, brightness);
-      } else if (context.mounted) {
-        ChuckAlertHelper.showAlert(
-          context,
-          'Permission error',
-          "Permission not granted. Couldn't save logs.",
-          brightness: brightness,
-        );
-      }
-    }
+    await _saveToFile(context, calls, brightness);
   }
 
   static Future<String> _saveToFile(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
@@ -47,13 +28,10 @@ sealed class ChuckSaveHelper {
         ChuckAlertHelper.showAlert(context, 'Error', 'There are no logs to save', brightness: brightness);
         return '';
       }
-      final bool isAndroid = Platform.isAndroid;
 
-      final Directory externalDir = await (isAndroid
-          ? getExternalStorageDirectory() as FutureOr<Directory>
-          : getApplicationDocumentsDirectory());
-      final String fileName = 'Chuck_log_${DateTime.now().millisecondsSinceEpoch}.txt';
-      final File file = File('${externalDir.path}/$fileName')..createSync();
+      final Directory dir = await getApplicationDocumentsDirectory();
+      final String fileName = 'chuck_log_${DateTime.now().millisecondsSinceEpoch}.txt';
+      final File file = File('${dir.path}/$fileName')..createSync(recursive: true);
       final IOSink sink = file.openWrite(mode: FileMode.append)
         // Write header log
         ..write(await _buildChuckLog());
@@ -65,22 +43,31 @@ sealed class ChuckSaveHelper {
 
       await sink.flush();
       await sink.close();
+
       if (context.mounted) {
         ChuckAlertHelper.showAlert(
           context,
           'Success',
           'Successfully saved logs in ${file.path}',
-          secondButtonTitle: isAndroid ? 'View file' : null,
-          secondButtonAction: () {},
+          firstButtonTitle: 'OK',
+          secondButtonTitle: 'Share',
+          secondButtonAction: () async {
+            await SharePlus.instance.share(
+              ShareParams(
+                files: [XFile(file.path)],
+                subject: 'Chuck HTTP Inspector Logs',
+              ),
+            );
+          },
           brightness: brightness,
         );
       }
       return file.path;
     } catch (exception) {
       if (context.mounted) {
-        ChuckAlertHelper.showAlert(context, 'Error', 'Failed to save http calls to file', brightness: brightness);
+        ChuckAlertHelper.showAlert(context, 'Error', 'Failed to save http calls to file: $exception', brightness: brightness);
       }
-      ChuckUtils.log(exception.toString());
+      ChuckUtils.log('Error saving HTTP calls: $exception');
     }
 
     return '';
@@ -88,15 +75,21 @@ sealed class ChuckSaveHelper {
 
   static Future<String> _buildChuckLog() async {
     final StringBuffer stringBuffer = StringBuffer();
-    final packageInfo = await PackageInfo.fromPlatform();
-    stringBuffer
-      ..write('Chuck - HTTP Inspector\n')
-      ..write('App name:  ${packageInfo.appName}\n')
-      ..write('Package: ${packageInfo.packageName}\n')
-      ..write('Version: ${packageInfo.version}\n')
-      ..write('Build number: ${packageInfo.buildNumber}\n')
-      ..write('Generated: ${DateTime.now().toIso8601String()}\n')
-      ..write('\n');
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      stringBuffer
+        ..write('Chuck - HTTP Inspector\n')
+        ..write('App name:  ${packageInfo.appName}\n')
+        ..write('Package: ${packageInfo.packageName}\n')
+        ..write('Version: ${packageInfo.version}\n')
+        ..write('Build number: ${packageInfo.buildNumber}\n')
+        ..write('Generated: ${DateTime.now().toIso8601String()}\n')
+        ..write('\n');
+    } catch (_) {
+      stringBuffer
+        ..write('Chuck - HTTP Inspector\n')
+        ..write('Generated: ${DateTime.now().toIso8601String()}\n\n');
+    }
     return stringBuffer.toString();
   }
 
@@ -112,34 +105,37 @@ sealed class ChuckSaveHelper {
       ..write('Method: ${call.method} \n')
       ..write('Endpoint: ${call.endpoint} \n')
       ..write('Client: ${call.client} \n')
-      ..write('Duration ${ChuckConversionHelper.formatTime(call.duration)}\n')
+      ..write('Duration: ${ChuckConversionHelper.formatTime(call.duration)}\n')
       ..write('Secured connection: ${call.secure}\n')
       ..write('Completed: ${!call.loading} \n')
       ..write('--------------------------------------------\n')
       ..write('Request\n')
       ..write('--------------------------------------------\n')
-      ..write('Request time: ${call.request!.time}\n')
-      ..write('Request content type: ${call.request!.contentType}\n')
-      ..write('Request cookies: ${_encoder.convert(call.request!.cookies)}\n')
-      ..write('Request headers: ${_encoder.convert(call.request!.headers)}\n');
-    if (call.request!.queryParameters.isNotEmpty) {
+      ..write('Request time: ${call.request?.time}\n')
+      ..write('Request content type: ${call.request?.contentType}\n')
+      ..write('Request cookies: ${_encoder.convert(call.request?.cookies ?? [])}\n')
+      ..write('Request headers: ${_encoder.convert(call.request?.headers ?? {})}\n');
+
+    if (call.request?.queryParameters.isNotEmpty ?? false) {
       stringBuffer.write('Request query params: ${_encoder.convert(call.request!.queryParameters)}\n');
     }
+
     stringBuffer
-      ..write('Request size: ${ChuckConversionHelper.formatBytes(call.request!.size)}\n')
+      ..write('Request size: ${ChuckConversionHelper.formatBytes(call.request?.size ?? 0)}\n')
       ..write(
-        'Request body: ${ChuckParser.formatBody(call.request!.body, ChuckParser.getContentType(call.request!.headers))}\n',
+        'Request body: ${ChuckParser.formatBody(call.request?.body, ChuckParser.getContentType(call.request?.headers))}\n',
       )
       ..write('--------------------------------------------\n')
       ..write('Response\n')
       ..write('--------------------------------------------\n')
-      ..write('Response time: ${call.response!.time}\n')
-      ..write('Response status: ${call.response!.status}\n')
-      ..write('Response size: ${ChuckConversionHelper.formatBytes(call.response!.size)}\n')
-      ..write('Response headers: ${_encoder.convert(call.response!.headers)}\n')
+      ..write('Response time: ${call.response?.time}\n')
+      ..write('Response status: ${call.response?.status}\n')
+      ..write('Response size: ${ChuckConversionHelper.formatBytes(call.response?.size ?? 0)}\n')
+      ..write('Response headers: ${_encoder.convert(call.response?.headers ?? {})}\n')
       ..write(
-        'Response body: ${ChuckParser.formatBody(call.response!.body, ChuckParser.getContentType(call.response!.headers))}\n',
+        'Response body: ${ChuckParser.formatBody(call.response?.body, ChuckParser.getContentType(call.response?.headers))}\n',
       );
+
     if (call.error != null) {
       stringBuffer
         ..write('--------------------------------------------\n')
@@ -152,6 +148,7 @@ sealed class ChuckSaveHelper {
         stringBuffer.write('Error stacktrace: ${call.error!.stackTrace}\n');
       }
     }
+
     stringBuffer
       ..write('--------------------------------------------\n')
       ..write('Curl\n')
@@ -168,7 +165,7 @@ sealed class ChuckSaveHelper {
     try {
       return await _buildChuckLog() + _buildCallLog(call);
     } catch (exception) {
-      return 'Failed to generate call log';
+      return 'Failed to generate call log: $exception';
     }
   }
 }

@@ -94,6 +94,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
               if (ex && ink)
                 SelectableText(
                   entry.key,
+                  style: TextStyle(color: context.chuckTheme.jsonKeyColor, fontWeight: FontWeight.w500),
                   contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
                     anchors: editableTextState.contextMenuAnchors,
                     buttonItems: editableTextState.contextMenuButtonItems,
@@ -102,7 +103,10 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
               else
                 SelectableText(
                   entry.key,
-                  style: TextStyle(color: entry.value == null ? context.chuckTheme.neutral : context.chuckTheme.primaryText),
+                  style: TextStyle(
+                    color: entry.value == null ? context.chuckTheme.jsonNullColor : context.chuckTheme.jsonKeyColor,
+                    fontWeight: FontWeight.w500,
+                  ),
                   contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
                     anchors: editableTextState.contextMenuAnchors,
                     buttonItems: editableTextState.contextMenuButtonItems,
@@ -153,11 +157,12 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
   }
 
   Widget getValueWidget(MapEntry<String, dynamic> entry) {
+    final theme = context.chuckTheme;
     if (entry.value == null) {
       return Expanded(
         child: SelectableText(
-          'undefined',
-          style: TextStyle(color: context.chuckTheme.neutral),
+          'null',
+          style: TextStyle(color: theme.jsonNullColor, fontStyle: FontStyle.italic),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -168,7 +173,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Expanded(
         child: SelectableText(
           entry.value.toString(),
-          style: const TextStyle(color: Color(0xff6491b3)),
+          style: TextStyle(color: theme.jsonNumberColor),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -179,7 +184,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Expanded(
         child: SelectableText(
           '"${entry.value}"',
-          style: const TextStyle(color: Color(0xff6a8759)),
+          style: TextStyle(color: theme.jsonStringColor),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -190,7 +195,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Expanded(
         child: SelectableText(
           entry.value.toString(),
-          style: const TextStyle(color: Color(0xffca7832)),
+          style: TextStyle(color: theme.jsonBooleanColor, fontWeight: FontWeight.bold),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -201,7 +206,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       return Expanded(
         child: SelectableText(
           entry.value.toString(),
-          style: const TextStyle(color: Color(0xff6491b3)),
+          style: TextStyle(color: theme.jsonNumberColor),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -223,7 +228,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
               }
             });
           },
-          child: Text('Array[0]', style: TextStyle(color: context.chuckTheme.neutral)),
+          child: Text('Array[0]', style: TextStyle(color: theme.neutral)),
         );
       } else {
         return InkWell(
@@ -241,7 +246,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           },
           child: Text(
             'Array<${getTypeName(entry.value[0])}>[${entry.value.length}]',
-            style: TextStyle(color: context.chuckTheme.neutral),
+            style: TextStyle(color: theme.neutral),
           ),
         );
       }
@@ -259,7 +264,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           }
         });
       },
-      child: Text('Object', style: TextStyle(color: context.chuckTheme.neutral)),
+      child: Text('Object', style: TextStyle(color: theme.neutral)),
     );
   }
 
@@ -387,11 +392,12 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
   }
 
   Widget getValueWidget(Object? content, int index) {
+    final theme = context.chuckTheme;
     if (content == null) {
       return Expanded(
         child: SelectableText(
-          'undefined',
-          style: TextStyle(color: context.chuckTheme.neutral),
+          'null',
+          style: TextStyle(color: theme.jsonNullColor, fontStyle: FontStyle.italic),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -402,7 +408,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       return Expanded(
         child: SelectableText(
           content.toString(),
-          style: const TextStyle(color: Color(0xff6491b3)),
+          style: TextStyle(color: theme.jsonNumberColor),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -413,7 +419,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       return Expanded(
         child: SelectableText(
           '"$content"',
-          style: const TextStyle(color: Color(0xff6a8759)),
+          style: TextStyle(color: theme.jsonStringColor),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -424,7 +430,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       return Expanded(
         child: SelectableText(
           content.toString(),
-          style: const TextStyle(color: Color(0xffca7832)),
+          style: TextStyle(color: theme.jsonBooleanColor, fontWeight: FontWeight.bold),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -435,7 +441,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       return Expanded(
         child: SelectableText(
           content.toString(),
-          style: const TextStyle(color: Color(0xff6491b3)),
+          style: TextStyle(color: theme.jsonNumberColor),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -457,7 +463,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
               }
             });
           },
-          child: Text('Array[0]', style: TextStyle(color: context.chuckTheme.neutral)),
+          child: Text('Array[0]', style: TextStyle(color: theme.neutral)),
         );
       } else {
         return InkWell(
@@ -475,7 +481,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           },
           child: Text(
             'Array<${JsonObjectViewerState.getTypeName(content)}>[${content.length}]',
-            style: TextStyle(color: context.chuckTheme.neutral),
+            style: TextStyle(color: theme.neutral),
           ),
         );
       }
@@ -493,7 +499,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           }
         });
       },
-      child: Text('Object', style: TextStyle(color: context.chuckTheme.neutral)),
+      child: Text('Object', style: TextStyle(color: theme.neutral)),
     );
   }
 }
@@ -502,13 +508,14 @@ class CustomSnackBar extends SnackBar {
   CustomSnackBar({
     super.key,
     required BuildContext context,
+    String message = 'Copied to clipboard!',
   }) : super(
          backgroundColor: context.chuckTheme.inverseSurface,
+         behavior: SnackBarBehavior.floating,
+         duration: const Duration(seconds: 2),
          content: Text(
-           'Copied to your clipboard !',
+           message,
            style: TextStyle(color: context.chuckTheme.onInverseSurface),
          ),
        );
-
-  Widget build(BuildContext context) => SnackBar(backgroundColor: backgroundColor, content: content);
 }

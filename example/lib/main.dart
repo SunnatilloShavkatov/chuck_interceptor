@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
       foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
     );
     return MaterialApp(
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       theme: ThemeData(
         primaryColor: _primaryColor,
         brightness: Brightness.light,

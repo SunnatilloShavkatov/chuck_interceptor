@@ -21,12 +21,13 @@ class _ChuckCallResponsePreviewWidgetState extends ChuckBaseCallDetailsWidgetSta
   @override
   Widget build(BuildContext context) {
     if (!_call.loading && _call.response != null) {
+      final double bottomPadding = MediaQuery.paddingOf(context).bottom + 84;
       return Scrollbar(
         controller: PrimaryScrollController.of(context),
         child: CustomScrollView(
           slivers: [
             SliverSafeArea(
-              minimum: const EdgeInsets.all(6),
+              minimum: EdgeInsets.only(left: 6, top: 6, right: 6, bottom: bottomPadding),
               sliver: SliverList.list(children: _buildPreviewContent()),
             ),
           ],

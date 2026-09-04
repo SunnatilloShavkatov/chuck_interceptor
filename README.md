@@ -35,7 +35,7 @@ and [Chucker](https://github.com/ChuckerTeam/chucker).
 
 ```yaml
 dependencies:
-  chuck_interceptor: ^2.5.0
+  chuck_interceptor: ^2.6.0
 ```
 
 2. Install it
@@ -89,165 +89,144 @@ configuration.
 
 ### Additional settings
 
+You can enable/disable Chuck dynamically (e.g. disable in production builds for zero overhead):
+```dart
+Chuck chuck = Chuck(
+  enabled: kDebugMode, // Completely short-circuits in production
+  showNotification: true,
+  maxBodySize: 1024 * 1024, // 1 MB max payload body size
+);
+```
+
 You can set `showNotification` in Chuck constructor to show notification. Clicking on this
 notification will open inspector.
 
+```dart
+Chuck chuck = Chuck(showNotification: true);
 ```
 
-Chuck chuck = Chuck(..., showNotification: true);
-```
+You can set `showInspectorOnShake` in Chuck constructor to open inspector by shaking your device (default disabled):
 
-You can set `showInspectorOnShake` in Chuck constructor to open inspector by shaking your device (
-default disabled):
-
-```
-
-Chuck chuck = Chuck(..., showInspectorOnShake: true);
+```dart
+Chuck chuck = Chuck(showInspectorOnShake: true);
 ```
 
 If you want to use dark mode just add `darkTheme` flag:
 
+```dart
+Chuck chuck = Chuck(darkTheme: true);
 ```
 
-Chuck chuck = Chuck(..., darkTheme: true);
+You can also customize the entire palette using `ChuckThemeExtension`:
+
+```dart
+MaterialApp(
+  theme: ThemeData.light().copyWith(
+    extensions: [
+      ChuckThemeExtension.light.copyWith(
+        accent: Colors.deepPurple,
+        methodGet: Colors.teal,
+      ),
+    ],
+  ),
+  navigatorKey: chuck.getNavigatorKey(),
+  ...
+);
 ```
 
 If you want to pass another notification icon, you can use `notificationIcon` parameter. Default
-value is @mipmap/ic_launcher.
+value is `@mipmap/ic_launcher`.
 
-```
-
-Chuck chuck = Chuck(..., notificationIcon: "myNotificationIconResourceName");
+```dart
+Chuck chuck = Chuck(notificationIcon: "myNotificationIconResourceName");
 ```
 
 If you want to limit max numbers of HTTP calls saved in memory, you may use `maxCallsCount`
-parameter.
+parameter (default is 1000).
 
-```
-
-Chuck chuck = Chuck(..., maxCallsCount: 1000));
+```dart
+Chuck chuck = Chuck(maxCallsCount: 500);
 ```
 
 If you want to change the Directionality of Chuck, you can use the `directionality` parameter. If
 the parameter is set to null, the Directionality of the app will be used.
 
-```
-
-Chuck chuck = Chuck(..., directionality: TextDirection.ltr);
+```dart
+Chuck chuck = Chuck(directionality: TextDirection.ltr);
 ```
 
 ### HTTP Client configuration
 
-If you're using Dio, you just need to add interceptor.
+#### Dio
 
-```
+If you're using Dio, you just need to add the interceptor:
 
+```dart
 Dio dio = Dio();
-dio.interceptors.add
-(
-chuck
-.
-dioInterceptor
-);
+dio.interceptors.add(chuck.dioInterceptor);
 ```
 
-If you're using HttpClient from dart:io package:
+#### HttpClient (dart:io)
 
-```
+If you're using HttpClient from `dart:io`:
+
+```dart
 httpClient
-    .getUrl
-(
-Uri.parse("https://jsonplaceholder.typicode.com/posts"))
+    .getUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
     .then((request) async {
-chuck.onHttpClientRequest(request);
-var httpResponse = await request.close();
-var responseBody = await httpResponse.transform(utf8.decoder).join();
-chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
+  chuck.onHttpClientRequest(request);
+  var httpResponse = await request.close();
+  var responseBody = await httpResponse.transform(utf8.decoder).join();
+  chuck.onHttpClientResponse(httpResponse, request, body: responseBody);
 });
 ```
 
-If you're using http from http/http package:
+#### http package
 
-```
-http.get
-('https://jsonplaceholder.typicode.com/posts
-'
-)
-.then((response) {
-chuck.onHttpResponse(response);
+If you're using `http` from `package:http`:
+
+```dart
+http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'))
+    .then((response) {
+  chuck.onHttpResponse(response);
 });
 ```
 
-If you're using Chopper, you can use the generic http call interface:
+#### Generic HTTP Client / Chopper
 
-```
-// Chopper integration example
-final response = await
-chopper.get
-('/posts
-'
-);chuck.
-onHttpResponse
-(
-response
-);
-```
+If you have other HTTP clients, you can use the generic HTTP call interface:
 
-If you have other HTTP client you can use generic http call interface:
-
-```
-
+```dart
 ChuckHttpCall chuckHttpCall = ChuckHttpCall(id);
-chuckHttpCall.request =
-
-ChuckHttpRequest();
-chuckHttpCall.response =
-
-ChuckHttpResponse();
-chuck.addHttpCall
-(
-chuckHttpCall
-);
+chuckHttpCall.request = ChuckHttpRequest();
+chuckHttpCall.response = ChuckHttpResponse();
+chuck.addHttpCall(chuckHttpCall);
 ```
 
 ## Show inspector manually
 
 You may need that if you won't use shake or notification:
 
-```
+```dart
 chuck.showInspector();
 ```
 
-## Saving calls
+## Saving and Sharing calls
 
-Chuck supports saving logs to your mobile device storage. In order to make save feature works, you
-need to add in your Android application manifest:
-
-```xml
-
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-```
+Chuck supports saving and sharing HTTP call logs directly via the system share sheet (`share_plus`). No storage permissions (`WRITE_EXTERNAL_STORAGE`) are required.
 
 ## Extensions
 
-You can use extensions to shorten your http and http client code. This is optional, but may improve
-your codebase.
-Example:
+You can use extensions to shorten your http and http client code:
 
-1. Import:
-
-```
+```dart
 import 'package:chuck_interceptor/chuck_interceptor.dart';
-```
 
-2. Use extensions:
-
-```
-http.post('https://jsonplaceholder.typicode.com/posts', body: body)
+// http package extension
+http.post(Uri.parse('https://jsonplaceholder.typicode.com/posts'), body: body)
     .then((response) => chuck.onHttpResponse(response, body: body));
-```
 
-```
+// HttpClient extension
 httpClient.postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))
     .interceptWithChuck(chuck, body: body, headers: {});
 ```

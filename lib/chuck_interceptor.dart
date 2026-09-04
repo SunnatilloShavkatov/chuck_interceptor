@@ -27,6 +27,8 @@ final class Chuck {
     this.showInspectorOnShake = false,
     this.notificationIcon = '@mipmap/ic_launcher',
     this.maxCallsCount = 1000,
+    this.enabled = true,
+    this.maxBodySize = 1024 * 1024,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
     _chuckCore = ChuckCore(
@@ -35,10 +37,18 @@ final class Chuck {
       showNotification: showNotification,
       notificationIcon: notificationIcon,
       showInspectorOnShake: showInspectorOnShake,
+      enabled: enabled,
+      maxBodySize: maxBodySize,
     );
     _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
     _httpAdapter = ChuckHttpAdapter(_chuckCore);
   }
+
+  /// Whether Chuck is enabled. When disabled, interceptors pass requests through with zero overhead.
+  final bool enabled;
+
+  /// Maximum size of request/response body in bytes to store in memory (default: 256 KB)
+  final int maxBodySize;
 
   /// Should user be notified with notification if there's new request catched
   /// by Chuck

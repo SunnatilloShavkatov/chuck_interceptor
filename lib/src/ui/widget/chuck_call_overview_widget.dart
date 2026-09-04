@@ -16,23 +16,41 @@ class _ChuckCallOverviewWidget extends ChuckBaseCallDetailsWidgetState<ChuckCall
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> rows = [
-      getListRow('Method: ', _call.method),
-      getListRow('Server: ', _call.server),
-      getListRow('Endpoint: ', _call.endpoint),
-      getListRow('Started:', _call.request!.time.toString()),
-      getListRow('Finished:', _call.response!.time.toString()),
-      getListRow('Duration:', formatDuration(_call.duration)),
-      getListRow('Bytes sent:', formatBytes(_call.request!.size)),
-      getListRow('Bytes received:', formatBytes(_call.response!.size)),
-      getListRow('Client:', _call.client),
-      getListRow('Secure:', _call.secure.toString()),
-    ];
-    return CustomScrollView(
-      slivers: [
-        SliverSafeArea(
-          minimum: const EdgeInsets.all(6),
-          sliver: SliverList.list(children: rows),
+    final String startedTime = _call.request?.time != null ? _call.request!.time.toString() : 'Unknown';
+    final String finishedTime = _call.response?.time != null ? _call.response!.time.toString() : (_call.loading ? 'Pending...' : 'Failed');
+    final String durationText = _call.loading ? 'Pending' : formatDuration(_call.duration);
+    final String sentBytes = formatBytes(_call.request?.size ?? 0);
+    final String receivedBytes = formatBytes(_call.response?.size ?? 0);
+
+    return ListView(
+      padding: getDetailsListPadding(context),
+      children: [
+        buildCardSection(
+          title: 'General Information',
+          children: [
+            getListRow('Method:', _call.method.toUpperCase(), copyable: true),
+            getListRow('Server:', _call.server, copyable: true),
+            getListRow('Endpoint:', _call.endpoint, copyable: true),
+            if (_call.uri.isNotEmpty) getListRow('Full URL:', _call.uri, copyable: true),
+            getListRow('Client:', _call.client.isNotEmpty ? _call.client : 'Unknown'),
+            getListRow('Secured (HTTPS):', _call.secure ? 'Yes' : 'No'),
+            getListRow('Status:', _call.loading ? 'Loading...' : '${_call.response?.status ?? "Unknown"}'),
+          ],
+        ),
+        buildCardSection(
+          title: 'Timing & Performance',
+          children: [
+            getListRow('Started:', startedTime),
+            getListRow('Finished:', finishedTime),
+            getListRow('Duration:', durationText),
+          ],
+        ),
+        buildCardSection(
+          title: 'Data Transfer',
+          children: [
+            getListRow('Bytes Sent:', sentBytes),
+            getListRow('Bytes Received:', receivedBytes),
+          ],
         ),
       ],
     );

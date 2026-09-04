@@ -30,12 +30,14 @@ class ChuckCore {
     required this.showInspectorOnShake,
     required this.notificationIcon,
     required this.maxCallsCount,
+    this.enabled = true,
+    this.maxBodySize = 1024 * 1024,
   }) {
-    if (showNotification) {
+    if (enabled && showNotification) {
       _initializeNotificationsPlugin();
       _callsSubscription = callsSubject.listen((_) => _onCallsChanged());
     }
-    if (showInspectorOnShake) {
+    if (enabled && showInspectorOnShake) {
       _shakeDetector = ShakeDetector.autoStart(
         onPhoneShake: () {
           navigateToCallListScreen();
@@ -44,6 +46,12 @@ class ChuckCore {
       );
     }
   }
+
+  /// Whether Chuck interceptor is enabled
+  final bool enabled;
+
+  /// Maximum size of request/response body in bytes to store in memory (default: 256 KB)
+  final int maxBodySize;
 
   /// Whether to show notifications when new HTTP requests are intercepted
   final bool showNotification;
@@ -68,12 +76,14 @@ class ChuckCore {
   bool _isInspectorOpened = false;
   ShakeDetector? _shakeDetector;
   StreamSubscription<dynamic>? _callsSubscription;
+  Timer? _notificationDebounceTimer;
   String? _notificationMessage;
   String? _notificationMessageShown;
   bool _notificationProcessing = false;
 
   /// Dispose subjects and subscriptions
   void dispose() {
+    _notificationDebounceTimer?.cancel();
     unawaited(callsSubject.close());
     _shakeDetector?.stopListening();
     if (_callsSubscription != null) {
@@ -99,13 +109,21 @@ class ChuckCore {
     );
   }
 
-  Future<void> _onCallsChanged() async {
-    if (callsSubject.value.isNotEmpty && !_notificationProcessing) {
-      _notificationMessage = _getNotificationMessage();
-      if (_notificationMessage != _notificationMessageShown) {
-        await _showLocalNotification();
-        // Remove recursive call to prevent potential stack overflow
-      }
+  void _onCallsChanged() {
+    if (!enabled || !showNotification || _isInspectorOpened || callsSubject.value.isEmpty) {
+      return;
+    }
+    _notificationDebounceTimer?.cancel();
+    _notificationDebounceTimer = Timer(const Duration(milliseconds: 350), _showDebouncedNotification);
+  }
+
+  Future<void> _showDebouncedNotification() async {
+    if (!enabled || !showNotification || _isInspectorOpened || callsSubject.value.isEmpty || _notificationProcessing) {
+      return;
+    }
+    _notificationMessage = _getNotificationMessage();
+    if (_notificationMessage != _notificationMessageShown) {
+      await _showLocalNotification();
     }
   }
 
@@ -216,37 +234,23 @@ class ChuckCore {
 
   /// Add Chuck http call to calls subject with optimized memory management
   void addCall(ChuckHttpCall call) {
-    final List<ChuckHttpCall> currentCalls = callsSubject.value;
+    if (!enabled) {
+      return;
+    }
+    final List<ChuckHttpCall> currentCalls = List.of(callsSubject.value);
 
     if (currentCalls.length >= maxCallsCount) {
-      // Find and remove the oldest call more efficiently
-      ChuckHttpCall? oldestCall;
-      int oldestIndex = -1;
-
-      for (int i = 0; i < currentCalls.length; i++) {
-        if (oldestCall == null || currentCalls[i].createdTime.isBefore(oldestCall.createdTime)) {
-          oldestCall = currentCalls[i];
-          oldestIndex = i;
-        }
-      }
-
-      if (oldestIndex >= 0) {
-        // Create new list with the oldest call replaced
-        final List<ChuckHttpCall> updatedCalls = [...currentCalls];
-        updatedCalls[oldestIndex] = call;
-        callsSubject.add(updatedCalls);
-      } else {
-        // Fallback: add to existing list
-        callsSubject.add([...currentCalls, call]);
-      }
-    } else {
-      // Efficiently add new call to existing list
-      callsSubject.add([...currentCalls, call]);
+      currentCalls.removeAt(0);
     }
+    currentCalls.add(call);
+    callsSubject.add(List.unmodifiable(currentCalls));
   }
 
   /// Add error to existing Chuck http call with improved error handling
   void addError(ChuckHttpError<dynamic> error, int requestId) {
+    if (!enabled) {
+      return;
+    }
     try {
       final ChuckHttpCall? selectedCall = _selectCall(requestId);
 
@@ -255,10 +259,15 @@ class ChuckCore {
         return;
       }
 
-      selectedCall.error = error;
+      selectedCall
+        ..loading = false
+        ..error = error;
+      if (selectedCall.duration == 0) {
+        selectedCall.duration = DateTime.now().millisecondsSinceEpoch - selectedCall.createdTime.millisecondsSinceEpoch;
+      }
       // Trigger update with the modified call
-      final List<ChuckHttpCall> currentCalls = callsSubject.value;
-      callsSubject.add([...currentCalls]);
+      final List<ChuckHttpCall> currentCalls = List.of(callsSubject.value);
+      callsSubject.add(List.unmodifiable(currentCalls));
     } catch (e) {
       ChuckUtils.log('Error adding error to call $requestId: $e');
     }
@@ -266,6 +275,9 @@ class ChuckCore {
 
   /// Add response to existing Chuck http call with improved error handling
   void addResponse(ChuckHttpResponse response, int requestId) {
+    if (!enabled) {
+      return;
+    }
     try {
       final ChuckHttpCall? selectedCall = _selectCall(requestId);
 
@@ -274,19 +286,19 @@ class ChuckCore {
         return;
       }
 
-      if (selectedCall.request == null) {
-        ChuckUtils.log('Warning: Request is null for call $requestId');
-        return;
-      }
+      final requestTime = selectedCall.request?.time;
+      final duration = requestTime != null
+          ? response.time.millisecondsSinceEpoch - requestTime.millisecondsSinceEpoch
+          : 0;
 
       selectedCall
         ..loading = false
         ..response = response
-        ..duration = response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
+        ..duration = duration >= 0 ? duration : 0;
 
       // Trigger update with the modified call
-      final List<ChuckHttpCall> currentCalls = callsSubject.value;
-      callsSubject.add([...currentCalls]);
+      final List<ChuckHttpCall> currentCalls = List.of(callsSubject.value);
+      callsSubject.add(List.unmodifiable(currentCalls));
     } catch (e) {
       ChuckUtils.log('Error adding response to call $requestId: $e');
     }
@@ -294,9 +306,12 @@ class ChuckCore {
 
   /// Add Chuck http call to calls subject
   void addHttpCall(ChuckHttpCall chuckHttpCall) {
+    if (!enabled) {
+      return;
+    }
     assert(chuckHttpCall.request != null, "Http call request can't be null");
     assert(chuckHttpCall.response != null, "Http call response can't be null");
-    callsSubject.add([...callsSubject.value, chuckHttpCall]);
+    addCall(chuckHttpCall);
   }
 
   /// Remove all calls from calls subject

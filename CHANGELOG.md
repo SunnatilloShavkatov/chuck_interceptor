@@ -1,6 +1,27 @@
-## 2.5.1
+## 2.6.0
 
-* Updated dependencies.
+* **Performance & Zero Overhead**:
+  * Added `enabled` flag (default `true`). When set to `false`, interceptors short-circuit immediately with zero logging, zero memory allocation, and zero overhead for production builds.
+  * Added `maxBodySize` parameter (default 1 MB) to prevent OOM crashes on huge payloads (e.g. large file downloads, binary streams).
+  * Debounced notifications (350ms) to eliminate platform channel jank on high-frequency API traffic.
+  * Notifications automatically suppressed while the inspector UI is open.
+  * $O(1)$ memory limit eviction via efficient bounded FIFO buffer.
+* **Size Optimization**:
+  * Completely removed `permission_handler` and 5 native sub-packages, significantly reducing APK/IPA binary size.
+  * Streamlined file export and sharing with `share_plus` (`XFile`) requiring zero Android storage permissions.
+  * Optimized `.pubignore` by excluding platform and test build artifacts, reducing pub.dev archive size from 125 KB down to 39 KB (~70% reduction).
+* **UI & Theme Overhaul**:
+  * Re-architected theme system around Flutter `ThemeExtension` (`ChuckThemeExtension`) with comprehensive light & dark tokens (semantic status colors, HTTP method badges, JSON syntax highlighting).
+  * Redesigned calls list screen with a clean search bar, modern call cards, and bottom safe area padding.
+  * Modernized call details screen with structured copyable cards, tabbed views, and live reactive stream updates.
+  * Completely revamped Stats screen into an informative dashboard with KPI summary cards, timing latency metrics, transfer breakdown, and HTTP methods analytics.
+  * Themed interactive JSON tree viewer with full syntax coloring.
+* **Bug Fixes**:
+  * Fixed bug where Dio and HttpClient response/request headers were lost due to iterating unpopulated maps.
+  * Fixed `addError` not clearing `loading = false` or calculating call duration, leaving errored calls indefinitely in pending state.
+  * Fixed average duration calculation in Stats screen that was overwriting sums instead of accumulating.
+  * Fixed `firstWhere` crash in call details screen when a call was evicted from FIFO while being viewed.
+  * Fixed stale state in call details tab views by propagating reactive calls.
 
 ## 2.5.0
 
