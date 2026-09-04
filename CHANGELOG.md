@@ -1,3 +1,7 @@
+## 2.6.1
+
+* Fixed `prefer_if_elements_to_conditional_expressions` lint violations in JSON viewer widget to resolve pub.dev pana static analysis and platform score.
+
 ## 2.6.0
 
 * **Performance & Zero Overhead**:

@@ -72,23 +72,24 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               if (ex)
-                (openFlag[entry.key] ?? false)
-                    ? InkWell(
-                        onTap: () {
-                          setState(() {
-                            openFlag[entry.key] = !(openFlag[entry.key] ?? false);
-                          });
-                        },
-                        child: Icon(Icons.arrow_drop_down, color: context.chuckTheme.secondaryText),
-                      )
-                    : InkWell(
-                        onTap: () {
-                          setState(() {
-                            openFlag[entry.key] = !(openFlag[entry.key] ?? false);
-                          });
-                        },
-                        child: Icon(Icons.arrow_right, color: context.chuckTheme.secondaryText),
-                      )
+                if (openFlag[entry.key] ?? false)
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+                      });
+                    },
+                    child: Icon(Icons.arrow_drop_down, color: context.chuckTheme.secondaryText),
+                  )
+                else
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        openFlag[entry.key] = !(openFlag[entry.key] ?? false);
+                      });
+                    },
+                    child: Icon(Icons.arrow_right, color: context.chuckTheme.secondaryText),
+                  )
               else
                 const SizedBox.shrink(),
               if (ex && ink)
@@ -342,23 +343,24 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               if (ex)
-                (openFlag[i])
-                    ? InkWell(
-                        onTap: () {
-                          setState(() {
-                            openFlag[i] = !openFlag[i];
-                          });
-                        },
-                        child: Icon(Icons.arrow_drop_down, color: context.chuckTheme.secondaryText),
-                      )
-                    : InkWell(
-                        onTap: () {
-                          setState(() {
-                            openFlag[i] = !openFlag[i];
-                          });
-                        },
-                        child: Icon(Icons.arrow_right, color: context.chuckTheme.secondaryText),
-                      )
+                if (openFlag[i])
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        openFlag[i] = !openFlag[i];
+                      });
+                    },
+                    child: Icon(Icons.arrow_drop_down, color: context.chuckTheme.secondaryText),
+                  )
+                else
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        openFlag[i] = !openFlag[i];
+                      });
+                    },
+                    child: Icon(Icons.arrow_right, color: context.chuckTheme.secondaryText),
+                  )
               else
                 InkWell(
                   onTap: () {
@@ -505,17 +507,11 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
 }
 
 class CustomSnackBar extends SnackBar {
-  CustomSnackBar({
-    super.key,
-    required BuildContext context,
-    String message = 'Copied to clipboard!',
-  }) : super(
-         backgroundColor: context.chuckTheme.inverseSurface,
-         behavior: SnackBarBehavior.floating,
-         duration: const Duration(seconds: 2),
-         content: Text(
-           message,
-           style: TextStyle(color: context.chuckTheme.onInverseSurface),
-         ),
-       );
+  CustomSnackBar({super.key, required BuildContext context, String message = 'Copied to clipboard!'})
+    : super(
+        backgroundColor: context.chuckTheme.inverseSurface,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+        content: Text(message, style: TextStyle(color: context.chuckTheme.onInverseSurface)),
+      );
 }

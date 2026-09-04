@@ -16,11 +16,7 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget> extends
       children: [
         SelectableText(
           name,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-            color: context.chuckTheme.primaryText,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: context.chuckTheme.primaryText),
           contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
             anchors: editableTextState.contextMenuAnchors,
             buttonItems: editableTextState.contextMenuButtonItems,
@@ -30,10 +26,7 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget> extends
         Expanded(
           child: SelectableText(
             value,
-            style: TextStyle(
-              fontSize: 13,
-              color: context.chuckTheme.secondaryText,
-            ),
+            style: TextStyle(fontSize: 13, color: context.chuckTheme.secondaryText),
             contextMenuBuilder: (_, editableTextState) => AdaptiveTextSelectionToolbar.buttonItems(
               anchors: editableTextState.contextMenuAnchors,
               buttonItems: editableTextState.contextMenuButtonItems,
@@ -62,11 +55,7 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget> extends
     ),
   );
 
-  Widget buildCardSection({
-    required String title,
-    required List<Widget> children,
-    Widget? trailing,
-  }) => Container(
+  Widget buildCardSection({required String title, required List<Widget> children, Widget? trailing}) => Container(
     margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
     decoration: BoxDecoration(
       color: context.chuckTheme.surface,
@@ -83,11 +72,7 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget> extends
             children: [
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: context.chuckTheme.primaryText,
-                ),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: context.chuckTheme.primaryText),
               ),
               ?trailing,
             ],
@@ -107,8 +92,6 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget> extends
 
   String? getContentType(Map<String, dynamic>? headers) => ChuckParser.getContentType(headers);
 
-  EdgeInsets getDetailsListPadding(BuildContext context, {bool hasFab = true}) => EdgeInsets.only(
-        top: 8,
-        bottom: MediaQuery.paddingOf(context).bottom + (hasFab ? 84 : 16),
-      );
+  EdgeInsets getDetailsListPadding(BuildContext context, {bool hasFab = true}) =>
+      EdgeInsets.only(top: 8, bottom: MediaQuery.paddingOf(context).bottom + (hasFab ? 84 : 16));
 }

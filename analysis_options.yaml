@@ -4,3 +4,7 @@ analyzer:
     avoid_annotating_with_dynamic: ignore
     discarded_futures: ignore
     document_ignores: ignore
+
+linter:
+  rules:
+    prefer_if_elements_to_conditional_expressions: true

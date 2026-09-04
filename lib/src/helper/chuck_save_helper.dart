@@ -53,10 +53,7 @@ sealed class ChuckSaveHelper {
           secondButtonTitle: 'Share',
           secondButtonAction: () async {
             await SharePlus.instance.share(
-              ShareParams(
-                files: [XFile(file.path)],
-                subject: 'Chuck HTTP Inspector Logs',
-              ),
+              ShareParams(files: [XFile(file.path)], subject: 'Chuck HTTP Inspector Logs'),
             );
           },
           brightness: brightness,
@@ -65,7 +62,12 @@ sealed class ChuckSaveHelper {
       return file.path;
     } catch (exception) {
       if (context.mounted) {
-        ChuckAlertHelper.showAlert(context, 'Error', 'Failed to save http calls to file: $exception', brightness: brightness);
+        ChuckAlertHelper.showAlert(
+          context,
+          'Error',
+          'Failed to save http calls to file: $exception',
+          brightness: brightness,
+        );
       }
       ChuckUtils.log('Error saving HTTP calls: $exception');
     }

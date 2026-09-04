@@ -23,17 +23,9 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(context.chuckTheme.statusLoading),
-            ),
+            CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(context.chuckTheme.statusLoading)),
             const SizedBox(height: 16),
-            Text(
-              'Awaiting response...',
-              style: TextStyle(
-                fontSize: 14,
-                color: context.chuckTheme.secondaryText,
-              ),
-            ),
+            Text('Awaiting response...', style: TextStyle(fontSize: 14, color: context.chuckTheme.secondaryText)),
           ],
         ),
       );
@@ -41,10 +33,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
 
     if (_call.response == null) {
       return Center(
-        child: Text(
-          'No response received',
-          style: TextStyle(color: context.chuckTheme.secondaryText),
-        ),
+        child: Text('No response received', style: TextStyle(color: context.chuckTheme.secondaryText)),
       );
     }
 
@@ -93,7 +82,10 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
                       children: [
                         Icon(Icons.copy, size: 13, color: context.chuckTheme.accent),
                         const SizedBox(width: 4),
-                        Text('Copy', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.chuckTheme.accent)),
+                        Text(
+                          'Copy',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.chuckTheme.accent),
+                        ),
                       ],
                     ),
                   ),
@@ -110,11 +102,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
               ),
               child: SelectableText(
                 bodyContent,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'monospace',
-                  color: context.chuckTheme.primaryText,
-                ),
+                style: TextStyle(fontSize: 12, fontFamily: 'monospace', color: context.chuckTheme.primaryText),
               ),
             ),
           ],

@@ -17,7 +17,9 @@ class _ChuckCallOverviewWidget extends ChuckBaseCallDetailsWidgetState<ChuckCall
   @override
   Widget build(BuildContext context) {
     final String startedTime = _call.request?.time != null ? _call.request!.time.toString() : 'Unknown';
-    final String finishedTime = _call.response?.time != null ? _call.response!.time.toString() : (_call.loading ? 'Pending...' : 'Failed');
+    final String finishedTime = _call.response?.time != null
+        ? _call.response!.time.toString()
+        : (_call.loading ? 'Pending...' : 'Failed');
     final String durationText = _call.loading ? 'Pending' : formatDuration(_call.duration);
     final String sentBytes = formatBytes(_call.request?.size ?? 0);
     final String receivedBytes = formatBytes(_call.response?.size ?? 0);
@@ -47,10 +49,7 @@ class _ChuckCallOverviewWidget extends ChuckBaseCallDetailsWidgetState<ChuckCall
         ),
         buildCardSection(
           title: 'Data Transfer',
-          children: [
-            getListRow('Bytes Sent:', sentBytes),
-            getListRow('Bytes Received:', receivedBytes),
-          ],
+          children: [getListRow('Bytes Sent:', sentBytes), getListRow('Bytes Received:', receivedBytes)],
         ),
       ],
     );

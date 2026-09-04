@@ -68,7 +68,10 @@ class _ChuckCallErrorWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCa
                 children: [
                   Icon(Icons.copy, size: 13, color: context.chuckTheme.error),
                   const SizedBox(width: 4),
-                  Text('Copy', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.chuckTheme.error)),
+                  Text(
+                    'Copy',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.chuckTheme.error),
+                  ),
                 ],
               ),
             ),
@@ -82,13 +85,7 @@ class _ChuckCallErrorWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCa
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: context.chuckTheme.errorPreviewBorder),
               ),
-              child: SelectableText(
-                errorText,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: context.chuckTheme.primaryText,
-                ),
-              ),
+              child: SelectableText(errorText, style: TextStyle(fontSize: 13, color: context.chuckTheme.primaryText)),
             ),
           ],
         ),
@@ -114,7 +111,10 @@ class _ChuckCallErrorWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCa
                   children: [
                     Icon(Icons.copy, size: 13, color: context.chuckTheme.accent),
                     const SizedBox(width: 4),
-                    Text('Copy', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.chuckTheme.accent)),
+                    Text(
+                      'Copy',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.chuckTheme.accent),
+                    ),
                   ],
                 ),
               ),
@@ -130,11 +130,7 @@ class _ChuckCallErrorWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCa
                 ),
                 child: SelectableText(
                   stackTrace.toString(),
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontFamily: 'monospace',
-                    color: context.chuckTheme.secondaryText,
-                  ),
+                  style: TextStyle(fontSize: 11, fontFamily: 'monospace', color: context.chuckTheme.secondaryText),
                 ),
               ),
             ],
