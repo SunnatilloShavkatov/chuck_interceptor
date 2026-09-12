@@ -1,7 +1,8 @@
 // ignore_for_file: discarded_futures, avoid_dynamic_calls
 
-import 'dart:convert';
 
+import 'dart:convert';
+import 'package:chuck_interceptor/src/helper/chuck_snack_bar_helper.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -225,7 +226,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
+                ChuckSnackBarHelper.show(context, 'Copied to clipboard!');
               }
             });
           },
@@ -241,7 +242,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
+                ChuckSnackBarHelper.show(context, 'Copied to clipboard!');
               }
             });
           },
@@ -261,7 +262,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       onDoubleTap: () {
         Clipboard.setData(ClipboardData(text: jsonEncode(entry.value))).then((_) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
+            ChuckSnackBarHelper.show(context, 'Copied to clipboard!');
           }
         });
       },
@@ -461,7 +462,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
+                ChuckSnackBarHelper.show(context, 'Copied to clipboard!');
               }
             });
           },
@@ -477,7 +478,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
           onDoubleTap: () {
             Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
+                ChuckSnackBarHelper.show(context, 'Copied to clipboard!');
               }
             });
           },
@@ -497,7 +498,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       onDoubleTap: () {
         Clipboard.setData(ClipboardData(text: jsonEncode(content))).then((_) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(context: context));
+            ChuckSnackBarHelper.show(context, 'Copied to clipboard!');
           }
         });
       },

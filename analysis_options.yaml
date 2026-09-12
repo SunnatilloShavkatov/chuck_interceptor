@@ -4,6 +4,8 @@ analyzer:
     avoid_annotating_with_dynamic: ignore
     discarded_futures: ignore
     document_ignores: ignore
+  exclude:
+    - build/**
 
 linter:
   rules:

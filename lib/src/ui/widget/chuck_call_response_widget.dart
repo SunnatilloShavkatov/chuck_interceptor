@@ -1,3 +1,4 @@
+import 'package:chuck_interceptor/src/helper/chuck_snack_bar_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.dart';
@@ -66,12 +67,10 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
               ? InkWell(
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: bodyContent));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Response body copied to clipboard'),
-                        duration: Duration(seconds: 1),
-                        behavior: SnackBarBehavior.floating,
-                      ),
+                    ChuckSnackBarHelper.show(
+                      context,
+                      'Response body copied to clipboard',
+                      duration: const Duration(seconds: 1),
                     );
                   },
                   borderRadius: BorderRadius.circular(4),

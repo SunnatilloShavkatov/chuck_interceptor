@@ -16,80 +16,82 @@ class ChuckStatsScreen extends StatelessWidget {
     child: Builder(
       builder: (context) {
         final theme = context.chuckTheme;
-        return Scaffold(
-          backgroundColor: theme.background,
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: context.chuckTheme.background,
-            surfaceTintColor: context.chuckTheme.background,
-            title: const Text('Chuck - HTTP Inspector - Stats'),
-          ),
-          body: ListView(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.paddingOf(context).bottom + 16),
-            children: [
-              _buildOverviewGrid(context),
-              const SizedBox(height: 16),
-              _buildSectionCard(
-                context,
-                title: 'Timing & Latency',
-                icon: Icons.timer_outlined,
-                children: [
-                  _buildMetricRow(
-                    context,
-                    'Average Request Time',
-                    ChuckConversionHelper.formatTime(_getAverageRequestTime()),
-                  ),
-                  _buildMetricRow(
-                    context,
-                    'Minimum Request Time',
-                    ChuckConversionHelper.formatTime(_getMinRequestTime()),
-                  ),
-                  _buildMetricRow(
-                    context,
-                    'Maximum Request Time',
-                    ChuckConversionHelper.formatTime(_getMaxRequestTime()),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              _buildSectionCard(
-                context,
-                title: 'Data Transfer',
-                icon: Icons.data_usage_outlined,
-                children: [
-                  _buildMetricRow(context, 'Bytes Sent', ChuckConversionHelper.formatBytes(_getBytesSent())),
-                  _buildMetricRow(context, 'Bytes Received', ChuckConversionHelper.formatBytes(_getBytesReceived())),
-                  _buildMetricRow(
-                    context,
-                    'Total Transferred',
-                    ChuckConversionHelper.formatBytes(_getBytesSent() + _getBytesReceived()),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              _buildSectionCard(
-                context,
-                title: 'Security',
-                icon: Icons.security_outlined,
-                children: [
-                  _buildMetricRow(context, 'Secured (HTTPS)', '${_getSecuredRequests()}'),
-                  _buildMetricRow(context, 'Unsecured (HTTP)', '${_getUnsecuredRequests()}'),
-                ],
-              ),
-              const SizedBox(height: 16),
-              _buildSectionCard(
-                context,
-                title: 'HTTP Methods',
-                icon: Icons.http_outlined,
-                children: [
-                  _buildMethodRow(context, 'GET', _getRequests('GET'), theme.methodGet),
-                  _buildMethodRow(context, 'POST', _getRequests('POST'), theme.methodPost),
-                  _buildMethodRow(context, 'PUT', _getRequests('PUT'), theme.methodPut),
-                  _buildMethodRow(context, 'DELETE', _getRequests('DELETE'), theme.methodDelete),
-                  _buildMethodRow(context, 'PATCH', _getRequests('PATCH'), theme.methodPatch),
-                ],
-              ),
-            ],
+        return ScaffoldMessenger(
+          child: Scaffold(
+            backgroundColor: theme.background,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: context.chuckTheme.background,
+              surfaceTintColor: context.chuckTheme.background,
+              title: const Text('Chuck - HTTP Inspector - Stats'),
+            ),
+            body: ListView(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.paddingOf(context).bottom + 16),
+              children: [
+                _buildOverviewGrid(context),
+                const SizedBox(height: 16),
+                _buildSectionCard(
+                  context,
+                  title: 'Timing & Latency',
+                  icon: Icons.timer_outlined,
+                  children: [
+                    _buildMetricRow(
+                      context,
+                      'Average Request Time',
+                      ChuckConversionHelper.formatTime(_getAverageRequestTime()),
+                    ),
+                    _buildMetricRow(
+                      context,
+                      'Minimum Request Time',
+                      ChuckConversionHelper.formatTime(_getMinRequestTime()),
+                    ),
+                    _buildMetricRow(
+                      context,
+                      'Maximum Request Time',
+                      ChuckConversionHelper.formatTime(_getMaxRequestTime()),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _buildSectionCard(
+                  context,
+                  title: 'Data Transfer',
+                  icon: Icons.data_usage_outlined,
+                  children: [
+                    _buildMetricRow(context, 'Bytes Sent', ChuckConversionHelper.formatBytes(_getBytesSent())),
+                    _buildMetricRow(context, 'Bytes Received', ChuckConversionHelper.formatBytes(_getBytesReceived())),
+                    _buildMetricRow(
+                      context,
+                      'Total Transferred',
+                      ChuckConversionHelper.formatBytes(_getBytesSent() + _getBytesReceived()),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _buildSectionCard(
+                  context,
+                  title: 'Security',
+                  icon: Icons.security_outlined,
+                  children: [
+                    _buildMetricRow(context, 'Secured (HTTPS)', '${_getSecuredRequests()}'),
+                    _buildMetricRow(context, 'Unsecured (HTTP)', '${_getUnsecuredRequests()}'),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _buildSectionCard(
+                  context,
+                  title: 'HTTP Methods',
+                  icon: Icons.http_outlined,
+                  children: [
+                    _buildMethodRow(context, 'GET', _getRequests('GET'), theme.methodGet),
+                    _buildMethodRow(context, 'POST', _getRequests('POST'), theme.methodPost),
+                    _buildMethodRow(context, 'PUT', _getRequests('PUT'), theme.methodPut),
+                    _buildMethodRow(context, 'DELETE', _getRequests('DELETE'), theme.methodDelete),
+                    _buildMethodRow(context, 'PATCH', _getRequests('PATCH'), theme.methodPatch),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

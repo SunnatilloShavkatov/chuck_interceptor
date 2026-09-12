@@ -1,3 +1,4 @@
+import 'package:chuck_interceptor/src/helper/chuck_snack_bar_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,15 +38,11 @@ final class ChuckCopyHelper {
       await Clipboard.setData(ClipboardData(text: curlCommand));
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Curl request copied to clipboard'), duration: Duration(seconds: 2)),
-        );
+        ChuckSnackBarHelper.show(context, 'Curl request copied to clipboard');
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Error copying curl request'), duration: Duration(seconds: 2)));
+        ChuckSnackBarHelper.show(context, 'Error copying curl request');
       }
     }
   }

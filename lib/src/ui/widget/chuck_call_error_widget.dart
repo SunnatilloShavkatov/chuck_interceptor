@@ -1,3 +1,4 @@
+import 'package:chuck_interceptor/src/helper/chuck_snack_bar_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.dart';
@@ -52,13 +53,7 @@ class _ChuckCallErrorWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCa
           trailing: InkWell(
             onTap: () {
               Clipboard.setData(ClipboardData(text: errorText));
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Error copied to clipboard'),
-                  duration: Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              ChuckSnackBarHelper.show(context, 'Error copied to clipboard', duration: const Duration(seconds: 1));
             },
             borderRadius: BorderRadius.circular(4),
             child: Padding(
@@ -95,12 +90,10 @@ class _ChuckCallErrorWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCa
             trailing: InkWell(
               onTap: () {
                 Clipboard.setData(ClipboardData(text: stackTrace.toString()));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Stack trace copied to clipboard'),
-                    duration: Duration(seconds: 1),
-                    behavior: SnackBarBehavior.floating,
-                  ),
+                ChuckSnackBarHelper.show(
+                  context,
+                  'Stack trace copied to clipboard',
+                  duration: const Duration(seconds: 1),
                 );
               },
               borderRadius: BorderRadius.circular(4),

@@ -1,3 +1,9 @@
+## 2.6.2
+
+* Fixed `No ScaffoldMessenger widget found` crash when tapping copy buttons (request/response body, headers, error, stack trace, JSON viewer, cURL) inside apps whose widget tree does not expose a `ScaffoldMessenger` above Chuck's screens.
+  * Chuck's calls list, call details and stats screens now install their own `ScaffoldMessenger`.
+  * All snack bars go through `ChuckSnackBarHelper`, which uses `ScaffoldMessenger.maybeOf` and logs instead of throwing when no messenger is reachable.
+
 ## 2.6.1
 
 * Fixed `prefer_if_elements_to_conditional_expressions` lint violations in JSON viewer widget to resolve pub.dev pana static analysis and platform score.

@@ -1,6 +1,7 @@
-import 'dart:convert';
 
+import 'dart:convert';
 import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
+import 'package:chuck_interceptor/src/helper/chuck_snack_bar_helper.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/utils/chuck_parser.dart';
 import 'package:flutter/material.dart';
@@ -37,13 +38,7 @@ abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget> extends
           InkWell(
             onTap: () {
               Clipboard.setData(ClipboardData(text: value));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Copied $name to clipboard'),
-                  duration: const Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              ChuckSnackBarHelper.show(context, 'Copied $name to clipboard', duration: const Duration(seconds: 1));
             },
             borderRadius: BorderRadius.circular(4),
             child: Padding(

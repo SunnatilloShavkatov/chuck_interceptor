@@ -42,28 +42,30 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
   Widget build(BuildContext context) => Theme(
     data: ChuckThemeData.attach(Theme.of(context)),
     child: Builder(
-      builder: (context) => Scaffold(
-        backgroundColor: context.chuckTheme.background,
-        appBar: AppBar(
+      builder: (context) => ScaffoldMessenger(
+        child: Scaffold(
           backgroundColor: context.chuckTheme.background,
-          surfaceTintColor: context.chuckTheme.background,
-          title: _searchEnabled ? _buildSearchField(context) : _buildTitleWidget(context),
-          actions: [_buildSearchButton(), _buildMenuButton(context)],
-        ),
-        body: StreamBuilder<List<ChuckHttpCall>>(
-          stream: chuckCore.callsSubject,
-          builder: (context, snapshot) {
-            List<ChuckHttpCall> calls = snapshot.data ?? [];
-            final String query = _queryTextEditingController.text.trim();
-            if (query.isNotEmpty) {
-              calls = _filterCallsByQuery(calls, query);
-            }
-            if (calls.isNotEmpty) {
-              return _buildCallsListWidget(context, calls);
-            } else {
-              return _buildEmptyWidget(context);
-            }
-          },
+          appBar: AppBar(
+            backgroundColor: context.chuckTheme.background,
+            surfaceTintColor: context.chuckTheme.background,
+            title: _searchEnabled ? _buildSearchField(context) : _buildTitleWidget(context),
+            actions: [_buildSearchButton(), _buildMenuButton(context)],
+          ),
+          body: StreamBuilder<List<ChuckHttpCall>>(
+            stream: chuckCore.callsSubject,
+            builder: (context, snapshot) {
+              List<ChuckHttpCall> calls = snapshot.data ?? [];
+              final String query = _queryTextEditingController.text.trim();
+              if (query.isNotEmpty) {
+                calls = _filterCallsByQuery(calls, query);
+              }
+              if (calls.isNotEmpty) {
+                return _buildCallsListWidget(context, calls);
+              } else {
+                return _buildEmptyWidget(context);
+              }
+            },
+          ),
         ),
       ),
     ),
