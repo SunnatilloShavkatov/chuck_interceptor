@@ -125,14 +125,6 @@ httpClient
  });
 ```
 
-If you're using http from http/http package:
-
-```dart
-http.get('https://jsonplaceholder.typicode.com/posts').then((response) {
-    chuck.onHttpResponse(response);
-});
-```
-
 If you're using Chopper. you need to add interceptor:
 
 ```dart
@@ -157,28 +149,18 @@ chuck.showInspector();
 
 ## Saving calls
 
-Chuck supports saving logs to your mobile device storage. In order to make save feature works, you need to add in your Android application manifest:
-
-```xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-```
+Chuck supports saving logs to your mobile device storage. Logs are written to an
+app-scoped directory, so no runtime storage permission is required.
 
 ## Extensions
-You can use extensions to shorten your http and http client code. This is optional, but may improve your codebase.
+You can use extensions to shorten your http client code. This is optional, but may improve your codebase.
 Example:
 1. Import:
 ```dart
 import 'package:chuck_interceptor/core/chuck_http_client_extensions.dart';
-import 'package:chuck_interceptor/core/chuck_http_extensions.dart';
 ```
 
 2. Use extensions:
-```dart
-http
-    .post('https://jsonplaceholder.typicode.com/posts', body: body)
-    .interceptWithChuck(Chuck, body: body);
-```
-
 ```dart
 httpClient
     .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))

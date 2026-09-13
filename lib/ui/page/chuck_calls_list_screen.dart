@@ -415,23 +415,25 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
             title: const Text("Cache size"),
             content: StatefulBuilder(
               builder: (context, setState) {
-                return Wrap(
-                  children: [
-                    ...ChuckCore.cacheCountOptions.map(
-                      (int option) => RadioListTile<int>(
-                        title: Text(option == 0 ? "Off" : "$option calls"),
-                        value: option,
-                        groupValue: selected,
-                        onChanged: (int? value) {
-                          if (value != null) {
-                            setState(() {
-                              selected = value;
-                            });
-                          }
-                        },
+                return RadioGroup<int>(
+                  groupValue: selected,
+                  onChanged: (int? value) {
+                    if (value != null) {
+                      setState(() {
+                        selected = value;
+                      });
+                    }
+                  },
+                  child: Wrap(
+                    children: [
+                      ...ChuckCore.cacheCountOptions.map(
+                        (int option) => RadioListTile<int>(
+                          title: Text(option == 0 ? "Off" : "$option calls"),
+                          value: option,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
             ),
@@ -483,41 +485,41 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
             title: const Text("Select filter"),
             content: StatefulBuilder(
               builder: (context, setState) {
-                return Wrap(
-                  children: [
-                    ...ChuckSortOption.values
-                        .map(
-                          (ChuckSortOption sortOption) =>
-                              RadioListTile<ChuckSortOption>(
-                                title: Text(sortOption.name),
-                                value: sortOption,
-                                groupValue: _sortOption,
-                                onChanged: (ChuckSortOption? value) {
-                                  setState(() {
-                                    _sortOption = value;
-                                  });
-                                },
-                              ),
-                        )
-                        .toList(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Descending"),
-                        Switch(
-                          value: _sortAscending,
-                          onChanged: (value) {
-                            setState(() {
-                              _sortAscending = value;
-                            });
-                          },
-                          activeTrackColor: Colors.grey,
-                          activeColor: Colors.white,
-                        ),
-                        const Text("Ascending"),
-                      ],
-                    ),
-                  ],
+                return RadioGroup<ChuckSortOption>(
+                  groupValue: _sortOption,
+                  onChanged: (ChuckSortOption? value) {
+                    setState(() {
+                      _sortOption = value;
+                    });
+                  },
+                  child: Wrap(
+                    children: [
+                      ...ChuckSortOption.values.map(
+                        (ChuckSortOption sortOption) =>
+                            RadioListTile<ChuckSortOption>(
+                              title: Text(sortOption.name),
+                              value: sortOption,
+                            ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Descending"),
+                          Switch(
+                            value: _sortAscending,
+                            onChanged: (value) {
+                              setState(() {
+                                _sortAscending = value;
+                              });
+                            },
+                            activeTrackColor: Colors.grey,
+                            activeThumbColor: Colors.white,
+                          ),
+                          const Text("Ascending"),
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               },
             ),

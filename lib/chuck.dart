@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:chuck_interceptor/core/chuck_http_adapter.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 
 import 'package:chuck_interceptor/core/chuck_core.dart';
@@ -8,22 +7,14 @@ import 'package:chuck_interceptor/core/chuck_http_client_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
 
 class Chuck {
-  /// Should user be notified with notification if there's new request catched
-  /// by Chuck
-  final bool showNotification;
-
   /// Should inspector be opened on device shake (works only with physical
   /// with sensors)
   final bool showInspectorOnShake;
 
   /// Should inspector use dark theme
   final bool darkTheme;
-
-  /// Icon url for notification
-  final String notificationIcon;
 
   ///Max number of calls that are stored in memory. When count is reached, FIFO
   ///method queue will be used to remove elements.
@@ -40,19 +31,16 @@ class Chuck {
   final Box<dynamic>? cacheBox;
   late ChuckCore _chuckCore;
   late ChuckHttpClientAdapter _httpClientAdapter;
-  late ChuckHttpAdapter _httpAdapter;
 
   /// Creates Chuck instance.
   Chuck({
     GlobalKey<NavigatorState>? navigatorKey,
     this.cacheBox,
-    this.showNotification = true,
-    this.showInspectorOnShake = false,
-    this.darkTheme = false,
-    this.notificationIcon = "@mipmap/ic_launcher",
-    this.maxCallsCount = 1000,
-    this.maxCacheCount = 0,
     this.directionality,
+    this.darkTheme = false,
+    this.maxCacheCount = 0,
+    this.maxCallsCount = 1000,
+    this.showInspectorOnShake = false,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
     _chuckCore = ChuckCore(
@@ -62,12 +50,9 @@ class Chuck {
       maxCallsCount: maxCallsCount,
       maxCacheCount: maxCacheCount,
       directionality: directionality,
-      notificationIcon: notificationIcon,
-      showNotification: showNotification,
       showInspectorOnShake: showInspectorOnShake,
     );
     _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
-    _httpAdapter = ChuckHttpAdapter(_chuckCore);
   }
 
   /// Set custom navigation key. This will help if there's route library.
@@ -92,17 +77,8 @@ class Chuck {
   }
 
   /// Handle response from HttpClient
-  void onHttpClientResponse(
-    HttpClientResponse response,
-    HttpClientRequest request, {
-    dynamic body,
-  }) {
+  void onHttpClientResponse(HttpClientResponse response, HttpClientRequest request, {dynamic body}) {
     _httpClientAdapter.onResponse(response, request, body: body);
-  }
-
-  /// Handle both request and response from http package
-  void onHttpResponse(http.Response response, {dynamic body}) {
-    _httpAdapter.onResponse(response, body: body);
   }
 
   /// Opens Http calls inspector. This will navigate user to the new fullscreen

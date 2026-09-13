@@ -39,11 +39,10 @@ class _MyAppState extends State<MyApp> {
 
   void initChuck() {
     _chuck = Chuck(
-      cacheBox: widget.chuckBox,
-      showNotification: true,
-      showInspectorOnShake: true,
       darkTheme: false,
       maxCallsCount: 1000,
+      cacheBox: widget.chuckBox,
+      showInspectorOnShake: true,
     );
     _dio = Dio(BaseOptions(followRedirects: false));
     _dio.interceptors.add(_chuck.getDioInterceptor());

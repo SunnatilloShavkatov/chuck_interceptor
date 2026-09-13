@@ -10,7 +10,6 @@ import 'package:chuck_interceptor/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/ui/page/chuck_calls_list_screen.dart';
 import 'package:chuck_interceptor/utils/shake_detector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -28,10 +27,6 @@ const int _cacheKeyWidth = 19;
 const String _cacheCountKey = '__chuck_max_cache_count__';
 
 class ChuckCore {
-  /// Should user be notified with notification if there's new request catch
-  /// by Chuck
-  final bool showNotification;
-
   /// Should inspector be opened on device shake (works only with physical
   /// with sensors)
   final bool showInspectorOnShake;
@@ -40,11 +35,7 @@ class ChuckCore {
   final bool darkTheme;
 
   /// Rx subject which contains all intercepted http calls
-  final BehaviorSubject<List<ChuckHttpCall>> callsSubject =
-      BehaviorSubject.seeded([]);
-
-  /// Icon url for notification
-  final String notificationIcon;
+  final BehaviorSubject<List<ChuckHttpCall>> callsSubject = BehaviorSubject.seeded([]);
 
   ///Max number of calls that are stored in memory. When count is reached, FIFO
   ///method queue will be used to remove elements.
@@ -71,15 +62,11 @@ class ChuckCore {
   ///Directionality of app. If null then directionality of context will be used.
   final TextDirection? directionality;
 
-  late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   GlobalKey<NavigatorState>? navigatorKey;
   Brightness _brightness = Brightness.light;
   bool _isInspectorOpened = false;
   ShakeDetector? _shakeDetector;
   StreamSubscription<dynamic>? _callsSubscription;
-  String? _notificationMessage;
-  String? _notificationMessageShown;
-  bool _notificationProcessing = false;
   Box<dynamic>? cacheBox;
 
   /// Memoizes the decoded contents of [cacheBox] so that a box write does not
@@ -89,19 +76,13 @@ class ChuckCore {
   /// Creates Chuck core instance
   ChuckCore(
     this.navigatorKey, {
-    required this.showNotification,
     required this.showInspectorOnShake,
     required this.darkTheme,
-    required this.notificationIcon,
     required this.maxCallsCount,
     int maxCacheCount = 0,
     this.directionality,
     this.cacheBox,
   }) {
-    if (showNotification) {
-      _initializeNotificationsPlugin();
-      _callsSubscription = callsSubject.listen((_) => _onCallsChanged());
-    }
     if (showInspectorOnShake) {
       _shakeDetector = ShakeDetector.autoStart(
         onPhoneShake: () {
@@ -128,48 +109,12 @@ class ChuckCore {
   /// Get currently used brightness
   Brightness get brightness => _brightness;
 
-  void _initializeNotificationsPlugin() {
-    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid = AndroidInitializationSettings(
-      notificationIcon,
-    );
-    const initializationSettingsIOS = DarwinInitializationSettings();
-    final initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-      linux: LinuxInitializationSettings(defaultActionName: 'default'),
-      macOS: initializationSettingsIOS,
-    );
-    _flutterLocalNotificationsPlugin.initialize(
-      settings: initializationSettings,
-      onDidReceiveNotificationResponse: _onSelectedNotification,
-    );
-  }
-
-  void _onCallsChanged() async {
-    if (callsSubject.value.isNotEmpty) {
-      _notificationMessage = _getNotificationMessage();
-      if (_notificationMessage != _notificationMessageShown &&
-          !_notificationProcessing) {
-        await _showLocalNotification();
-        _onCallsChanged();
-      }
-    }
-  }
-
-  Future<void> _onSelectedNotification(NotificationResponse payload) async {
-    navigateToCallListScreen();
-    return;
-  }
-
   /// Opens Http calls inspector. This will navigate user to the new fullscreen
   /// page where all listened http calls can be viewed.
   void navigateToCallListScreen() {
     final context = getContext();
     if (context == null) {
-      ChuckUtils.log(
-        "Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application",
-      );
+      ChuckUtils.log("Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application");
       return;
     }
     if (!_isInspectorOpened) {
@@ -184,110 +129,13 @@ class ChuckCore {
   /// Get context from navigator key. Used to open inspector route.
   BuildContext? getContext() => navigatorKey?.currentState?.overlay?.context;
 
-  String _getNotificationMessage() {
-    final List<ChuckHttpCall> calls = callsSubject.value;
-    final int successCalls = calls
-        .where(
-          (call) =>
-              call.response != null &&
-              (call.response!.status ?? 0) >= 200 &&
-              (call.response!.status ?? 0) < 300,
-        )
-        .toList()
-        .length;
-
-    final int redirectCalls = calls
-        .where(
-          (call) =>
-              call.response != null &&
-              (call.response!.status ?? 0) >= 300 &&
-              (call.response!.status ?? 0) < 400,
-        )
-        .toList()
-        .length;
-
-    final int errorCalls = calls
-        .where(
-          (call) =>
-              call.response != null &&
-              (call.response!.status ?? 0) >= 400 &&
-              (call.response!.status ?? 0) < 600,
-        )
-        .toList()
-        .length;
-
-    final int loadingCalls = calls
-        .where((call) => call.loading)
-        .toList()
-        .length;
-
-    final StringBuffer notificationsMessage = StringBuffer();
-    if (loadingCalls > 0) {
-      notificationsMessage.write("Loading: $loadingCalls");
-      notificationsMessage.write(" | ");
-    }
-    if (successCalls > 0) {
-      notificationsMessage.write("Success: $successCalls");
-      notificationsMessage.write(" | ");
-    }
-    if (redirectCalls > 0) {
-      notificationsMessage.write("Redirect: $redirectCalls");
-      notificationsMessage.write(" | ");
-    }
-    if (errorCalls > 0) {
-      notificationsMessage.write("Error: $errorCalls");
-    }
-    String notificationMessageString = notificationsMessage.toString();
-    if (notificationMessageString.endsWith(" | ")) {
-      notificationMessageString = notificationMessageString.substring(
-        0,
-        notificationMessageString.length - 3,
-      );
-    }
-
-    return notificationMessageString;
-  }
-
-  Future<void> _showLocalNotification() async {
-    _notificationProcessing = true;
-    const channelId = "Chuck";
-    const channelName = "Chuck";
-    final androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      channelId,
-      channelName,
-      enableVibration: false,
-      playSound: false,
-      largeIcon: DrawableResourceAndroidBitmap(notificationIcon),
-    );
-    const iOSPlatformChannelSpecifics = DarwinNotificationDetails(
-      presentSound: false,
-    );
-    final platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
-    );
-    final String? message = _notificationMessage;
-    await _flutterLocalNotificationsPlugin.show(
-      id: 0,
-      body: message,
-      payload: "chuck_interceptor",
-      title: "Chuck (total: ${callsSubject.value.length} requests)",
-      notificationDetails: platformChannelSpecifics,
-    );
-    _notificationMessageShown = message;
-    _notificationProcessing = false;
-    return;
-  }
-
   /// Add Chuck http call to calls subject
   void addCall(ChuckHttpCall call) {
     final callsCount = callsSubject.value.length;
     if (callsCount >= maxCallsCount) {
       final originalCalls = callsSubject.value;
       final calls = List<ChuckHttpCall>.from(originalCalls);
-      calls.sort(
-        (call1, call2) => call1.createdTime.compareTo(call2.createdTime),
-      );
+      calls.sort((call1, call2) => call1.createdTime.compareTo(call2.createdTime));
       final indexToReplace = originalCalls.indexOf(calls.first);
       originalCalls[indexToReplace] = call;
 
@@ -321,9 +169,7 @@ class ChuckCore {
     }
     selectedCall.loading = false;
     selectedCall.response = response;
-    selectedCall.duration =
-        response.time.millisecondsSinceEpoch -
-        selectedCall.request!.time.millisecondsSinceEpoch;
+    selectedCall.duration = response.time.millisecondsSinceEpoch - selectedCall.request!.time.millisecondsSinceEpoch;
     _cacheCall(selectedCall);
     callsSubject.add([...callsSubject.value]);
   }
@@ -363,9 +209,7 @@ class ChuckCore {
       return;
     }
 
-    final String key = call.createdTime.microsecondsSinceEpoch
-        .toString()
-        .padLeft(_cacheKeyWidth, '0');
+    final String key = call.createdTime.microsecondsSinceEpoch.toString().padLeft(_cacheKeyWidth, '0');
     _guardCacheWrite(box.put(key, jsonEncode(call.toJson())));
     // Hive applies the write to its keystore synchronously, so the length below
     // already accounts for the entry just written.
@@ -393,8 +237,7 @@ class ChuckCore {
 
   /// Keys of [box] that hold calls, oldest first, excluding the stored
   /// preference.
-  List<dynamic> _callKeys(Box<dynamic> box) =>
-      box.keys.where((dynamic key) => key != _cacheCountKey).toList();
+  List<dynamic> _callKeys(Box<dynamic> box) => box.keys.where((dynamic key) => key != _cacheCountKey).toList();
 
   /// Cache size stored by a previous session, or null when unset or no longer
   /// offered in [cacheCountOptions].
@@ -446,8 +289,7 @@ class ChuckCore {
     );
   }
 
-  ChuckHttpCall? _selectCall(int requestId) =>
-      callsSubject.value.firstWhere((call) => call.id == requestId);
+  ChuckHttpCall? _selectCall(int requestId) => callsSubject.value.firstWhere((call) => call.id == requestId);
 
   /// Save all calls to file
   void saveHttpRequests(BuildContext context) {

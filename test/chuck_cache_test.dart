@@ -15,15 +15,13 @@ String enc(int id, DateTime t) {
 }
 
 ChuckCore core(Box<dynamic> box, {int maxCacheCount = 0}) => ChuckCore(
-      null,
-      showNotification: false,
-      showInspectorOnShake: false,
-      darkTheme: false,
-      notificationIcon: "@mipmap/ic_launcher",
-      maxCallsCount: 1000,
-      maxCacheCount: maxCacheCount,
-      cacheBox: box,
-    );
+  null,
+  showInspectorOnShake: false,
+  darkTheme: false,
+  maxCallsCount: 1000,
+  maxCacheCount: maxCacheCount,
+  cacheBox: box,
+);
 
 void main() {
   late Box<dynamic> box;
@@ -48,8 +46,7 @@ void main() {
     expect(calls.last.id, 249);
   });
 
-  test('legacy oversized box is trimmed on startup, legacy keys go first',
-      () async {
+  test('legacy oversized box is trimmed on startup, legacy keys go first', () async {
     final base = DateTime(2026, 1, 1);
     // Entries written by an older version: plain auto increment int keys.
     for (var i = 0; i < 5000; i++) {
@@ -122,10 +119,7 @@ void main() {
       final base = DateTime(2026, 1, 1);
       for (var i = 0; i < count; i++) {
         final t = base.add(Duration(seconds: i));
-        await box.put(
-          t.microsecondsSinceEpoch.toString().padLeft(19, '0'),
-          enc(i, t),
-        );
+        await box.put(t.microsecondsSinceEpoch.toString().padLeft(19, '0'), enc(i, t));
       }
     }
 
@@ -143,8 +137,7 @@ void main() {
       expect(box.keys, isEmpty);
     });
 
-    test('a stored size is honoured instead of the default, cache survives',
-        () async {
+    test('a stored size is honoured instead of the default, cache survives', () async {
       core(box).setMaxCacheCount(100);
       await seed(40);
       await box.flush();
@@ -160,10 +153,7 @@ void main() {
     test('disabled core writes nothing', () async {
       final c = core(box);
       final t = DateTime(2026, 1, 2);
-      await box.put(
-        t.microsecondsSinceEpoch.toString().padLeft(19, '0'),
-        enc(1, t),
-      );
+      await box.put(t.microsecondsSinceEpoch.toString().padLeft(19, '0'), enc(1, t));
       // Anything written while disabled is dropped on the next trim.
       c.setMaxCacheCount(100);
       c.setMaxCacheCount(0);

@@ -1,3 +1,17 @@
+## 3.0.0
+
+* **Breaking:** dropped the `http` package dependency. `Chuck.onHttpResponse`, `ChuckHttpAdapter`
+  and the `interceptWithChuck` extension on `Future<http.Response>`
+  (`core/chuck_http_extensions.dart`) have been removed. If you use `package:http`, build a
+  `ChuckHttpCall` yourself and pass it to `chuck.addHttpCall`. `dio` and `dart:io` `HttpClient`
+  support is unchanged.
+* Dropped the `permission_handler` dependency. Logs are saved to an app-scoped directory
+  (`getExternalStorageDirectory` / `getApplicationDocumentsDirectory`), which needs no runtime
+  storage permission, so the permission request and the `WRITE_EXTERNAL_STORAGE` manifest entry are
+  no longer needed.
+* Migrated `RadioListTile` usages to `RadioGroup` and `Switch.activeColor` to `activeThumbColor`,
+  removing the Flutter 3.32/3.41 deprecation warnings.
+
 ## 2.3.0
 
 * The cache box is now bounded. Previously every response and every error was appended to the box

@@ -9,7 +9,6 @@ import 'package:chuck_interceptor/utils/chuck_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ChuckSaveHelper {
   static const JsonEncoder _encoder = JsonEncoder.withIndent('  ');
@@ -20,31 +19,10 @@ class ChuckSaveHelper {
     List<ChuckHttpCall> calls,
     Brightness brightness,
   ) {
-    _checkPermissions(context, calls, brightness);
-  }
-
-  static void _checkPermissions(
-    BuildContext context,
-    List<ChuckHttpCall> calls,
-    Brightness brightness,
-  ) async {
-    final status = await Permission.storage.status;
-    if (status.isGranted) {
-      _saveToFile(context, calls, brightness);
-    } else {
-      final status = await Permission.storage.request();
-
-      if (status.isGranted) {
-        _saveToFile(context, calls, brightness);
-      } else {
-        ChuckAlertHelper.showAlert(
-          context,
-          "Permission error",
-          "Permission not granted. Couldn't save logs.",
-          brightness: brightness,
-        );
-      }
-    }
+    /// Logs are stored in app-scoped directories
+    /// (getExternalStorageDirectory / getApplicationDocumentsDirectory),
+    /// which require no runtime storage permission.
+    _saveToFile(context, calls, brightness);
   }
 
   static Future<String> _saveToFile(

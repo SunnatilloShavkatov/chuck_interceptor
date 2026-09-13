@@ -3,6 +3,7 @@
 analyzer:
   exclude:
     - "**/*.chopper.dart"
+    - build/**
   language:
     strict-raw-types: true
 
