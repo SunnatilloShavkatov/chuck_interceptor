@@ -5,6 +5,10 @@
   tab and button styling can't leak into the inspector. Only the brightness and an explicit
   `ChuckThemeExtension` override are still taken from the surrounding app.
 * Fixed clipped tab labels ("Response") on the call details screen.
+* Trimmed the published archive via `.pubignore`: package tests, the example app's test and
+  analysis config, `pubspec.lock`, `.metadata` and editor/CI folders are no longer shipped to
+  pub.dev (they stay in git). Only `example/lib/main.dart`, `example/pubspec.yaml` and
+  `example/README.md` remain so the pub.dev "Example" tab keeps working.
 
 ## 3.0.0
 
@@ -19,7 +23,7 @@
   * Use `builder: chuck.builder` in `MaterialApp` for the default placement, or build
     `ChuckButton(chuckCore: chuck.core, child: child)` yourself to customise `visible`, `alignment`,
     `padding`, `draggable` and `hideWhenEmpty`.
-  * Button colour reflects traffic state (idle / in flight / failed) and it is hidden automatically
+  * Button color reflects traffic state (idle / in flight / failed) and it is hidden automatically
     when `enabled: false` or while the inspector is open.
 * Added `Chuck.core`, `Chuck.callsStream` and `ChuckCore.callsStream` / `ChuckCore.isInspectorOpened`
   so a custom inspector entry point can be built without touching internals.

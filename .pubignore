@@ -1,15 +1,40 @@
+# Only the library itself is published. Everything below stays in git, it is
+# just not worth shipping to every consumer of the package.
+
+# Tooling / editor noise
 .DS_Store
 .dart_tool/
 .packages
 .pub/
 build/
 .idea/
+.vscode/
+.github/
+*.iml
+.metadata
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+
+# Repo-only docs and assets
 media/
 AGENTS.md
 
+# Package tests are not needed to use the package
+test/
+
+# Example: publish only what pub.dev renders on the "Example" tab
+# (lib/main.dart, pubspec.yaml, README.md); the runnable app scaffolding stays
+# in git only.
 example/.dart_tool/
+example/.flutter-plugins
 example/.flutter-plugins-dependencies
+example/.gitignore
+example/.metadata
+example/.pubignore
+example/analysis_options.yaml
 example/build/
+example/test/
 example/android/
 example/ios/
 example/macos/
