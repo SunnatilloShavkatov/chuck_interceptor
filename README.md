@@ -13,7 +13,7 @@ and [Chucker](https://github.com/ChuckerTeam/chucker).
 
 - Dio
 - HttpClient from dart:io package
-- Http from http/http package
+- Any other client (`http`, `chopper`, `retrofit`, custom) via the client agnostic API
 
 **Features:**  
 ✔️ Detailed logs for each HTTP calls (HTTP Request, HTTP Response)  
@@ -22,6 +22,7 @@ and [Chucker](https://github.com/ChuckerTeam/chucker).
 ✔️ Statistics  
 ✔️ Floating inspector button with live call counter  
 ✔️ Support for top used HTTP clients in Dart  
+✔️ Client agnostic API - log calls from any HTTP client, zero extra dependencies  
 ✔️ Enhanced error handling with comprehensive recovery  
 ✔️ Shake to open inspector  
 ✔️ HTTP calls search and filtering  
@@ -35,7 +36,7 @@ and [Chucker](https://github.com/ChuckerTeam/chucker).
 
 ```yaml
 dependencies:
-  chuck_interceptor: ^3.0.1
+  chuck_interceptor: ^3.1.0
 ```
 
 2. Install it
@@ -221,20 +222,55 @@ httpClient
 });
 ```
 
-#### http package
+#### Any other client (http, Chopper, Retrofit, custom)
 
-If you're using `http` from `package:http`:
+Chuck does not depend on `package:http` or any other client. Instead it takes plain values
+(method, uri, headers, body, status code), so every client can be inspected through the same API.
+
+For a client which hands you the finished call, log it in one step:
 
 ```dart
-http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'))
-    .then((response) {
-  chuck.onHttpResponse(response);
-});
+final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+
+chuck.logHttpCall(
+  method: response.request!.method,
+  uri: response.request!.url,
+  statusCode: response.statusCode,
+  requestHeaders: response.request?.headers,
+  responseHeaders: response.headers,
+  responseBody: response.body,
+  client: 'http package',
+);
 ```
 
-#### Generic HTTP Client / Chopper
+For a client which streams the response, log the request first and complete it later:
 
-If you have other HTTP clients, you can use the generic HTTP call interface:
+```dart
+final callId = chuck.logRequest(
+  method: 'POST',
+  uri: uri,
+  headers: headers,
+  body: requestBody,
+  client: 'My client',
+);
+
+try {
+  final response = await send();
+  chuck.logResponse(
+    callId,
+    statusCode: response.statusCode,
+    headers: response.headers,
+    body: response.body,
+  );
+} catch (error, stackTrace) {
+  chuck.logError(callId, error, stackTrace: stackTrace);
+}
+```
+
+Bodies larger than `maxBodySize` are truncated automatically, and generated call ids never collide
+with the Dio / `HttpClient` adapters.
+
+If you'd rather build the call yourself, the raw interface is still there:
 
 ```dart
 ChuckHttpCall chuckHttpCall = ChuckHttpCall(id);
@@ -257,14 +293,10 @@ Chuck supports saving and sharing HTTP call logs directly via the system share s
 
 ## Extensions
 
-You can use extensions to shorten your http and http client code:
+You can use extensions to shorten your http client code:
 
 ```dart
 import 'package:chuck_interceptor/chuck_interceptor.dart';
-
-// http package extension
-http.post(Uri.parse('https://jsonplaceholder.typicode.com/posts'), body: body)
-    .then((response) => chuck.onHttpResponse(response, body: body));
 
 // HttpClient extension
 httpClient.postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))

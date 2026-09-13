@@ -1,6 +1,6 @@
 # Chuck Interceptor - AI Agent Guide
 ## Project Overview
-Chuck Interceptor is a Flutter/Dart package for HTTP request/response inspection. It intercepts HTTP traffic from multiple client libraries (Dio, HttpClient, http package) and presents it in a debug UI with notifications, shake detection, and file export capabilities.
+Chuck Interceptor is a Flutter/Dart package for HTTP request/response inspection. It intercepts HTTP traffic from multiple client libraries (Dio, HttpClient, or any other client via the generic adapter) and presents it in a debug UI with notifications, shake detection, and file export capabilities.
 ## Architecture
 ### Core Components
 - **ChuckCore** (`lib/src/core/chuck_core.dart`): Central state manager using RxDart's `BehaviorSubject<List<ChuckHttpCall>>` for reactive updates. Handles notifications, shake detection, navigation, and FIFO memory management (default 1000 calls).
@@ -8,7 +8,8 @@ Chuck Interceptor is a Flutter/Dart package for HTTP request/response inspection
 - **Adapters**: Translate HTTP client-specific formats into `ChuckHttpCall` objects:
   - `ChuckDioInterceptor` extends Dio's `InterceptorsWrapper`
   - `ChuckHttpClientAdapter` handles dart:io `HttpClient`
-  - `ChuckHttpAdapter` ha  - `ChuckHttpAdapter` ha  - `### Request/Response Flow
+  - `ChuckGenericAdapter` (`lib/src/core/chuck_generic_adapter.dart`) is client agnostic: it builds calls from plain values (method, uri, headers, body, status code), so `package:http`, chopper, retrofit or custom clients work without Chuck depending on them. Ids it generates count down from `-1` to avoid colliding with `hashCode` based ids.
+### Request/Response Flow
 1. HTTP client adapter creates `ChuckHttpCall(requestId)` using `hashCode` as unique ID
 2. Request details populate `ChuckHttpRequest`, call added to `ChuckCore.callsSubject`
 3. Response/error updates matched by request ID using `_selectCall(requestId)`
@@ -24,7 +25,7 @@ Chuck Interceptor is a Flutter/Dart package for HTTP request/response inspection
 ```bash
 cd example
 flutter run
-# The example demonstrates all 3 HTTP client integrations
+# The example demonstrates the supported HTTP client integrations
 ```
 ### Testing
 ```bash
@@ -65,9 +66,14 @@ Interceptor hooks: `onRequest()`, `onResponse()`, `onError()`. FormData fields/f
 Two approaches:
 1. Extension method: `request.interceptWithChuck(chuck, body: ...)`
 2. Manual: `chuck.onHttpClientRequest(request)` → `chuck.onHttpClientResponse(response, request, body: ...)`
-### Http Package Integration
-```
-http.get(url).then((response) => chuck.onHttpResponse(response));
+### Generic (any client) Integration
+```dart
+// finished call, one step
+chuck.logHttpCall(method: 'GET', uri: uri, statusCode: 200, responseBody: body);
+// streaming: request first, response/error later
+final id = chuck.logRequest(method: 'POST', uri: uri, body: payload);
+chuck.logResponse(id, statusCode: 201, headers: headers, body: body);
+chuck.logError(id, error, stackTrace: stackTrace);
 ```
 ### Floating Button
 `ChuckButton` (in `lib/src/ui/widget/chuck_button.dart`) is a draggable overlay bubble rendered through `MaterialApp.builder` (`chuck.builder`). It listens to `ChuckCore.callsStream`, shows total call count, colours itself by traffic state (idle/in-flight/failed) and opens the inspector on tap. No native notification dependency is used anymore.

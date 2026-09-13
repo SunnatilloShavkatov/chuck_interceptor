@@ -1,3 +1,35 @@
+## 3.1.0
+
+* **Dropped the `http` (`package:http`) dependency**. Chuck no longer pulls `http` into consumers'
+  dependency graphs.
+  * Removed `Chuck.onHttpResponse(...)` and the internal `ChuckHttpAdapter`.
+  * Removed the `ChuckHttpExtensions` extension (`Future<Response>.interceptWithChuck(...)`).
+* **New client agnostic API** which replaces it and works with *any* http client, including
+  `package:http`, `chopper`, `retrofit` or a hand written one. It takes plain values (method, uri,
+  headers, body, status code), so Chuck does not need to depend on the client:
+  * `chuck.logHttpCall(...)` logs a finished request and response in one step.
+  * `chuck.logRequest(...)` returns a call id; `chuck.logResponse(id, ...)` and
+    `chuck.logError(id, ...)` complete it later, for clients which stream the response.
+  * `chuck.genericAdapter` exposes the same methods as `ChuckGenericAdapter` if you prefer wiring
+    the adapter yourself.
+  * Generated call ids count down from `-1`, so they never collide with the `hashCode` based ids
+    used by the Dio and `HttpClient` adapters.
+* Migration for `package:http` users:
+
+  ```dart
+  final response = await http.get(url);
+  chuck.logHttpCall(
+    method: response.request!.method,
+    uri: response.request!.url,
+    statusCode: response.statusCode,
+    requestHeaders: response.request?.headers,
+    responseHeaders: response.headers,
+    responseBody: response.body,
+    client: 'http package',
+  );
+  ```
+* Dio and `dart:io` `HttpClient` integrations are unchanged.
+
 ## 3.0.1
 
 * **Inspector no longer inherits the host app theme**. Chuck screens and dialogs now build their own

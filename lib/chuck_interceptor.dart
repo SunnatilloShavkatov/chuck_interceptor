@@ -2,15 +2,15 @@ import 'dart:io';
 
 import 'package:chuck_interceptor/src/core/chuck_core.dart';
 import 'package:chuck_interceptor/src/core/chuck_dio_interceptor.dart';
-import 'package:chuck_interceptor/src/core/chuck_http_adapter.dart';
+import 'package:chuck_interceptor/src/core/chuck_generic_adapter.dart';
 import 'package:chuck_interceptor/src/core/chuck_http_client_adapter.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_button.dart';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
 
 export 'package:chuck_interceptor/src/core/chuck_core.dart';
 export 'package:chuck_interceptor/src/core/chuck_dio_interceptor.dart';
+export 'package:chuck_interceptor/src/core/chuck_generic_adapter.dart';
 export 'package:chuck_interceptor/src/core/chuck_http_client_adapter.dart';
 export 'package:chuck_interceptor/src/core/chuck_http_client_extensions.dart';
 export 'package:chuck_interceptor/src/model/chuck_http_call.dart';
@@ -37,8 +37,8 @@ final class Chuck {
       maxCallsCount: maxCallsCount,
       showInspectorOnShake: showInspectorOnShake,
     );
-    _httpAdapter = ChuckHttpAdapter(_chuckCore);
     _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
+    _genericAdapter = ChuckGenericAdapter(_chuckCore);
   }
 
   /// Whether Chuck is enabled. When disabled, interceptors pass requests through with zero overhead.
@@ -58,7 +58,7 @@ final class Chuck {
   GlobalKey<NavigatorState>? _navigatorKey;
   late ChuckCore _chuckCore;
   late ChuckHttpClientAdapter _httpClientAdapter;
-  late ChuckHttpAdapter _httpAdapter;
+  late ChuckGenericAdapter _genericAdapter;
 
   /// Set custom navigation key. This will help if there's route library.
   void setNavigatorKey(GlobalKey<NavigatorState> navigatorKey) {
@@ -101,9 +101,90 @@ final class Chuck {
     await _httpClientAdapter.onResponse(response, request, body: body);
   }
 
-  /// Handle both request and response from http package
-  void onHttpResponse(http.Response response, {Object? body}) {
-    _httpAdapter.onResponse(response, body: body);
+  /// Client agnostic adapter. Use it to inspect traffic from any http client
+  /// Chuck has no built-in integration for (`package:http`, `chopper`,
+  /// `retrofit`, a custom client): it only needs plain values, so Chuck does
+  /// not depend on those packages.
+  ChuckGenericAdapter get genericAdapter => _genericAdapter;
+
+  /// Log a finished request and response in one step. Handy for clients which
+  /// only expose the call once it has completed, e.g. `package:http`:
+  ///
+  /// ```dart
+  /// final response = await http.get(url);
+  /// chuck.logHttpCall(
+  ///   method: response.request!.method,
+  ///   uri: response.request!.url,
+  ///   statusCode: response.statusCode,
+  ///   requestHeaders: response.request?.headers,
+  ///   responseHeaders: response.headers,
+  ///   responseBody: response.body,
+  ///   client: 'http package',
+  /// );
+  /// ```
+  ///
+  /// Returns the id of the created call, or `-1` when Chuck is disabled.
+  int logHttpCall({
+    required String method,
+    required Uri uri,
+    int? statusCode,
+    Map<String, dynamic>? requestHeaders,
+    Object? requestBody,
+    Map<String, dynamic>? queryParameters,
+    Map<String, String>? responseHeaders,
+    Object? responseBody,
+    Duration? duration,
+    Object? error,
+    StackTrace? stackTrace,
+    String client = 'Custom',
+    int? id,
+  }) => _genericAdapter.onCall(
+    method: method,
+    uri: uri,
+    statusCode: statusCode,
+    requestHeaders: requestHeaders,
+    requestBody: requestBody,
+    queryParameters: queryParameters,
+    responseHeaders: responseHeaders,
+    responseBody: responseBody,
+    duration: duration,
+    error: error,
+    stackTrace: stackTrace,
+    client: client,
+    id: id,
+  );
+
+  /// Log a request which has not finished yet and get back its call id. Pass
+  /// that id to [logResponse] or [logError] once the request completes. Use it
+  /// for streaming clients, where the response arrives later.
+  ///
+  /// Returns the id of the created call, or `-1` when Chuck is disabled.
+  int logRequest({
+    required String method,
+    required Uri uri,
+    Map<String, dynamic>? headers,
+    Object? body,
+    Map<String, dynamic>? queryParameters,
+    String client = 'Custom',
+    int? id,
+  }) => _genericAdapter.onRequest(
+    method: method,
+    uri: uri,
+    headers: headers,
+    body: body,
+    queryParameters: queryParameters,
+    client: client,
+    id: id,
+  );
+
+  /// Attach a response to the call created by [logRequest].
+  void logResponse(int callId, {int? statusCode, Map<String, String>? headers, Object? body}) {
+    _genericAdapter.onResponse(callId, statusCode: statusCode, headers: headers, body: body);
+  }
+
+  /// Attach an error to the call created by [logRequest].
+  void logError(int callId, Object error, {StackTrace? stackTrace}) {
+    _genericAdapter.onError(callId, error, stackTrace: stackTrace);
   }
 
   /// Opens Http calls inspector. This will navigate user to the new fullscreen

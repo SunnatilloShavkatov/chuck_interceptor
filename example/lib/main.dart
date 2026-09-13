@@ -82,6 +82,11 @@ class _MyAppState extends State<MyApp> {
               ' drag it to move it. You can also shake your device or click button below.',
             ),
             ElevatedButton(
+              onPressed: _runGenericClientRequests,
+              style: buttonStyle,
+              child: const Text('Run Generic (any client) Requests'),
+            ),
+            ElevatedButton(
               onPressed: _runHttpInspector,
               style: buttonStyle,
               child: const Text('Run HTTP Inspector'),
@@ -245,6 +250,58 @@ class _MyAppState extends State<MyApp> {
             body: responseBody,
           );
         });
+  }
+
+  /// Shows the client agnostic API. Chuck only needs plain values, so the same
+  /// calls work for `package:http`, chopper, retrofit or a custom client -
+  /// without Chuck depending on any of them.
+  Future<void> _runGenericClientRequests() async {
+    // 1. Finished call: log request and response in one step.
+    final uri = Uri.parse('https://jsonplaceholder.typicode.com/posts?_limit=2');
+    final request = await _httpClient.getUrl(uri);
+    final response = await request.close();
+    final responseBody = await utf8.decoder.bind(response).join();
+
+    _chuck.logHttpCall(
+      method: 'GET',
+      uri: uri,
+      statusCode: response.statusCode,
+      requestHeaders: <String, dynamic>{'accept': 'application/json'},
+      responseHeaders: <String, String>{
+        'content-type': response.headers.contentType?.toString() ?? '',
+      },
+      responseBody: responseBody,
+      client: 'Generic (one step)',
+    );
+
+    // 2. Streamed call: log the request first, complete it once it resolves.
+    final postUri = Uri.parse('https://jsonplaceholder.typicode.com/posts');
+    final postBody = '{"title":"foo","body":"bar","userId":1}';
+    final callId = _chuck.logRequest(
+      method: 'POST',
+      uri: postUri,
+      headers: <String, dynamic>{'content-type': 'application/json'},
+      body: postBody,
+      client: 'Generic (streamed)',
+    );
+
+    try {
+      final postRequest = await _httpClient.postUrl(postUri);
+      postRequest.write(postBody);
+      final postResponse = await postRequest.close();
+      final postResponseBody = await utf8.decoder.bind(postResponse).join();
+
+      _chuck.logResponse(
+        callId,
+        statusCode: postResponse.statusCode,
+        headers: <String, String>{
+          'content-type': postResponse.headers.contentType?.toString() ?? '',
+        },
+        body: postResponseBody,
+      );
+    } catch (error, stackTrace) {
+      _chuck.logError(callId, error, stackTrace: stackTrace);
+    }
   }
 
   void _runHttpInspector() {
