@@ -1,8 +1,8 @@
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 final class ChuckThemeData {
-  const ChuckThemeData._();
+  const new _();
 
   static ThemeData attach(ThemeData base, {ChuckThemeExtension? extension}) {
     final Brightness brightness = base.brightness;

@@ -2,13 +2,14 @@
 
 
 import 'dart:convert';
+
 import 'package:chuck_interceptor/src/helper/chuck_snack_bar_helper.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 class JsonViewer extends StatefulWidget {
-  const JsonViewer(this.jsonObj, {super.key});
+  const new(this.jsonObj, {super.key});
 
   final dynamic jsonObj;
 
@@ -39,7 +40,7 @@ class _JsonViewerState extends State<JsonViewer> {
 }
 
 class JsonObjectViewer extends StatefulWidget {
-  const JsonObjectViewer(this.jsonObj, {super.key, this.notRoot = false});
+  const new(this.jsonObj, {super.key, this.notRoot = false});
 
   final Map<String, dynamic> jsonObj;
   final bool notRoot;
@@ -302,7 +303,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
 }
 
 class JsonArrayViewer extends StatefulWidget {
-  const JsonArrayViewer(this.jsonArray, {super.key, this.notRoot = false});
+  const new(this.jsonArray, {super.key, this.notRoot = false});
 
   final List<dynamic> jsonArray;
 
@@ -508,7 +509,7 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
 }
 
 class CustomSnackBar extends SnackBar {
-  CustomSnackBar({super.key, required BuildContext context, String message = 'Copied to clipboard!'})
+  new({super.key, required BuildContext context, String message = 'Copied to clipboard!'})
     : super(
         backgroundColor: context.chuckTheme.inverseSurface,
         behavior: SnackBarBehavior.floating,

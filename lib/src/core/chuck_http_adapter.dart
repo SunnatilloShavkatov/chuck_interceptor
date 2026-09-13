@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class ChuckHttpAdapter {
   /// Creates Chuck http adapter
-  const ChuckHttpAdapter(this.chuckCore);
+  const new(this.chuckCore);
 
   /// ChuckCore instance
   final ChuckCore chuckCore;

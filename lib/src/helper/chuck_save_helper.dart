@@ -6,13 +6,13 @@ import 'package:chuck_interceptor/src/helper/chuck_alert_helper.dart';
 import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/utils/chuck_parser.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 sealed class ChuckSaveHelper {
-  const ChuckSaveHelper._();
+  const new _();
 
   /// JsonEncoder instance used to encode request and response headers
   static const JsonEncoder _encoder = JsonEncoder.withIndent('  ');

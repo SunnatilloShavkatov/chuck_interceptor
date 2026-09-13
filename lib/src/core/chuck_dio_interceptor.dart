@@ -11,7 +11,7 @@ import 'package:dio/dio.dart';
 
 class ChuckDioInterceptor extends InterceptorsWrapper {
   /// Creates dio interceptor
-  ChuckDioInterceptor(this.chuckCore);
+  new(this.chuckCore);
 
   /// ChuckCore instance
   final ChuckCore chuckCore;

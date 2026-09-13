@@ -10,10 +10,10 @@ import 'package:chuck_interceptor/src/theme/chuck_theme_data.dart';
 import 'package:chuck_interceptor/src/ui/page/chuck_call_details_screen.dart';
 import 'package:chuck_interceptor/src/ui/page/chuck_stats_screen.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_list_item_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChuckCallsListScreen extends StatefulWidget {
-  const ChuckCallsListScreen(this._chuckCore, {super.key});
+  const new(this._chuckCore, {super.key});
 
   final ChuckCore _chuckCore;
 
@@ -22,7 +22,7 @@ class ChuckCallsListScreen extends StatefulWidget {
 }
 
 class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
-  _ChuckCallsListScreenState() {
+  new() {
     _menuItems
       ..add(const ChuckMenuItem('Sort', Icons.sort))
       ..add(const ChuckMenuItem('Delete', Icons.delete))

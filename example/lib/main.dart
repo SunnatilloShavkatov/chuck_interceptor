@@ -2,9 +2,10 @@
 
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:chuck_interceptor/chuck_interceptor.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() => runApp(const MyApp());
@@ -51,6 +52,9 @@ class _MyAppState extends State<MyApp> {
         elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
       ),
       navigatorKey: _chuck.navigatorKey,
+      // Renders the floating Chuck button above the whole app. Tap it to open
+      // the inspector, drag it to move it out of the way.
+      builder: _chuck.builder,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(title: const Text('Chuck HTTP Inspector - Example')),
@@ -73,8 +77,9 @@ class _MyAppState extends State<MyApp> {
             ),
             const SizedBox(height: 24),
             _getTextWidget(
-              'After clicking on buttons above, you should receive notification.'
-              ' Click on it to show inspector. You can also shake your device or click button below.',
+              'After clicking on buttons above, the floating Chuck button in the corner'
+              ' shows the number of intercepted calls. Tap it to open the inspector,'
+              ' drag it to move it. You can also shake your device or click button below.',
             ),
             ElevatedButton(
               onPressed: _runHttpInspector,

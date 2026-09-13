@@ -20,7 +20,7 @@ and [Chucker](https://github.com/ChuckerTeam/chucker).
 ✔️ Inspector UI for viewing HTTP calls  
 ✔️ Save HTTP calls to file  
 ✔️ Statistics  
-✔️ Notification on HTTP call  
+✔️ Floating inspector button with live call counter  
 ✔️ Support for top used HTTP clients in Dart  
 ✔️ Enhanced error handling with comprehensive recovery  
 ✔️ Shake to open inspector  
@@ -35,7 +35,7 @@ and [Chucker](https://github.com/ChuckerTeam/chucker).
 
 ```yaml
 dependencies:
-  chuck_interceptor: ^2.6.2
+  chuck_interceptor: ^3.0.0
 ```
 
 2. Install it
@@ -74,7 +74,7 @@ You can use also your navigator key in Chuck:
 
 ```
 
-Chuck chuck = Chuck(showNotification: true, navigatorKey: yourNavigatorKeyHere);
+Chuck chuck = Chuck(navigatorKey: yourNavigatorKeyHere);
 ```
 
 If you need to pass navigatorKey lazily, you can use:
@@ -93,16 +93,8 @@ You can enable/disable Chuck dynamically (e.g. disable in production builds for 
 ```dart
 Chuck chuck = Chuck(
   enabled: kDebugMode, // Completely short-circuits in production
-  showNotification: true,
   maxBodySize: 1024 * 1024, // 1 MB max payload body size
 );
-```
-
-You can set `showNotification` in Chuck constructor to show notification. Clicking on this
-notification will open inspector.
-
-```dart
-Chuck chuck = Chuck(showNotification: true);
 ```
 
 You can set `showInspectorOnShake` in Chuck constructor to open inspector by shaking your device (default disabled):
@@ -134,13 +126,6 @@ MaterialApp(
 );
 ```
 
-If you want to pass another notification icon, you can use `notificationIcon` parameter. Default
-value is `@mipmap/ic_launcher`.
-
-```dart
-Chuck chuck = Chuck(notificationIcon: "myNotificationIconResourceName");
-```
-
 If you want to limit max numbers of HTTP calls saved in memory, you may use `maxCallsCount`
 parameter (default is 1000).
 
@@ -153,6 +138,61 @@ the parameter is set to null, the Directionality of the app will be used.
 
 ```dart
 Chuck chuck = Chuck(directionality: TextDirection.ltr);
+```
+
+### Floating inspector button
+
+Chuck ships with `ChuckButton` — a draggable floating bubble which shows how many HTTP calls were
+intercepted and opens the inspector when tapped. It replaces the local notification used by Chuck
+`2.x`, so the package no longer depends on `flutter_local_notifications` (no notification
+permission, no notification channel setup, smaller binary).
+
+The easiest way to use it is `MaterialApp.builder`:
+
+```dart
+MaterialApp(
+  navigatorKey: chuck.navigatorKey,
+  builder: chuck.builder,
+  home: const HomeScreen(),
+);
+```
+
+The bubble colour reflects the state of intercepted traffic: primary colour by default, orange while
+requests are in flight, red when at least one call failed. Counts above 999 are shortened to `999+`.
+
+If you need more control, use the widget directly:
+
+```dart
+MaterialApp(
+  navigatorKey: chuck.navigatorKey,
+  builder: (context, child) => ChuckButton(
+    chuckCore: chuck.core,
+    visible: kDebugMode,                // render the button only in debug builds
+    alignment: Alignment.bottomLeft,    // start position
+    padding: const EdgeInsets.all(24),  // distance from screen edges
+    draggable: true,                    // allow user to move the button
+    hideWhenEmpty: true,                // hide until the first call is intercepted
+    child: child,
+  ),
+  home: const HomeScreen(),
+);
+```
+
+The button is hidden automatically when Chuck is disabled (`Chuck(enabled: false)`).
+
+If you prefer your own UI, listen to the calls stream and build whatever you want:
+
+```dart
+StreamBuilder<List<ChuckHttpCall>>(
+  stream: chuck.callsStream,
+  builder: (context, snapshot) => Badge(
+    label: Text('${snapshot.data?.length ?? 0}'),
+    child: IconButton(
+      icon: const Icon(Icons.http),
+      onPressed: chuck.showInspector,
+    ),
+  ),
+);
 ```
 
 ### HTTP Client configuration
@@ -205,7 +245,7 @@ chuck.addHttpCall(chuckHttpCall);
 
 ## Show inspector manually
 
-You may need that if you won't use shake or notification:
+You may need that if you won't use the floating button or shake:
 
 ```dart
 chuck.showInspector();

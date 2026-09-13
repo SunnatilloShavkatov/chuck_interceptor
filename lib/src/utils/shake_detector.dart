@@ -7,14 +7,14 @@ typedef PhoneShakeCallback = Null Function();
 
 /// ShakeDetector class for phone shake functionality
 class ShakeDetector {
-  ShakeDetector.waitForStart({
+  new waitForStart({
     this.onPhoneShake,
     this.shakeThresholdGravity = 2.7,
     this.shakeSlopTimeMS = 500,
     this.shakeCountResetTime = 3000,
   });
 
-  ShakeDetector.autoStart({
+  new autoStart({
     this.onPhoneShake,
     this.shakeThresholdGravity = 2.7,
     this.shakeSlopTimeMS = 500,

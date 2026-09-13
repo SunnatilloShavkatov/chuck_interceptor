@@ -9,11 +9,11 @@ import 'package:chuck_interceptor/src/ui/widget/chuck_call_overview_widget.dart'
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_request_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_response_preview_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_response_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ChuckCallDetailsScreen extends StatefulWidget {
-  const ChuckCallDetailsScreen(this.call, this.core, {super.key});
+  const new(this.call, this.core, {super.key});
 
   final ChuckHttpCall call;
   final ChuckCore core;

@@ -5,7 +5,7 @@ import 'package:chuck_interceptor/src/core/chuck_dio_interceptor.dart';
 import 'package:chuck_interceptor/src/core/chuck_http_adapter.dart';
 import 'package:chuck_interceptor/src/core/chuck_http_client_adapter.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
-import 'package:flutter/material.dart';
+import 'package:chuck_interceptor/src/ui/widget/chuck_button.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,30 +18,27 @@ export 'package:chuck_interceptor/src/model/chuck_http_request.dart';
 export 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 export 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 export 'package:chuck_interceptor/src/theme/chuck_theme_data.dart';
+export 'package:chuck_interceptor/src/ui/widget/chuck_button.dart';
 
 final class Chuck {
   /// Creates Chuck instance.
-  Chuck({
+  new({
     GlobalKey<NavigatorState>? navigatorKey,
-    this.showNotification = true,
-    this.showInspectorOnShake = false,
-    this.notificationIcon = '@mipmap/ic_launcher',
-    this.maxCallsCount = 1000,
     this.enabled = true,
+    this.maxCallsCount = 1000,
     this.maxBodySize = 1024 * 1024,
+    this.showInspectorOnShake = false,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
     _chuckCore = ChuckCore(
       _navigatorKey,
-      maxCallsCount: maxCallsCount,
-      showNotification: showNotification,
-      notificationIcon: notificationIcon,
-      showInspectorOnShake: showInspectorOnShake,
       enabled: enabled,
       maxBodySize: maxBodySize,
+      maxCallsCount: maxCallsCount,
+      showInspectorOnShake: showInspectorOnShake,
     );
-    _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
     _httpAdapter = ChuckHttpAdapter(_chuckCore);
+    _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
   }
 
   /// Whether Chuck is enabled. When disabled, interceptors pass requests through with zero overhead.
@@ -50,16 +47,9 @@ final class Chuck {
   /// Maximum size of request/response body in bytes to store in memory (default: 256 KB)
   final int maxBodySize;
 
-  /// Should user be notified with notification if there's new request catched
-  /// by Chuck
-  final bool showNotification;
-
   /// Should inspector be opened on device shake (works only with physical
   /// with sensors)
   final bool showInspectorOnShake;
-
-  /// Icon url for notification
-  final String notificationIcon;
 
   ///Max number of calls that are stored in memory. When count is reached, FIFO
   ///method queue will be used to remove elements.
@@ -78,6 +68,25 @@ final class Chuck {
 
   /// Get currently used navigation key
   GlobalKey<NavigatorState>? get navigatorKey => _navigatorKey;
+
+  /// Core instance which stores intercepted calls. Useful when building custom
+  /// UI on top of Chuck, e.g. your own inspector entry point.
+  ChuckCore get core => _chuckCore;
+
+  /// Reactive stream of all intercepted http calls.
+  Stream<List<ChuckHttpCall>> get callsStream => _chuckCore.callsStream;
+
+  /// Builder which renders floating [ChuckButton] above the application. Pass
+  /// it directly to `MaterialApp.builder` to get a button which opens the
+  /// inspector:
+  ///
+  /// ```dart
+  /// MaterialApp(
+  ///   navigatorKey: chuck.navigatorKey,
+  ///   builder: chuck.builder,
+  /// );
+  /// ```
+  Widget builder(BuildContext context, Widget? child) => ChuckButton(chuckCore: _chuckCore, child: child);
 
   /// Get Dio interceptor which should be applied to Dio instance.
   ChuckDioInterceptor get dioInterceptor => ChuckDioInterceptor(_chuckCore);

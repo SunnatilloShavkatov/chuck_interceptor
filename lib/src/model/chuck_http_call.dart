@@ -3,7 +3,7 @@ import 'package:chuck_interceptor/src/model/chuck_http_request.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 
 class ChuckHttpCall {
-  ChuckHttpCall(this.id) {
+  new(this.id) {
     loading = true;
     createdTime = DateTime.now();
   }

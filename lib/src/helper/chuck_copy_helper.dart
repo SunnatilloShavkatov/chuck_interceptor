@@ -1,10 +1,10 @@
 import 'package:chuck_interceptor/src/helper/chuck_snack_bar_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 final class ChuckCopyHelper {
-  const ChuckCopyHelper._();
+  const new _();
 
   static void showCopyMenu(BuildContext context, ChuckHttpCall call) {
     final RenderBox renderBox = context.findRenderObject()! as RenderBox;

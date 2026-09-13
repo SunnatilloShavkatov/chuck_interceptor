@@ -1,3 +1,23 @@
+## 3.0.0
+
+* **Breaking: removed `flutter_local_notifications`**. Chuck no longer ships a native notification
+  dependency, which removes the notification permission, the notification channel setup and a large
+  chunk of native code from the final APK/IPA.
+  * Removed `Chuck(showNotification: ...)` and `Chuck(notificationIcon: ...)` parameters — delete
+    them from your `Chuck(...)` call.
+  * Same for `ChuckCore(showNotification: ..., notificationIcon: ...)`.
+* **New `ChuckButton`**: draggable floating button which shows the number of intercepted calls and
+  opens the inspector on tap. It replaces the notification as the default way of opening Chuck.
+  * Use `builder: chuck.builder` in `MaterialApp` for the default placement, or build
+    `ChuckButton(chuckCore: chuck.core, child: child)` yourself to customise `visible`, `alignment`,
+    `padding`, `draggable` and `hideWhenEmpty`.
+  * Button colour reflects traffic state (idle / in flight / failed) and it is hidden automatically
+    when `enabled: false` or while the inspector is open.
+* Added `Chuck.core`, `Chuck.callsStream` and `ChuckCore.callsStream` / `ChuckCore.isInspectorOpened`
+  so a custom inspector entry point can be built without touching internals.
+* Raised the required environment to Dart `>=3.13.0` and Flutter `>=3.47.0`; the example app now
+  uses the same constraints.
+
 ## 2.6.2
 
 * Fixed `No ScaffoldMessenger widget found` crash when tapping copy buttons (request/response body, headers, error, stack trace, JSON viewer, cURL) inside apps whose widget tree does not expose a `ScaffoldMessenger` above Chuck's screens.

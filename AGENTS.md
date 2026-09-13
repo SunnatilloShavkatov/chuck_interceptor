@@ -66,11 +66,11 @@ Two approaches:
 1. Extension method: `request.interceptWithChuck(chuck, body: ...)`
 2. Manual: `chuck.onHttpClientRequest(request)` → `chuck.onHttpClientResponse(response, request, body: ...)`
 ### Http Package Integration
-```dart
+```
 http.get(url).then((response) => chuck.onHttpResponse(response));
 ```
-### Notification System
-Uses `flutter_local_notifications`. Android requires notification icon resource (`notificationIcon` parameter). Notification shows call counts by status category (loading/success/redirect/error).
+### Floating Button
+`ChuckButton` (in `lib/src/ui/widget/chuck_button.dart`) is a draggable overlay bubble rendered through `MaterialApp.builder` (`chuck.builder`). It listens to `ChuckCore.callsStream`, shows total call count, colours itself by traffic state (idle/in-flight/failed) and opens the inspector on tap. No native notification dependency is used anymore.
 ### Shake Detection
 `ShakeDetector` (in `lib/src/utils/shake_detector.dart`) uses accelerometer. Only works on physical devices with sensors. Threshold: 5G by default.
 ## Common Gotchas

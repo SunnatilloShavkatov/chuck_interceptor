@@ -4,7 +4,7 @@ import 'package:chuck_interceptor/src/model/chuck_form_data_file.dart';
 import 'package:chuck_interceptor/src/model/chuck_from_data_field.dart';
 
 class ChuckHttpRequest {
-  ChuckHttpRequest({
+  new({
     this.size = 0,
     DateTime? time,
     Map<String, dynamic>? headers,

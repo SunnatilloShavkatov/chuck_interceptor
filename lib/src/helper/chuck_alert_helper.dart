@@ -1,9 +1,9 @@
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme_data.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 final class ChuckAlertHelper {
-  const ChuckAlertHelper._();
+  const new _();
 
   ///Helper method used to open alarm with given title and description.
   static void showAlert(

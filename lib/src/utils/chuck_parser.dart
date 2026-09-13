@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 sealed class ChuckParser {
-  const ChuckParser._();
+  const new _();
 
   static const String _emptyBody = 'Body is empty';
   static const String _unknownContentType = 'Unknown';

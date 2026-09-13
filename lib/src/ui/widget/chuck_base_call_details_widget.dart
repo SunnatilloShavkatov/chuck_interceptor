@@ -1,11 +1,12 @@
 
 import 'dart:convert';
+
 import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/src/helper/chuck_snack_bar_helper.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/utils/chuck_parser.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 abstract class ChuckBaseCallDetailsWidgetState<T extends StatefulWidget> extends State<T> {
   final JsonEncoder encoder = const JsonEncoder.withIndent('  ');

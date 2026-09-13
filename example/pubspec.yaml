@@ -4,20 +4,21 @@ publish_to: "none"
 description: "Demonstrates how to use the Chuck Interceptor plugin."
 
 environment:
-  sdk: ">=3.11.0 <4.0.0"
-  flutter: ">=3.41.0"
+  sdk: ">=3.13.0 <4.0.0"
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
     sdk: flutter
   dio: ^5.11.1
+  material_ui: ^1.2.0
   path_provider: ^2.1.6
   connectivity_plus: ^7.3.1
   chuck_interceptor:
     path: ../
 
 dev_dependencies:
-  analysis_lints: ^1.0.9
+  analysis_lints: ^1.1.0
 
 flutter:
 

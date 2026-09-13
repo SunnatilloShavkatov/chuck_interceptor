@@ -2,10 +2,10 @@ import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/src/helper/chuck_copy_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChuckCallListItemWidget extends StatelessWidget {
-  const ChuckCallListItemWidget(this.call, this.itemClickAction, {super.key});
+  const new(this.call, this.itemClickAction, {super.key});
 
   final ChuckHttpCall call;
   final void Function(ChuckHttpCall) itemClickAction;

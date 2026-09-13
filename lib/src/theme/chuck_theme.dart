@@ -1,9 +1,9 @@
 import 'package:chuck_interceptor/src/utils/chuck_constants.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 @immutable
 final class ChuckThemeExtension extends ThemeExtension<ChuckThemeExtension> {
-  const ChuckThemeExtension({
+  const new({
     required this.background,
     required this.surface,
     required this.surfaceBorder,
@@ -34,7 +34,7 @@ final class ChuckThemeExtension extends ThemeExtension<ChuckThemeExtension> {
     required this.jsonNullColor,
   });
 
-  factory ChuckThemeExtension.fallback(Brightness brightness) => brightness == Brightness.dark ? dark : light;
+  factory fallback(Brightness brightness) => brightness == Brightness.dark ? dark : light;
 
   final Color background;
   final Color surface;

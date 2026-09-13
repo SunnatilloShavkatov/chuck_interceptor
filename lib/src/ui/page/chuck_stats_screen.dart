@@ -3,10 +3,10 @@ import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme_data.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChuckStatsScreen extends StatelessWidget {
-  const ChuckStatsScreen(this.chuckCore, {super.key});
+  const new(this.chuckCore, {super.key});
 
   final ChuckCore chuckCore;
 

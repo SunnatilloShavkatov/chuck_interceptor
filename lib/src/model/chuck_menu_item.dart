@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChuckMenuItem {
-  const ChuckMenuItem(this.title, this.iconData);
+  const new(this.title, this.iconData);
 
   final String title;
   final IconData iconData;

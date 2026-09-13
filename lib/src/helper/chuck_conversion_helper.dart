@@ -1,5 +1,5 @@
 final class ChuckConversionHelper {
-  const ChuckConversionHelper._();
+  const new _();
 
   static const int _kilobyteAsByte = 1000;
   static const int _megabyteAsByte = 1000000;

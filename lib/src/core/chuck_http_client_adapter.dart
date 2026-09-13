@@ -7,7 +7,7 @@ import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 
 class ChuckHttpClientAdapter {
   /// Creates Chuck http client adapter
-  const ChuckHttpClientAdapter(this.chuckCore);
+  const new(this.chuckCore);
 
   /// ChuckCore instance
   final ChuckCore chuckCore;

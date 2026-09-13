@@ -4,8 +4,8 @@ import 'package:chuck_interceptor/src/model/chuck_http_error.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_request.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('ChuckCore Tests', () {
@@ -14,9 +14,7 @@ void main() {
     setUp(() {
       chuckCore = ChuckCore(
         GlobalKey<NavigatorState>(),
-        showNotification: false, // Disable notifications for testing
         showInspectorOnShake: false,
-        notificationIcon: '@mipmap/ic_launcher',
         maxCallsCount: 5, // Small limit for testing
       );
     });
@@ -62,7 +60,9 @@ void main() {
       // Assert
       expect(chuckCore.callsSubject.value.length, equals(5));
       // Should contain the 5 most recent calls (2, 3, 4, 5, 6)
-      final callIds = chuckCore.callsSubject.value.map((call) => call.id).toList();
+      final callIds = chuckCore.callsSubject.value
+          .map((call) => call.id)
+          .toList();
       expect(callIds, containsAll([2, 3, 4, 5, 6]));
       expect(callIds, isNot(contains(0))); // Oldest call should be removed
     });
@@ -110,7 +110,9 @@ void main() {
       chuckCore.addCall(call);
 
       // Act
-      final error = ChuckHttpError<Exception>(error: Exception('Network timeout'));
+      final error = ChuckHttpError<Exception>(
+        error: Exception('Network timeout'),
+      );
       chuckCore.addError(error, 1);
 
       // Assert
@@ -124,9 +126,7 @@ void main() {
       final disabledCore = ChuckCore(
         GlobalKey<NavigatorState>(),
         enabled: false,
-        showNotification: false,
         showInspectorOnShake: false,
-        notificationIcon: '@mipmap/ic_launcher',
         maxCallsCount: 10,
       );
 
@@ -146,9 +146,7 @@ void main() {
     test('should maintain FIFO order when exceeding maxCallsCount', () {
       final limitedCore = ChuckCore(
         GlobalKey<NavigatorState>(),
-        showNotification: false,
         showInspectorOnShake: false,
-        notificationIcon: '@mipmap/ic_launcher',
         maxCallsCount: 3,
       );
 
@@ -157,7 +155,10 @@ void main() {
       }
 
       expect(limitedCore.callsSubject.value.length, equals(3));
-      expect(limitedCore.callsSubject.value.map((c) => c.id).toList(), equals([3, 4, 5]));
+      expect(
+        limitedCore.callsSubject.value.map((c) => c.id).toList(),
+        equals([3, 4, 5]),
+      );
 
       limitedCore.dispose();
     });

@@ -7,15 +7,13 @@ import 'package:chuck_interceptor/src/model/chuck_http_error.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/src/ui/page/chuck_calls_list_screen.dart';
 import 'package:chuck_interceptor/src/utils/shake_detector.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Core class that manages HTTP call interception, storage, and UI navigation.
 ///
 /// This class provides the main functionality for:
 /// - Intercepting and storing HTTP requests/responses
-/// - Managing notifications for new HTTP calls
 /// - Handling shake-to-open functionality
 /// - Memory management with configurable call limits
 /// - Navigation to the inspector UI
@@ -24,19 +22,13 @@ import 'package:rxdart/rxdart.dart';
 /// ensuring that UI components automatically update when new HTTP calls are added.
 class ChuckCore {
   /// Creates Chuck core instance
-  ChuckCore(
+  new(
     this.navigatorKey, {
-    required this.showNotification,
     required this.showInspectorOnShake,
-    required this.notificationIcon,
     required this.maxCallsCount,
     this.enabled = true,
     this.maxBodySize = 1024 * 1024,
   }) {
-    if (enabled && showNotification) {
-      _initializeNotificationsPlugin();
-      _callsSubscription = callsSubject.listen((_) => _onCallsChanged());
-    }
     if (enabled && showInspectorOnShake) {
       _shakeDetector = ShakeDetector.autoStart(
         onPhoneShake: () {
@@ -53,9 +45,6 @@ class ChuckCore {
   /// Maximum size of request/response body in bytes to store in memory (default: 256 KB)
   final int maxBodySize;
 
-  /// Whether to show notifications when new HTTP requests are intercepted
-  final bool showNotification;
-
   /// Whether to open the inspector when the device is shaken (physical devices only)
   final bool showInspectorOnShake;
 
@@ -64,72 +53,25 @@ class ChuckCore {
   /// to receive the current value immediately
   final BehaviorSubject<List<ChuckHttpCall>> callsSubject = BehaviorSubject.seeded([]);
 
-  /// Resource name for the notification icon (Android only)
-  final String notificationIcon;
-
   /// Maximum number of HTTP calls to store in memory
   /// When this limit is reached, the oldest calls are removed using FIFO policy
   final int maxCallsCount;
 
-  late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   GlobalKey<NavigatorState>? navigatorKey;
-  bool _isInspectorOpened = false;
   ShakeDetector? _shakeDetector;
-  StreamSubscription<dynamic>? _callsSubscription;
-  Timer? _notificationDebounceTimer;
-  String? _notificationMessage;
-  String? _notificationMessageShown;
-  bool _notificationProcessing = false;
+
+  /// Whether the inspector screen is currently on top of the navigation stack.
+  /// Listenable so UI (e.g. the floating Chuck button) can hide itself while it is open.
+  final ValueNotifier<bool> inspectorOpened = ValueNotifier(false);
+
+  /// Reactive stream of all intercepted HTTP calls.
+  Stream<List<ChuckHttpCall>> get callsStream => callsSubject.stream;
 
   /// Dispose subjects and subscriptions
   void dispose() {
-    _notificationDebounceTimer?.cancel();
     unawaited(callsSubject.close());
     _shakeDetector?.stopListening();
-    if (_callsSubscription != null) {
-      unawaited(_callsSubscription!.cancel());
-    }
-  }
-
-  void _initializeNotificationsPlugin() {
-    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid = AndroidInitializationSettings(notificationIcon);
-    const initializationSettingsIOS = DarwinInitializationSettings();
-    final initializationSettings = InitializationSettings(
-      iOS: initializationSettingsIOS,
-      macOS: initializationSettingsIOS,
-      android: initializationSettingsAndroid,
-      linux: const LinuxInitializationSettings(defaultActionName: 'default'),
-    );
-    unawaited(
-      _flutterLocalNotificationsPlugin.initialize(
-        settings: initializationSettings,
-        onDidReceiveNotificationResponse: _onSelectedNotification,
-      ),
-    );
-  }
-
-  void _onCallsChanged() {
-    if (!enabled || !showNotification || _isInspectorOpened || callsSubject.value.isEmpty) {
-      return;
-    }
-    _notificationDebounceTimer?.cancel();
-    _notificationDebounceTimer = Timer(const Duration(milliseconds: 350), _showDebouncedNotification);
-  }
-
-  Future<void> _showDebouncedNotification() async {
-    if (!enabled || !showNotification || _isInspectorOpened || callsSubject.value.isEmpty || _notificationProcessing) {
-      return;
-    }
-    _notificationMessage = _getNotificationMessage();
-    if (_notificationMessage != _notificationMessageShown) {
-      await _showLocalNotification();
-    }
-  }
-
-  Future<void> _onSelectedNotification(NotificationResponse payload) async {
-    navigateToCallListScreen();
-    return;
+    inspectorOpened.dispose();
   }
 
   /// Opens Http calls inspector. This will navigate user to the new fullscreen
@@ -140,97 +82,17 @@ class ChuckCore {
       ChuckUtils.log('Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application');
       return;
     }
-    if (!_isInspectorOpened) {
-      _isInspectorOpened = true;
+    if (!inspectorOpened.value) {
+      inspectorOpened.value = true;
       Navigator.push<void>(
         context,
         MaterialPageRoute(builder: (context) => ChuckCallsListScreen(this)),
-      ).then((onValue) => _isInspectorOpened = false);
+      ).then((_) => inspectorOpened.value = false);
     }
   }
 
   /// Get context from navigator key. Used to open inspector route.
   BuildContext? getContext() => navigatorKey?.currentState?.overlay?.context;
-
-  String _getNotificationMessage() {
-    final List<ChuckHttpCall> calls = callsSubject.value;
-    final int successCalls = calls
-        .where((call) => call.response != null && call.response!.status! >= 200 && call.response!.status! < 300)
-        .toList()
-        .length;
-
-    final int redirectCalls = calls
-        .where((call) => call.response != null && call.response!.status! >= 300 && call.response!.status! < 400)
-        .toList()
-        .length;
-
-    final int errorCalls = calls
-        .where((call) => call.response != null && call.response!.status! >= 400 && call.response!.status! < 600)
-        .toList()
-        .length;
-
-    final int loadingCalls = calls.where((call) => call.loading).toList().length;
-
-    final StringBuffer notificationsMessage = StringBuffer();
-    if (loadingCalls > 0) {
-      notificationsMessage
-        ..write('Loading: $loadingCalls')
-        ..write(' | ');
-    }
-    if (successCalls > 0) {
-      notificationsMessage
-        ..write('Success: $successCalls')
-        ..write(' | ');
-    }
-    if (redirectCalls > 0) {
-      notificationsMessage
-        ..write('Redirect: $redirectCalls')
-        ..write(' | ');
-    }
-    if (errorCalls > 0) {
-      notificationsMessage.write('Error: $errorCalls');
-    }
-    String notificationMessageString = notificationsMessage.toString();
-    if (notificationMessageString.endsWith(' | ')) {
-      notificationMessageString = notificationMessageString.substring(0, notificationMessageString.length - 3);
-    }
-
-    return notificationMessageString;
-  }
-
-  /// Show local notification with improved error handling
-  Future<void> _showLocalNotification() async {
-    try {
-      _notificationProcessing = true;
-      const channelId = 'Chuck';
-      const channelName = 'Chuck';
-      final androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        channelId,
-        channelName,
-        enableVibration: false,
-        playSound: false,
-        largeIcon: DrawableResourceAndroidBitmap(notificationIcon),
-      );
-      const iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentSound: false);
-      final platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics,
-      );
-      final String? message = _notificationMessage;
-      await _flutterLocalNotificationsPlugin.show(
-        id: 0,
-        title: 'Chuck (total: ${callsSubject.value.length} requests)',
-        body: message,
-        notificationDetails: platformChannelSpecifics,
-        payload: '',
-      );
-      _notificationMessageShown = message;
-    } catch (e) {
-      ChuckUtils.log('Error showing notification: $e');
-    } finally {
-      _notificationProcessing = false;
-    }
-  }
 
   /// Add Chuck http call to calls subject with optimized memory management
   void addCall(ChuckHttpCall call) {

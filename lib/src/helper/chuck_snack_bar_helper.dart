@@ -1,5 +1,5 @@
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shows Chuck snack bars without assuming that the host app provides a
 /// [ScaffoldMessenger] above Chuck's screens.
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 /// also be embedded by hosts. When no messenger is reachable the message is
 /// logged instead of throwing, so copy actions never crash the app.
 final class ChuckSnackBarHelper {
-  const ChuckSnackBarHelper._();
+  const new _();
 
   static void show(BuildContext context, String message, {Duration duration = const Duration(seconds: 2)}) {
     final messenger = ScaffoldMessenger.maybeOf(context);

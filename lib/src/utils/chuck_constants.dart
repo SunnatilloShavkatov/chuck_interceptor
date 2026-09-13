@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 final class ChuckConstants {
-  const ChuckConstants._();
+  const new _();
 
   static const Color red = Color(0xffff3f34);
   static const Color lightRed = Color(0xffff5e57);
