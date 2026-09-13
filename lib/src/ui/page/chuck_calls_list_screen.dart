@@ -40,7 +40,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
 
   @override
   Widget build(BuildContext context) => Theme(
-    data: ChuckThemeData.attach(Theme.of(context)),
+    data: ChuckThemeData.isolate(context),
     child: Builder(
       builder: (context) => ScaffoldMessenger(
         child: Scaffold(
@@ -388,7 +388,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
     showDialog<void>(
       context: context,
       builder: (BuildContext buildContext) => Theme(
-        data: ChuckThemeData.attach(Theme.of(context)),
+        data: ChuckThemeData.isolate(context),
         child: AlertDialog(
           title: const Text('Select filter'),
           content: StatefulBuilder(

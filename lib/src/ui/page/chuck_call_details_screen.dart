@@ -25,7 +25,7 @@ class ChuckCallDetailsScreen extends StatefulWidget {
 class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => Theme(
-    data: ChuckThemeData.attach(Theme.of(context)),
+    data: ChuckThemeData.isolate(context),
     child: StreamBuilder<List<ChuckHttpCall>>(
       stream: widget.core.callsSubject,
       initialData: [widget.call],

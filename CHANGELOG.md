@@ -1,3 +1,11 @@
+## 3.0.1
+
+* **Inspector no longer inherits the host app theme**. Chuck screens and dialogs now build their own
+  `ThemeData` (`ChuckThemeData.isolate` / `ChuckThemeData.buildTheme`), so the app's colors, fonts,
+  tab and button styling can't leak into the inspector. Only the brightness and an explicit
+  `ChuckThemeExtension` override are still taken from the surrounding app.
+* Fixed clipped tab labels ("Response") on the call details screen.
+
 ## 3.0.0
 
 * **Breaking: removed `flutter_local_notifications`**. Chuck no longer ships a native notification

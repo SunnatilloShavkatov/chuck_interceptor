@@ -12,7 +12,7 @@ class ChuckStatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Theme(
-    data: ChuckThemeData.attach(Theme.of(context)),
+    data: ChuckThemeData.isolate(context),
     child: Builder(
       builder: (context) {
         final theme = context.chuckTheme;

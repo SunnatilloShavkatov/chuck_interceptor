@@ -45,10 +45,7 @@ final class ChuckAlertHelper {
     showDialog<void>(
       context: context,
       builder: (BuildContext buildContext) => Theme(
-        data: ChuckThemeData.attach(
-          Theme.of(context).copyWith(brightness: resolvedBrightness),
-          extension: resolvedChuckTheme,
-        ),
+        data: ChuckThemeData.buildTheme(resolvedBrightness, extension: resolvedChuckTheme),
         child: AlertDialog(title: Text(title), content: Text(description), actions: actions),
       ),
     );
