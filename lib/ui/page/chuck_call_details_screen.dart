@@ -20,8 +20,7 @@ class ChuckCallDetailsScreen extends StatefulWidget {
   _ChuckCallDetailsScreenState createState() => _ChuckCallDetailsScreenState();
 }
 
-class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
-    with SingleTickerProviderStateMixin {
+class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with SingleTickerProviderStateMixin {
   ChuckHttpCall get call => widget.call;
 
   @override
@@ -66,12 +65,7 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen>
           foregroundColor: Colors.white,
           key: const Key('shareKey'),
           onPressed: () async {
-            SharePlus.instance.share(
-              ShareParams(
-                text: await _getSharableResponseString(),
-                subject: 'Request Details',
-              ),
-            );
+            SharePlus.instance.share(ShareParams(text: await _getSharableResponseString(), subject: 'Request Details'));
           },
           child: const Icon(Icons.share),
         ),

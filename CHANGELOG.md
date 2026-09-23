@@ -1,3 +1,14 @@
+## 2.4.0
+
+* **Breaking:** removed local notifications. The `showNotification` and `notificationIcon`
+  arguments of `Chuck` are gone. Open the inspector by shaking the device or by calling
+  `chuck.showInspector()`.
+* Removed the `flutter_local_notifications` and `permission_handler` dependencies. Logs are saved to
+  the app's own storage directory, which needs no runtime permission.
+* Replaced the deprecated `RadioListTile.groupValue`/`onChanged` with `RadioGroup` and
+  `Switch.activeColor` with `activeThumbColor`.
+* Example app moved to Gradle 8.14, AGP 8.11.1, Kotlin 2.2.20 and Java 17.
+
 ## 2.3.0
 
 * The cache box is now bounded. Previously every response and every error was appended to the box

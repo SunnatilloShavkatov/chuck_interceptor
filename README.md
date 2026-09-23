@@ -14,7 +14,6 @@ ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging htt
 ✔️ Inspector UI for viewing HTTP calls  
 ✔️ Save HTTP calls to file  
 ✔️ Statistics  
-✔️ Notification on HTTP call  
 ✔️ Support for top used HTTP clients in Dart  
 ✔️ Error handling  
 ✔️ Shake to open inspector  
@@ -26,7 +25,7 @@ ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging htt
 
 ```yaml
 dependencies:
-  chuck_interceptor: ^2.1.4
+  chuck_interceptor: ^2.4.0
 ```
 
 2. Install it
@@ -59,7 +58,7 @@ You need to add this navigator key in order to show inspector UI.
 You can use also your navigator key in Chuck:
 
 ```dart
-Chuck chuck = Chuck(showNotification: true, navigatorKey: yourNavigatorKeyHere);
+Chuck chuck = Chuck(navigatorKey: yourNavigatorKeyHere);
 ```
 
 If you need to pass navigatorKey lazily, you can use:
@@ -69,11 +68,6 @@ chuck.setNavigatorKey(yourNavigatorKeyHere);
 This is minimal configuration required to run Chuck. Can set optional settings in Chuck constructor, which are presented below. If you don't want to change anything, you can move to Http clients configuration.
 
 ### Additional settings
-
-You can set `showNotification` in Chuck constructor to show notification. Clicking on this notification will open inspector.
-```dart
-Chuck chuck = Chuck(..., showNotification: true);
-```
 
 You can set `showInspectorOnShake` in Chuck constructor to open inspector by shaking your device (default disabled):
 
@@ -85,11 +79,6 @@ If you want to use dark mode just add `darkTheme` flag:
 
 ```dart
 Chuck chuck = Chuck(..., darkTheme: true);
-```
-
-If you want to pass another notification icon, you can use `notificationIcon` parameter. Default value is @mipmap/ic_launcher.
-```dart
-Chuck chuck = Chuck(..., notificationIcon: "myNotificationIconResourceName");
 ```
 
 If you want to limit max numbers of HTTP calls saved in memory, you may use `maxCallsCount` parameter.
@@ -149,7 +138,7 @@ chuck.addHttpCall(ChuckHttpCall);
 
 ## Show inspector manually
 
-You may need that if you won't use shake or notification:
+You may need that if you won't use shake:
 
 ```dart
 chuck.showInspector();
@@ -157,11 +146,7 @@ chuck.showInspector();
 
 ## Saving calls
 
-Chuck supports saving logs to your mobile device storage. In order to make save feature works, you need to add in your Android application manifest:
-
-```xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-```
+Chuck supports saving logs to your app's storage directory. No extra permissions are required.
 
 ## Extensions
 You can use extensions to shorten your http and http client code. This is optional, but may improve your codebase.

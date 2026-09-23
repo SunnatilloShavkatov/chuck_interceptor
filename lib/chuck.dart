@@ -11,19 +11,12 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class Chuck {
-  /// Should user be notified with notification if there's new request catched
-  /// by Chuck
-  final bool showNotification;
-
   /// Should inspector be opened on device shake (works only with physical
   /// with sensors)
   final bool showInspectorOnShake;
 
   /// Should inspector use dark theme
   final bool darkTheme;
-
-  /// Icon url for notification
-  final String notificationIcon;
 
   ///Max number of calls that are stored in memory. When count is reached, FIFO
   ///method queue will be used to remove elements.
@@ -46,10 +39,8 @@ class Chuck {
   Chuck({
     GlobalKey<NavigatorState>? navigatorKey,
     this.cacheBox,
-    this.showNotification = true,
     this.showInspectorOnShake = false,
     this.darkTheme = false,
-    this.notificationIcon = "@mipmap/ic_launcher",
     this.maxCallsCount = 1000,
     this.maxCacheCount = 0,
     this.directionality,
@@ -62,8 +53,6 @@ class Chuck {
       maxCallsCount: maxCallsCount,
       maxCacheCount: maxCacheCount,
       directionality: directionality,
-      notificationIcon: notificationIcon,
-      showNotification: showNotification,
       showInspectorOnShake: showInspectorOnShake,
     );
     _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
@@ -92,11 +81,7 @@ class Chuck {
   }
 
   /// Handle response from HttpClient
-  void onHttpClientResponse(
-    HttpClientResponse response,
-    HttpClientRequest request, {
-    dynamic body,
-  }) {
+  void onHttpClientResponse(HttpClientResponse response, HttpClientRequest request, {dynamic body}) {
     _httpClientAdapter.onResponse(response, request, body: body);
   }
 

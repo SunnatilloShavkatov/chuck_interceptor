@@ -47,24 +47,14 @@ class ChuckHttpRequest {
       headers: json['headers'],
       body: json['body'],
       contentType: json['contentType'],
-      time: json['time'] != null
-          ? DateTime.parse(json['time'])
-          : DateTime.now(),
-      cookies: json['cookies'] != null
-          ? List<Cookie>.from(
-              json['cookies'].map((x) => Cookie("", "").fromJson(x)),
-            )
-          : [],
+      time: json['time'] != null ? DateTime.parse(json['time']) : DateTime.now(),
+      cookies: json['cookies'] != null ? List<Cookie>.from(json['cookies'].map((x) => Cookie("", "").fromJson(x))) : [],
       queryParameters: json['queryParameters'],
       formDataFiles: json['formDataFiles'] != null
-          ? List<ChuckFormDataFile>.from(
-              json['formDataFiles'].map((x) => ChuckFormDataFile.fromJson(x)),
-            )
+          ? List<ChuckFormDataFile>.from(json['formDataFiles'].map((x) => ChuckFormDataFile.fromJson(x)))
           : null,
       formDataFields: json['formDataFields'] != null
-          ? List<ChuckFormDataField>.from(
-              json['formDataFields'].map((x) => ChuckFormDataField.fromJson(x)),
-            )
+          ? List<ChuckFormDataField>.from(json['formDataFields'].map((x) => ChuckFormDataField.fromJson(x)))
           : null,
     );
   }

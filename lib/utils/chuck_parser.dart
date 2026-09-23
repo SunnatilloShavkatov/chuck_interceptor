@@ -34,8 +34,7 @@ class ChuckParser {
 
       var bodyContent = _emptyBody;
 
-      if (contentType == null ||
-          !contentType.toLowerCase().contains(_applicationJson)) {
+      if (contentType == null || !contentType.toLowerCase().contains(_applicationJson)) {
         final bodyTemp = body.toString();
 
         if (bodyTemp.isNotEmpty) {

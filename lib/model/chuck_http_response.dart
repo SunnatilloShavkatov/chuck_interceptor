@@ -1,11 +1,5 @@
 class ChuckHttpResponse {
-  ChuckHttpResponse({
-    int? status,
-    this.size = 0,
-    DateTime? time,
-    this.body,
-    this.headers,
-  }) {
+  ChuckHttpResponse({int? status, this.size = 0, DateTime? time, this.body, this.headers}) {
     if (time != null) this.time = time;
     if (status != null) this.status = status;
   }

@@ -19,12 +19,10 @@ class ChuckHiveCallDetailsScreen extends StatefulWidget {
   const ChuckHiveCallDetailsScreen(this.call, this.core);
 
   @override
-  _ChuckHiveCallDetailsScreenState createState() =>
-      _ChuckHiveCallDetailsScreenState();
+  _ChuckHiveCallDetailsScreenState createState() => _ChuckHiveCallDetailsScreenState();
 }
 
-class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
-    with SingleTickerProviderStateMixin {
+class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen> with SingleTickerProviderStateMixin {
   ChuckHttpCall get call => widget.call;
 
   @override
@@ -44,11 +42,8 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
         child: ValueListenableBuilder<Box<dynamic>>(
           valueListenable: widget.core.cacheBox!.listenable(),
           builder: (_, callsSnapshot, __) {
-            final List<ChuckHttpCall> calls = widget.core.cacheDecoder
-                .decodeCalls(callsSnapshot);
-            final bool callExists = calls.any(
-              (snapshotCall) => snapshotCall.id == widget.call.id,
-            );
+            final List<ChuckHttpCall> calls = widget.core.cacheDecoder.decodeCalls(callsSnapshot);
+            final bool callExists = calls.any((snapshotCall) => snapshotCall.id == widget.call.id);
             if (callExists) {
               return _buildMainWidget();
             } else {
@@ -69,12 +64,7 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
           foregroundColor: Colors.white,
           key: const Key('share_key'),
           onPressed: () async {
-            SharePlus.instance.share(
-              ShareParams(
-                text: await _getSharableResponseString(),
-                title: 'Request Details',
-              ),
-            );
+            SharePlus.instance.share(ShareParams(text: await _getSharableResponseString(), title: 'Request Details'));
           },
           child: const Icon(Icons.share),
         ),

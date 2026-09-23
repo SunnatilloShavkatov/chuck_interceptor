@@ -22,12 +22,10 @@ class ChuckCallsListScreen extends StatefulWidget {
   _ChuckCallsListScreenState createState() => _ChuckCallsListScreenState();
 }
 
-class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
-    with SingleTickerProviderStateMixin {
+class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> with SingleTickerProviderStateMixin {
   ChuckCore get chuckCore => widget._chuckCore;
   bool _searchEnabled = false;
-  final TextEditingController _queryTextEditingController =
-      TextEditingController();
+  final TextEditingController _queryTextEditingController = TextEditingController();
   final List<ChuckMenuItem> _menuItems = [];
   ChuckSortOption? _sortOption = ChuckSortOption.time;
   bool _sortAscending = false;
@@ -49,8 +47,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection:
-          widget._chuckCore.directionality ?? Directionality.of(context),
+      textDirection: widget._chuckCore.directionality ?? Directionality.of(context),
       child: Theme(
         data: ThemeData(brightness: widget._chuckCore.brightness),
         child: Scaffold(
@@ -81,10 +78,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
   }
 
   Widget _buildSearchButton() {
-    return IconButton(
-      icon: const Icon(Icons.search),
-      onPressed: _onSearchClicked,
-    );
+    return IconButton(icon: const Icon(Icons.search), onPressed: _onSearchClicked);
   }
 
   void _onSearchClicked() {
@@ -159,12 +153,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
         List<ChuckHttpCall> calls = snapshot.data ?? [];
         final String query = _queryTextEditingController.text.trim();
         if (query.isNotEmpty) {
-          calls = calls
-              .where(
-                (call) =>
-                    call.endpoint.toLowerCase().contains(query.toLowerCase()),
-              )
-              .toList();
+          calls = calls.where((call) => call.endpoint.toLowerCase().contains(query.toLowerCase())).toList();
         }
         if (calls.isNotEmpty) {
           return _buildCallsListWidget(calls);
@@ -181,9 +170,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
     }
     return ValueListenableBuilder<int>(
       valueListenable: chuckCore.maxCacheCountNotifier,
-      builder: (_, int maxCacheCount, __) => maxCacheCount > 0
-          ? _buildHiveCallsList()
-          : _buildCacheDisabledWidget(),
+      builder: (_, int maxCacheCount, __) => maxCacheCount > 0 ? _buildHiveCallsList() : _buildCacheDisabledWidget(),
     );
   }
 
@@ -192,17 +179,10 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
       valueListenable: chuckCore.cacheBox!.listenable(),
       builder: (_, snapshot, __) {
         // Final ordering is applied by _buildCallsListWidget from _sortOption.
-        List<ChuckHttpCall> calls = chuckCore.cacheDecoder.decodeCalls(
-          snapshot,
-        );
+        List<ChuckHttpCall> calls = chuckCore.cacheDecoder.decodeCalls(snapshot);
         final String query = _queryTextEditingController.text.trim();
         if (query.isNotEmpty) {
-          calls = calls
-              .where(
-                (call) =>
-                    call.endpoint.toLowerCase().contains(query.toLowerCase()),
-              )
-              .toList();
+          calls = calls.where((call) => call.endpoint.toLowerCase().contains(query.toLowerCase())).toList();
         }
         if (calls.isNotEmpty) {
           return _buildCallsListWidget(calls);
@@ -222,10 +202,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
           children: [
             Icon(Icons.error_outline, color: ChuckConstants.orange),
             const SizedBox(height: 6),
-            const Text(
-              "There are no calls to show",
-              style: TextStyle(fontSize: 18),
-            ),
+            const Text("There are no calls to show", style: TextStyle(fontSize: 18)),
             const SizedBox(height: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,11 +217,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
                   style: TextStyle(fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
-                Text(
-                  "• Check search filters",
-                  style: TextStyle(fontSize: 12),
-                  textAlign: TextAlign.center,
-                ),
+                Text("• Check search filters", style: TextStyle(fontSize: 12), textAlign: TextAlign.center),
               ],
             ),
           ],
@@ -258,66 +231,38 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
     switch (_sortOption) {
       case ChuckSortOption.time:
         if (_sortAscending) {
-          callsSorted.sort(
-            (call1, call2) => call1.createdTime.compareTo(call2.createdTime),
-          );
+          callsSorted.sort((call1, call2) => call1.createdTime.compareTo(call2.createdTime));
         } else {
-          callsSorted.sort(
-            (call1, call2) => call2.createdTime.compareTo(call1.createdTime),
-          );
+          callsSorted.sort((call1, call2) => call2.createdTime.compareTo(call1.createdTime));
         }
         break;
       case ChuckSortOption.responseTime:
         if (_sortAscending) {
           callsSorted.sort();
-          callsSorted.sort(
-            (call1, call2) =>
-                call1.response?.time.compareTo(call2.response!.time) ?? -1,
-          );
+          callsSorted.sort((call1, call2) => call1.response?.time.compareTo(call2.response!.time) ?? -1);
         } else {
-          callsSorted.sort(
-            (call1, call2) =>
-                call2.response?.time.compareTo(call1.response!.time) ?? -1,
-          );
+          callsSorted.sort((call1, call2) => call2.response?.time.compareTo(call1.response!.time) ?? -1);
         }
         break;
       case ChuckSortOption.responseCode:
         if (_sortAscending) {
-          callsSorted.sort(
-            (call1, call2) =>
-                call1.response?.status?.compareTo(call2.response!.status!) ??
-                -1,
-          );
+          callsSorted.sort((call1, call2) => call1.response?.status?.compareTo(call2.response!.status!) ?? -1);
         } else {
-          callsSorted.sort(
-            (call1, call2) =>
-                call2.response?.status?.compareTo(call1.response!.status!) ??
-                -1,
-          );
+          callsSorted.sort((call1, call2) => call2.response?.status?.compareTo(call1.response!.status!) ?? -1);
         }
         break;
       case ChuckSortOption.responseSize:
         if (_sortAscending) {
-          callsSorted.sort(
-            (call1, call2) =>
-                call1.response?.size.compareTo(call2.response!.size) ?? -1,
-          );
+          callsSorted.sort((call1, call2) => call1.response?.size.compareTo(call2.response!.size) ?? -1);
         } else {
-          callsSorted.sort(
-            (call1, call2) =>
-                call2.response?.size.compareTo(call1.response!.size) ?? -1,
-          );
+          callsSorted.sort((call1, call2) => call2.response?.size.compareTo(call1.response!.size) ?? -1);
         }
         break;
       case ChuckSortOption.endpoint:
         if (_sortAscending) {
-          callsSorted.sort(
-            (call1, call2) => call1.endpoint.compareTo(call2.endpoint),
-          );
+          callsSorted.sort((call1, call2) => call1.endpoint.compareTo(call2.endpoint));
         } else {
-          callsSorted.sort(
-            (call1, call2) => call2.endpoint.compareTo(call1.endpoint),
-          );
+          callsSorted.sort((call1, call2) => call2.endpoint.compareTo(call1.endpoint));
         }
         break;
       default:
@@ -329,8 +274,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
       itemBuilder: (context, index) {
         return ChuckCallListItemWidget(callsSorted[index], _onListItemClicked);
       },
-      separatorBuilder: (_, __) =>
-          const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
+      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
     );
   }
 
@@ -338,17 +282,12 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
     if (tabController.index == 0) {
       Navigator.push<void>(
         widget._chuckCore.getContext()!,
-        MaterialPageRoute(
-          builder: (context) => ChuckCallDetailsScreen(call, widget._chuckCore),
-        ),
+        MaterialPageRoute(builder: (context) => ChuckCallDetailsScreen(call, widget._chuckCore)),
       );
     } else {
       Navigator.push<void>(
         widget._chuckCore.getContext()!,
-        MaterialPageRoute(
-          builder: (context) =>
-              ChuckHiveCallDetailsScreen(call, widget._chuckCore),
-        ),
+        MaterialPageRoute(builder: (context) => ChuckHiveCallDetailsScreen(call, widget._chuckCore)),
       );
     }
   }
@@ -382,10 +321,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
           children: [
             Icon(Icons.storage, color: ChuckConstants.orange),
             const SizedBox(height: 6),
-            const Text(
-              "Caching is turned off",
-              style: TextStyle(fontSize: 18),
-            ),
+            const Text("Caching is turned off", style: TextStyle(fontSize: 18)),
             const SizedBox(height: 12),
             const Text(
               "Pick a cache size from the menu to keep http calls between "
@@ -394,10 +330,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
-            TextButton(
-              onPressed: _showCacheSizeDialog,
-              child: const Text("Set cache size"),
-            ),
+            TextButton(onPressed: _showCacheSizeDialog, child: const Text("Set cache size")),
           ],
         ),
       ),
@@ -415,23 +348,23 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
             title: const Text("Cache size"),
             content: StatefulBuilder(
               builder: (context, setState) {
-                return Wrap(
-                  children: [
-                    ...ChuckCore.cacheCountOptions.map(
-                      (int option) => RadioListTile<int>(
-                        title: Text(option == 0 ? "Off" : "$option calls"),
-                        value: option,
-                        groupValue: selected,
-                        onChanged: (int? value) {
-                          if (value != null) {
-                            setState(() {
-                              selected = value;
-                            });
-                          }
-                        },
+                return RadioGroup<int>(
+                  groupValue: selected,
+                  onChanged: (int? value) {
+                    if (value != null) {
+                      setState(() {
+                        selected = value;
+                      });
+                    }
+                  },
+                  child: Wrap(
+                    children: [
+                      ...ChuckCore.cacheCountOptions.map(
+                        (int option) =>
+                            RadioListTile<int>(title: Text(option == 0 ? "Off" : "$option calls"), value: option),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
             ),
@@ -459,9 +392,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
   void _showStatsScreen() {
     Navigator.push<void>(
       chuckCore.getContext()!,
-      MaterialPageRoute(
-        builder: (context) => ChuckStatsScreen(widget._chuckCore),
-      ),
+      MaterialPageRoute(builder: (context) => ChuckStatsScreen(widget._chuckCore)),
     );
   }
 
@@ -483,41 +414,38 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen>
             title: const Text("Select filter"),
             content: StatefulBuilder(
               builder: (context, setState) {
-                return Wrap(
-                  children: [
-                    ...ChuckSortOption.values
-                        .map(
-                          (ChuckSortOption sortOption) =>
-                              RadioListTile<ChuckSortOption>(
-                                title: Text(sortOption.name),
-                                value: sortOption,
-                                groupValue: _sortOption,
-                                onChanged: (ChuckSortOption? value) {
-                                  setState(() {
-                                    _sortOption = value;
-                                  });
-                                },
-                              ),
-                        )
-                        .toList(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Descending"),
-                        Switch(
-                          value: _sortAscending,
-                          onChanged: (value) {
-                            setState(() {
-                              _sortAscending = value;
-                            });
-                          },
-                          activeTrackColor: Colors.grey,
-                          activeColor: Colors.white,
-                        ),
-                        const Text("Ascending"),
-                      ],
-                    ),
-                  ],
+                return RadioGroup<ChuckSortOption>(
+                  groupValue: _sortOption,
+                  onChanged: (ChuckSortOption? value) {
+                    setState(() {
+                      _sortOption = value;
+                    });
+                  },
+                  child: Wrap(
+                    children: [
+                      ...ChuckSortOption.values.map(
+                        (ChuckSortOption sortOption) =>
+                            RadioListTile<ChuckSortOption>(title: Text(sortOption.name), value: sortOption),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Descending"),
+                          Switch(
+                            value: _sortAscending,
+                            onChanged: (value) {
+                              setState(() {
+                                _sortAscending = value;
+                              });
+                            },
+                            activeTrackColor: Colors.grey,
+                            activeThumbColor: Colors.white,
+                          ),
+                          const Text("Ascending"),
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               },
             ),

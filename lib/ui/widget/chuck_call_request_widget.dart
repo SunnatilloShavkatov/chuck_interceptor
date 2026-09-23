@@ -11,8 +11,7 @@ class ChuckCallRequestWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _ChuckCallRequestWidget();
 }
 
-class _ChuckCallRequestWidget
-    extends ChuckBaseCallDetailsWidgetState<ChuckCallRequestWidget> {
+class _ChuckCallRequestWidget extends ChuckBaseCallDetailsWidgetState<ChuckCallRequestWidget> {
   ChuckHttpCall get _call => widget.call;
 
   @override
@@ -20,9 +19,7 @@ class _ChuckCallRequestWidget
     final List<Widget> rows = [];
     rows.add(getListRow("Started:", _call.request!.time.toString()));
     rows.add(getListRow("Bytes sent:", formatBytes(_call.request!.size)));
-    rows.add(
-      getListRow("Content type:", getContentType(_call.request!.headers)!),
-    );
+    rows.add(getListRow("Content type:", getContentType(_call.request!.headers)!));
 
     final dynamic body = _call.request!.body;
     var bodyContent = "Body is empty";
@@ -41,12 +38,7 @@ class _ChuckCallRequestWidget
     if (formDataFiles?.isNotEmpty == true) {
       rows.add(getListRow("Form data files: ", ""));
       formDataFiles!.forEach((field) {
-        rows.add(
-          getListRow(
-            "   • ${field.fileName}:",
-            "${field.contentType} / ${field.length} B",
-          ),
-        );
+        rows.add(getListRow("   • ${field.fileName}:", "${field.contentType} / ${field.length} B"));
       });
     }
 

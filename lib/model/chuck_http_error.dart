@@ -11,9 +11,7 @@ class ChuckHttpError {
   }
 
   factory ChuckHttpError.fromJson(Map<String, dynamic> json) {
-    return ChuckHttpError(
-      error: json['error'] != null ? getFromJson(json['error']) : null,
-    );
+    return ChuckHttpError(error: json['error'] != null ? getFromJson(json['error']) : null);
   }
 }
 
@@ -21,20 +19,13 @@ DioException getFromJson(Map<String, dynamic> json) {
   return DioException(
     type: DioExceptionType.values[json['type']],
     requestOptions: RequestOptions(),
-    response: Response(
-      requestOptions: RequestOptions(),
-      data: json['response'],
-    ),
+    response: Response(requestOptions: RequestOptions(), data: json['response']),
     message: json['message'],
   );
 }
 
 extension DioExceptionExt on DioException {
   Map<String, dynamic> toJson() {
-    return {
-      'response': response?.data?.toString(),
-      'type': type.index,
-      'message': message,
-    };
+    return {'response': response?.data?.toString(), 'type': type.index, 'message': message};
   }
 }

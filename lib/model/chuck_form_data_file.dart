@@ -1,9 +1,5 @@
 class ChuckFormDataFile {
-  const ChuckFormDataFile({
-    this.fileName,
-    required this.contentType,
-    required this.length,
-  });
+  const ChuckFormDataFile({this.fileName, required this.contentType, required this.length});
 
   final String? fileName;
   final String contentType;
@@ -14,10 +10,6 @@ class ChuckFormDataFile {
   }
 
   factory ChuckFormDataFile.fromJson(Map<dynamic, dynamic> json) {
-    return ChuckFormDataFile(
-      fileName: json['fileName'],
-      contentType: json['contentType'],
-      length: json['length'],
-    );
+    return ChuckFormDataFile(fileName: json['fileName'], contentType: json['contentType'], length: json['length']);
   }
 }

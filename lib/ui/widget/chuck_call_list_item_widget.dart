@@ -61,12 +61,7 @@ class ChuckCallListItemWidget extends StatelessWidget {
       children: [
         _getSecuredConnectionIcon(call.secure),
         Expanded(
-          child: Text(
-            call.server,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            style: const TextStyle(fontSize: 14),
-          ),
+          child: Text(call.server, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 14)),
         ),
       ],
     );
@@ -77,18 +72,8 @@ class ChuckCallListItemWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         if (call.request?.time != null)
-          Flexible(
-            child: Text(
-              _formatTime(call.request!.time),
-              style: const TextStyle(fontSize: 12),
-            ),
-          ),
-        Flexible(
-          child: Text(
-            ChuckConversionHelper.formatTime(call.duration),
-            style: const TextStyle(fontSize: 12),
-          ),
-        ),
+          Flexible(child: Text(_formatTime(call.request!.time), style: const TextStyle(fontSize: 12))),
+        Flexible(child: Text(ChuckConversionHelper.formatTime(call.duration), style: const TextStyle(fontSize: 12))),
         Flexible(
           child: Text(
             "${ChuckConversionHelper.formatBytes(call.request!.size)} / "
@@ -118,19 +103,12 @@ class ChuckCallListItemWidget extends StatelessWidget {
         SizedBox(
           width: 20,
           height: 20,
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(ChuckConstants.lightRed),
-          ),
+          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(ChuckConstants.lightRed)),
         ),
       );
       widgets.add(const SizedBox(height: 4));
     }
-    widgets.add(
-      Text(
-        _getStatus(call.response!),
-        style: TextStyle(fontSize: 16, color: _getStatusTextColor(context)),
-      ),
-    );
+    widgets.add(Text(_getStatus(call.response!), style: TextStyle(fontSize: 16, color: _getStatusTextColor(context))));
     return Column(children: widgets);
   }
 

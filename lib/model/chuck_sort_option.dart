@@ -1,11 +1,5 @@
 ///Available sort options in inspector UI.
-enum ChuckSortOption {
-  time,
-  responseTime,
-  responseCode,
-  responseSize,
-  endpoint,
-}
+enum ChuckSortOption { time, responseTime, responseCode, responseSize, endpoint }
 
 extension ChuckSortOptionsExtension on ChuckSortOption {
   String get name {

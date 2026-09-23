@@ -11,8 +11,7 @@ class ChuckCallErrorWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _ChuckCallErrorWidgetState();
 }
 
-class _ChuckCallErrorWidgetState
-    extends ChuckBaseCallDetailsWidgetState<ChuckCallErrorWidget> {
+class _ChuckCallErrorWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCallErrorWidget> {
   ChuckHttpCall get _call => widget.call;
 
   @override
