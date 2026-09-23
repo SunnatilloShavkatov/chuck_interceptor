@@ -1,4 +1,4 @@
-## 2.4.0
+## 3.0.0
 
 * **Breaking:** removed local notifications. The `showNotification` and `notificationIcon`
   arguments of `Chuck` are gone. Open the inspector by shaking the device or by calling
