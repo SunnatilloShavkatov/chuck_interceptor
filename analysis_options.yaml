@@ -1,4 +1,8 @@
 include: package:analysis_lints/analysis_options.yaml
+
+formatter:
+  page_width: 120
+
 analyzer:
   errors:
     avoid_annotating_with_dynamic: ignore

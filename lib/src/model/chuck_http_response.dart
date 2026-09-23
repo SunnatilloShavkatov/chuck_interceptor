@@ -1,6 +1,5 @@
 class ChuckHttpResponse {
-  new({this.status = 0, this.size = 0, DateTime? time, this.body, this.headers})
-    : time = time ?? DateTime.now();
+  new({this.status = 0, this.size = 0, DateTime? time, this.body, this.headers}) : time = time ?? DateTime.now();
 
   int? status;
   int size;

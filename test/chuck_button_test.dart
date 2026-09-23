@@ -9,27 +9,18 @@ void main() {
     late ChuckCore chuckCore;
 
     setUp(() {
-      chuckCore = ChuckCore(
-        GlobalKey<NavigatorState>(),
-        showInspectorOnShake: false,
-        maxCallsCount: 10,
-      );
+      chuckCore = ChuckCore(GlobalKey<NavigatorState>(), showInspectorOnShake: false, maxCallsCount: 10);
     });
 
     tearDown(() {
       chuckCore.dispose();
     });
 
-    Widget wrap({bool hideWhenEmpty = false, bool visible = true}) =>
-        MaterialApp(
-          builder: (context, child) => ChuckButton(
-            chuckCore: chuckCore,
-            visible: visible,
-            hideWhenEmpty: hideWhenEmpty,
-            child: child,
-          ),
-          home: const Scaffold(body: Text('app')),
-        );
+    Widget wrap({bool hideWhenEmpty = false, bool visible = true}) => MaterialApp(
+      builder: (context, child) =>
+          ChuckButton(chuckCore: chuckCore, visible: visible, hideWhenEmpty: hideWhenEmpty, child: child),
+      home: const Scaffold(body: Text('app')),
+    );
 
     testWidgets('renders call counter above the app', (tester) async {
       await tester.pumpWidget(wrap());
@@ -43,19 +34,16 @@ void main() {
       expect(find.text('1'), findsOneWidget);
     });
 
-    testWidgets(
-      'hides itself when hideWhenEmpty is set and there are no calls',
-      (tester) async {
-        await tester.pumpWidget(wrap(hideWhenEmpty: true));
+    testWidgets('hides itself when hideWhenEmpty is set and there are no calls', (tester) async {
+      await tester.pumpWidget(wrap(hideWhenEmpty: true));
 
-        expect(find.byIcon(Icons.http), findsNothing);
+      expect(find.byIcon(Icons.http), findsNothing);
 
-        chuckCore.addCall(ChuckHttpCall(1)..endpoint = '/first');
-        await tester.pump();
+      chuckCore.addCall(ChuckHttpCall(1)..endpoint = '/first');
+      await tester.pump();
 
-        expect(find.byIcon(Icons.http), findsOneWidget);
-      },
-    );
+      expect(find.byIcon(Icons.http), findsOneWidget);
+    });
 
     testWidgets('is not rendered when visible is false', (tester) async {
       await tester.pumpWidget(wrap(visible: false));
@@ -75,8 +63,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          builder: (context, child) =>
-              ChuckButton(chuckCore: disabledCore, child: child),
+          builder: (context, child) => ChuckButton(chuckCore: disabledCore, child: child),
           home: const Scaffold(body: Text('app')),
         ),
       );
@@ -86,18 +73,13 @@ void main() {
 
     testWidgets('opens the inspector on tap', (tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
-      final core = ChuckCore(
-        navigatorKey,
-        showInspectorOnShake: false,
-        maxCallsCount: 10,
-      );
+      final core = ChuckCore(navigatorKey, showInspectorOnShake: false, maxCallsCount: 10);
       addTearDown(core.dispose);
 
       await tester.pumpWidget(
         MaterialApp(
           navigatorKey: navigatorKey,
-          builder: (context, child) =>
-              ChuckButton(chuckCore: core, child: child),
+          builder: (context, child) => ChuckButton(chuckCore: core, child: child),
           home: const Scaffold(body: Text('app')),
         ),
       );

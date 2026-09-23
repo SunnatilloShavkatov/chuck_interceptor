@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:chuck_interceptor/src/core/chuck_utils.dart';
 import 'package:chuck_interceptor/src/helper/chuck_alert_helper.dart';
 import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
@@ -11,7 +12,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-sealed class ChuckSaveHelper {
+final class ChuckSaveHelper {
   const new _();
 
   /// JsonEncoder instance used to encode request and response headers

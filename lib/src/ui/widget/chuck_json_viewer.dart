@@ -1,6 +1,5 @@
 // ignore_for_file: discarded_futures, avoid_dynamic_calls
 
-
 import 'dart:convert';
 
 import 'package:chuck_interceptor/src/helper/chuck_snack_bar_helper.dart';

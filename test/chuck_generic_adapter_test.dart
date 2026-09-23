@@ -102,13 +102,9 @@ void main() {
         maxCallsCount: 10,
         maxBodySize: 10,
       );
-      adapter = ChuckGenericAdapter(chuckCore)
-        ..onCall(
-          method: 'POST',
-          uri: Uri.parse('https://example.com/a'),
-          requestBody: 'x' * 50,
-          responseBody: 'y' * 50,
-        );
+      adapter = ChuckGenericAdapter(
+        chuckCore,
+      )..onCall(method: 'POST', uri: Uri.parse('https://example.com/a'), requestBody: 'x' * 50, responseBody: 'y' * 50);
 
       final call = chuckCore.callsSubject.value.single;
       expect(call.request!.size, 50);

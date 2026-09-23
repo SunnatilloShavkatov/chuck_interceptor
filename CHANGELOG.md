@@ -1,3 +1,9 @@
+## 3.1.1
+
+* Bumped `material_ui` to `^1.4.0`.
+* Formatted the package, example and tests with a 120 column page width (`formatter.page_width`
+  in `analysis_options.yaml`). No API or behaviour changes.
+
 ## 3.1.0
 
 * **Dropped the `http` (`package:http`) dependency**. Chuck no longer pulls `http` into consumers'

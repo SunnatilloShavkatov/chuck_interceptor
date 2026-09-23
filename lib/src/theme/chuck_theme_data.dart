@@ -71,9 +71,7 @@ final class ChuckThemeData {
         foregroundColor: ext.onAccent,
         elevation: 3,
       ),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(foregroundColor: ext.accent),
-      ),
+      textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: ext.accent)),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(backgroundColor: ext.accent, foregroundColor: ext.onAccent),
       ),
@@ -104,9 +102,6 @@ final class ChuckThemeData {
   /// the inspector keeps its default design inside any app.
   static ThemeData isolate(BuildContext context, {ChuckThemeExtension? extension, Brightness? brightness}) {
     final ThemeData app = Theme.of(context);
-    return buildTheme(
-      brightness ?? app.brightness,
-      extension: extension ?? app.extension<ChuckThemeExtension>(),
-    );
+    return buildTheme(brightness ?? app.brightness, extension: extension ?? app.extension<ChuckThemeExtension>());
   }
 }

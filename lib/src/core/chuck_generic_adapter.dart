@@ -40,12 +40,7 @@ class ChuckGenericAdapter {
     }
 
     final int callId = id ?? _nextId();
-    final ChuckHttpCall call = _buildCall(
-      id: callId,
-      method: method,
-      uri: uri,
-      client: client,
-    )
+    final ChuckHttpCall call = _buildCall(id: callId, method: method, uri: uri, client: client)
       ..request = _buildRequest(headers: headers, body: body, uri: uri, queryParameters: queryParameters)
       ..response = ChuckHttpResponse();
     chuckCore.addCall(call);
@@ -53,12 +48,7 @@ class ChuckGenericAdapter {
   }
 
   /// Adds a response to the call previously created by [onRequest].
-  void onResponse(
-    int callId, {
-    int? statusCode,
-    Map<String, String>? headers,
-    Object? body,
-  }) {
+  void onResponse(int callId, {int? statusCode, Map<String, String>? headers, Object? body}) {
     if (!chuckCore.enabled) {
       return;
     }
@@ -109,12 +99,7 @@ class ChuckGenericAdapter {
 
     final int callId = id ?? _nextId();
     final ChuckHttpCall call = _buildCall(id: callId, method: method, uri: uri, client: client)
-      ..request = _buildRequest(
-        headers: requestHeaders,
-        body: requestBody,
-        uri: uri,
-        queryParameters: queryParameters,
-      )
+      ..request = _buildRequest(headers: requestHeaders, body: requestBody, uri: uri, queryParameters: queryParameters)
       ..response = _buildResponse(statusCode: statusCode, headers: responseHeaders, body: responseBody)
       ..loading = false
       ..duration = duration?.inMilliseconds ?? 0;
@@ -127,12 +112,7 @@ class ChuckGenericAdapter {
 
   int _nextId() => --_lastGeneratedId;
 
-  ChuckHttpCall _buildCall({
-    required int id,
-    required String method,
-    required Uri uri,
-    required String client,
-  }) {
+  ChuckHttpCall _buildCall({required int id, required String method, required Uri uri, required String client}) {
     var path = uri.path;
     if (path.isEmpty) {
       path = '/';
