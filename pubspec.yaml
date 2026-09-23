@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  material_ui: ^1.2.0
+  material_ui: ^1.4.0
   dio: ">=5.10.0 <6.0.0"
   rxdart: ">=0.28.0 <1.0.0"
   share_plus: ^13.3.0
