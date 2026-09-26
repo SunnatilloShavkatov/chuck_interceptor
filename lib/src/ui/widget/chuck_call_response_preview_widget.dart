@@ -1,6 +1,7 @@
-import 'dart:convert';
+import 'dart:convert' show jsonDecode;
 
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_json_viewer.dart';
@@ -16,6 +17,14 @@ class ChuckCallResponsePreviewWidget extends StatefulWidget {
 }
 
 class _ChuckCallResponsePreviewWidgetState extends ChuckBaseCallDetailsWidgetState<ChuckCallResponsePreviewWidget> {
+  final ScrollController _scrollController = ScrollController();
+
+  ChuckHttpResponse? _parsedResponse;
+  String _bodyContent = '';
+  bool _isJson = false;
+  Object? _jsonData;
+  Object? _jsonError;
+
   ChuckHttpCall get _call => widget.call;
 
   @override
@@ -23,12 +32,13 @@ class _ChuckCallResponsePreviewWidgetState extends ChuckBaseCallDetailsWidgetSta
     if (!_call.loading && _call.response != null) {
       final double bottomPadding = MediaQuery.paddingOf(context).bottom + 84;
       return Scrollbar(
-        controller: PrimaryScrollController.of(context),
+        controller: _scrollController,
         child: CustomScrollView(
+          controller: _scrollController,
           slivers: [
             SliverSafeArea(
               minimum: EdgeInsets.only(left: 6, top: 6, right: 6, bottom: bottomPadding),
-              sliver: SliverList.list(children: _buildPreviewContent()),
+              sliver: _buildPreviewSliver(),
             ),
           ],
         ),
@@ -43,49 +53,60 @@ class _ChuckCallResponsePreviewWidgetState extends ChuckBaseCallDetailsWidgetSta
     }
   }
 
-  List<Widget> _buildPreviewContent() {
-    final List<Widget> content = [];
-    final headers = _call.response!.headers;
-    final contentType = getContentType(headers);
-    final bodyContent = formatBody(_call.response!.body, contentType);
+  Widget _buildPreviewSliver() {
+    _parseResponse(_call.response!);
+
+    if (_jsonError != null) {
+      // If JSON parsing fails, show as text with error message
+      return SliverList.list(
+        children: [
+          getListRow('JSON Parse Error:', 'Failed to parse JSON: $_jsonError'),
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: context.chuckTheme.errorPreviewBackground,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: context.chuckTheme.errorPreviewBorder),
+            ),
+            child: SelectableText(_bodyContent),
+          ),
+        ],
+      );
+    }
+    if (_isJson) {
+      // Lazy, interactive JSON tree: only rows on screen are built
+      return SliverPadding(padding: const EdgeInsets.only(top: 8), sliver: SliverJsonViewer(_jsonData));
+    }
+    // For non-JSON content, show as formatted text
+    return SliverToBoxAdapter(
+      child: Padding(padding: const EdgeInsets.fromLTRB(8, 16, 8, 8), child: SelectableText(_bodyContent)),
+    );
+  }
+
+  /// Formats and decodes the body once per response instead of on every rebuild.
+  void _parseResponse(ChuckHttpResponse response) {
+    if (identical(_parsedResponse, response)) {
+      return;
+    }
+    _parsedResponse = response;
+    _jsonData = null;
+    _jsonError = null;
+
+    final contentType = getContentType(response.headers);
+    _bodyContent = formatBody(response.body, contentType);
 
     // Enhanced JSON detection and display
     final isJsonByContentType = contentType != null && contentType.toLowerCase().contains('json');
-    final isJsonByStructure = _isValidJsonContent(bodyContent);
-
-    if (isJsonByContentType || isJsonByStructure) {
+    _isJson = isJsonByContentType || _isValidJsonContent(_bodyContent);
+    if (_isJson) {
       try {
-        final dynamic jsonData = jsonDecode(bodyContent);
-        // Use JsonViewer for interactive JSON display
-        content
-          ..add(const SizedBox(height: 8))
-          ..add(JsonViewer(jsonData));
+        _jsonData = jsonDecode(_bodyContent);
       } catch (e) {
-        // If JSON parsing fails, show as text with error message
-        content
-          ..add(getListRow('JSON Parse Error:', 'Failed to parse JSON: $e'))
-          ..add(const SizedBox(height: 8))
-          ..add(
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.chuckTheme.errorPreviewBackground,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: context.chuckTheme.errorPreviewBorder),
-              ),
-              child: SelectableText(bodyContent),
-            ),
-          );
+        _jsonError = e;
       }
-    } else {
-      // For non-JSON content, show as formatted text
-      content
-        ..add(const SizedBox(height: 8))
-        ..add(Padding(padding: const EdgeInsets.all(8), child: SelectableText(bodyContent)));
     }
-
-    return content;
   }
 
   /// Check if content appears to be valid JSON
@@ -109,6 +130,7 @@ class _ChuckCallResponsePreviewWidgetState extends ChuckBaseCallDetailsWidgetSta
 
   @override
   void dispose() {
+    _scrollController.dispose();
     super.dispose();
   }
 }

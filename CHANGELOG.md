@@ -1,3 +1,15 @@
+## 3.1.2
+
+* Fixed the `ScrollController is attached to more than one ScrollPosition` assertion thrown while
+  scrolling or swiping tabs on the call details screen (iOS). The Preview tab now owns its
+  `ScrollController` instead of sharing the `PrimaryScrollController` with the other tabs.
+* Rewrote the JSON viewer on the Preview tab as a lazy sliver (`SliverList.builder`). The tree is
+  flattened into the currently visible rows, so only rows on screen are built and large responses
+  scroll smoothly.
+* The Preview tab now parses the response body once per response instead of on every rebuild.
+* Nested arrays show the type of their first element (e.g. `Array<Object>[3]`) consistently, and a
+  primitive JSON root value (e.g. `"ok"` or `42`) is now displayed instead of an empty view.
+
 ## 3.1.1
 
 * Bumped `material_ui` to `^1.4.0`.
