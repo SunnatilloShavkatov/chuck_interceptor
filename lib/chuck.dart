@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:chuck_interceptor/core/chuck_generic_adapter.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
@@ -5,6 +6,7 @@ import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/core/chuck_dio_interceptor.dart';
 import 'package:chuck_interceptor/core/chuck_http_client_adapter.dart';
+import 'package:chuck_interceptor/ui/widget/chuck_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
@@ -28,6 +30,16 @@ class Chuck {
   ///Directionality of app. Directionality of the app will be used if set to null.
   final TextDirection? directionality;
 
+  ///App name written in the shared/saved log header. Omitted when null.
+  final String? appName;
+
+  ///App version written in the shared/saved log header. Omitted when null.
+  final String? appVersion;
+
+  ///Called with the call log when the share button is pressed. When null, the
+  ///log is copied to the clipboard instead.
+  final FutureOr<void> Function(String text)? onShare;
+
   GlobalKey<NavigatorState>? _navigatorKey;
   final Box<dynamic>? cacheBox;
   late ChuckCore _chuckCore;
@@ -43,12 +55,18 @@ class Chuck {
     this.maxCallsCount = 1000,
     this.maxCacheCount = 0,
     this.directionality,
+    this.appName,
+    this.appVersion,
+    this.onShare,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
     _chuckCore = ChuckCore(
       _navigatorKey,
+      onShare: onShare,
+      appName: appName,
       cacheBox: cacheBox,
       darkTheme: darkTheme,
+      appVersion: appVersion,
       maxCallsCount: maxCallsCount,
       maxCacheCount: maxCacheCount,
       directionality: directionality,
@@ -69,10 +87,20 @@ class Chuck {
     return _navigatorKey;
   }
 
+  /// Builder which renders a floating [ChuckButton] above the application.
+  /// Pass it directly to `MaterialApp.builder`:
+  ///
+  /// ```dart
+  /// MaterialApp(
+  ///   navigatorKey: chuck.getNavigatorKey(),
+  ///   builder: chuck.builder,
+  ///   home: const HomeScreen(),
+  /// );
+  /// ```
+  Widget builder(BuildContext context, Widget? child) => ChuckButton(chuckCore: _chuckCore, child: child);
+
   /// Get Dio interceptor which should be applied to Dio instance.
-  ChuckDioInterceptor getDioInterceptor() {
-    return ChuckDioInterceptor(_chuckCore);
-  }
+  ChuckDioInterceptor get dioInterceptor => ChuckDioInterceptor(_chuckCore);
 
   /// Handle request from HttpClient
   void onHttpClientRequest(HttpClientRequest request, {dynamic body}) {

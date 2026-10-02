@@ -62,9 +62,21 @@ class ChuckCore {
   ///Directionality of app. If null then directionality of context will be used.
   final TextDirection? directionality;
 
+  ///App name written in the shared/saved log header. Omitted when null.
+  final String? appName;
+
+  ///App version written in the shared/saved log header. Omitted when null.
+  final String? appVersion;
+
+  ///Called with the call log when the share button is pressed. When null, the
+  ///log is copied to the clipboard instead.
+  final FutureOr<void> Function(String text)? onShare;
+
+  ///Whether the inspector is currently open. Used to hide the floating button.
+  final ValueNotifier<bool> inspectorOpened = ValueNotifier<bool>(false);
+
   GlobalKey<NavigatorState>? navigatorKey;
   Brightness _brightness = Brightness.light;
-  bool _isInspectorOpened = false;
   ShakeDetector? _shakeDetector;
   Box<dynamic>? cacheBox;
 
@@ -81,6 +93,9 @@ class ChuckCore {
     int maxCacheCount = 0,
     this.directionality,
     this.cacheBox,
+    this.appName,
+    this.appVersion,
+    this.onShare,
   }) {
     if (showInspectorOnShake) {
       _shakeDetector = ShakeDetector.autoStart(
@@ -102,6 +117,7 @@ class ChuckCore {
     callsSubject.close();
     _shakeDetector?.stopListening();
     maxCacheCountNotifier.dispose();
+    inspectorOpened.dispose();
   }
 
   /// Get currently used brightness
@@ -115,12 +131,12 @@ class ChuckCore {
       ChuckUtils.log("Cant start Chuck HTTP Inspector. Please add NavigatorKey to your application");
       return;
     }
-    if (!_isInspectorOpened) {
-      _isInspectorOpened = true;
+    if (!inspectorOpened.value) {
+      inspectorOpened.value = true;
       Navigator.push<void>(
         context,
         MaterialPageRoute(builder: (context) => ChuckCallsListScreen(this)),
-      ).then((onValue) => _isInspectorOpened = false);
+      ).then((_) => inspectorOpened.value = false);
     }
   }
 
@@ -291,6 +307,6 @@ class ChuckCore {
 
   /// Save all calls to file
   void saveHttpRequests(BuildContext context) {
-    ChuckSaveHelper.saveCalls(context, callsSubject.value, _brightness);
+    ChuckSaveHelper.saveCalls(context, this);
   }
 }

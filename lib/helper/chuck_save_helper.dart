@@ -1,24 +1,41 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/core/chuck_utils.dart';
 import 'package:chuck_interceptor/helper/chuck_alert_helper.dart';
 import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/utils/chuck_parser.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:path_provider/path_provider.dart';
 
 class ChuckSaveHelper {
   static const JsonEncoder _encoder = JsonEncoder.withIndent('  ');
 
   /// Top level method used to save calls to file
-  static void saveCalls(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) {
-    _saveToFile(context, calls, brightness);
+  static void saveCalls(BuildContext context, ChuckCore core) {
+    _saveToFile(context, core);
   }
 
-  static Future<String> _saveToFile(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
+  /// Hands [text] to [ChuckCore.onShare], or copies it to the clipboard and
+  /// shows a snack bar when no callback was given.
+  static Future<void> share(BuildContext context, ChuckCore core, String text) async {
+    final onShare = core.onShare;
+    if (onShare != null) {
+      await onShare(text);
+      return;
+    }
+    await Clipboard.setData(ClipboardData(text: text));
+    if (context.mounted) {
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text("Copied to clipboard")));
+    }
+  }
+
+  static Future<String> _saveToFile(BuildContext context, ChuckCore core) async {
+    final List<ChuckHttpCall> calls = core.callsSubject.value;
+    final Brightness brightness = core.brightness;
     try {
       if (calls.isEmpty) {
         ChuckAlertHelper.showAlert(context, "Error", "There are no logs to save", brightness: brightness);
@@ -33,7 +50,7 @@ class ChuckSaveHelper {
       final File file = File("${externalDir.path}/$fileName");
       file.createSync();
       final IOSink sink = file.openWrite(mode: FileMode.append);
-      sink.write(await _buildChuckLog());
+      sink.write(_buildChuckLog(core));
       calls.forEach((ChuckHttpCall call) {
         sink.write(_buildCallLog(call));
       });
@@ -60,14 +77,15 @@ class ChuckSaveHelper {
     return "";
   }
 
-  static Future<String> _buildChuckLog() async {
+  static String _buildChuckLog(ChuckCore core) {
     final StringBuffer stringBuffer = StringBuffer();
-    final packageInfo = await PackageInfo.fromPlatform();
     stringBuffer.write("Chuck - HTTP Inspector\n");
-    stringBuffer.write("App name:  ${packageInfo.appName}\n");
-    stringBuffer.write("Package: ${packageInfo.packageName}\n");
-    stringBuffer.write("Version: ${packageInfo.version}\n");
-    stringBuffer.write("Build number: ${packageInfo.buildNumber}\n");
+    if (core.appName != null) {
+      stringBuffer.write("App name: ${core.appName}\n");
+    }
+    if (core.appVersion != null) {
+      stringBuffer.write("Version: ${core.appVersion}\n");
+    }
     stringBuffer.write("Generated: ${DateTime.now().toIso8601String()}\n");
     stringBuffer.write("\n");
     return stringBuffer.toString();
@@ -134,9 +152,9 @@ class ChuckSaveHelper {
     return stringBuffer.toString();
   }
 
-  static Future<String> buildCallLog(ChuckHttpCall call) async {
+  static String buildCallLog(ChuckCore core, ChuckHttpCall call) {
     try {
-      return await _buildChuckLog() + _buildCallLog(call);
+      return _buildChuckLog(core) + _buildCallLog(call);
     } catch (exception) {
       return "Failed to generate call log";
     }

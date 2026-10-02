@@ -16,22 +16,25 @@ ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging htt
 ✔️ Statistics  
 ✔️ Support for top used HTTP clients in Dart  
 ✔️ Error handling  
-✔️ Shake to open inspector  
+✔️ Shake or floating button to open inspector  
 ✔️ HTTP calls search
 
 ## Install
 
-1. Add this to your **pubspec.yaml** file:
+1. This branch is not published to pub.dev. Add it from git, pinned to a tag:
 
 ```yaml
 dependencies:
-  chuck_interceptor: ^3.0.0
+  chuck_interceptor:
+    git:
+      url: https://github.com/SunnatilloShavkatov/chuck_interceptor.git
+      ref: b.3.1.0
 ```
 
 2. Install it
 
 ```bash
-$ flutter packages get
+$ flutter pub get
 ```
 
 3. Import it
@@ -91,6 +94,23 @@ Chuck chuck = Chuck(..., maxCallsCount: 1000));
 If you want to change the Directionality of Chuck, you can use the `directionality` parameter. If the parameter is set to null, the Directionality of the app will be used.
 ```dart
 Chuck chuck = Chuck(..., directionality: TextDirection.ltr);
+```
+
+App name and version written at the top of a shared or saved log. Both are optional; a row is left out
+when its value is null:
+
+```dart
+Chuck chuck = Chuck(..., appName: 'MyApp', appVersion: '1.2.3+45');
+```
+
+The share button on the call details screen copies the log to the clipboard by default. Pass `onShare`
+to handle it yourself, e.g. with `share_plus` added to **your** app:
+
+```dart
+Chuck chuck = Chuck(
+  ...,
+  onShare: (text) => SharePlus.instance.share(ShareParams(text: text)),
+);
 ```
 ### HTTP Client configuration
 If you're using Dio, you just need to add interceptor.
@@ -156,11 +176,37 @@ chuck.addHttpCall(ChuckHttpCall);
 
 ## Show inspector manually
 
-You may need that if you won't use shake:
+Floating, draggable button with a call counter, rendered above your whole app:
+
+```dart
+MaterialApp(
+  navigatorKey: chuck.getNavigatorKey(),
+  builder: chuck.builder,
+  home: ...,
+)
+```
+
+Use `ChuckButton` directly (`import 'package:chuck_interceptor/ui/widget/chuck_button.dart';`) for options
+(`visible`, `alignment`, `padding`, `draggable`, `hideWhenEmpty`).
+
+Or open it from your own code:
 
 ```dart
 chuck.showInspector();
 ```
+
+## Migration to 3.1.0
+
+* `share_plus` and `package_info_plus` are no longer dependencies of Chuck.
+  * Sharing a call copies the log to the clipboard. To keep the share sheet, add `share_plus` to your app
+    and pass `onShare` (see *Additional settings*).
+  * The log header no longer reads package info. Pass `appName` / `appVersion` to keep those rows.
+    `Package` and `Build number` rows are gone; put the build into `appVersion` if you need it.
+* `http` (`package:http`) support moved to the client agnostic API. `chuck.onHttpResponse(response)` and
+  `Future<Response>.interceptWithChuck(...)` are removed; use `chuck.logHttpCall(...)` instead (see
+  *HTTP Client configuration*).
+* Notifications were already removed in 3.0.0. Open the inspector with `builder: chuck.builder`, shake, or
+  `chuck.showInspector()`. No notification permission is needed.
 
 ## Saving calls
 

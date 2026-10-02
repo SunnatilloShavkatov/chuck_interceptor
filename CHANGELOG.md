@@ -1,3 +1,21 @@
+## 3.1.0
+
+* **BREAKING:** removed the `share_plus` and `package_info_plus` dependencies.
+  * New optional `Chuck(onShare: ...)` callback receives the call log. Without it the log is copied to the
+    clipboard and a "Copied to clipboard" snack bar is shown.
+  * New optional `Chuck(appName: ..., appVersion: ...)` for the log header. Null values are left out;
+    `Package` and `Build number` rows were removed.
+* **BREAKING:** removed `Chuck.onHttpResponse` and the `ChuckHttpExtensions` (`package:http`) extension.
+  Use the new client agnostic API instead: `chuck.logHttpCall(...)`, or `chuck.logRequest(...)` with
+  `chuck.logResponse(id, ...)` / `chuck.logError(id, ...)`, or `chuck.genericAdapter`.
+* Added a floating, draggable `ChuckButton` with a call counter which opens the inspector. Wire it with
+  `MaterialApp(builder: chuck.builder)`.
+* Fixed the `ScrollController is attached to more than one ScrollPosition` assertion when swiping tabs on
+  the call details screen (iOS). The Response and Preview tabs now own their `ScrollController`.
+* Rewrote the Preview JSON viewer as a lazy sliver, so large responses scroll smoothly. The body is parsed
+  once per response; invalid JSON falls back to text instead of throwing; a primitive JSON root is shown.
+* Fixed a `StateError` when a response or error arrived for a call that was no longer in memory.
+
 ## 3.0.0
 
 * **Breaking:** removed local notifications. The `showNotification` and `notificationIcon`

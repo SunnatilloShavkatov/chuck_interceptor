@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,9 +39,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initChuck() {
-    _chuck = Chuck(cacheBox: widget.chuckBox, showInspectorOnShake: true, darkTheme: false, maxCallsCount: 1000);
+    _chuck = Chuck(
+      cacheBox: widget.chuckBox,
+      showInspectorOnShake: true,
+      darkTheme: false,
+      maxCallsCount: 1000,
+      appName: 'Chuck example',
+      appVersion: '3.1.0',
+      onShare: (text) => SharePlus.instance.share(ShareParams(text: text, subject: 'Request Details')),
+    );
     _dio = Dio(BaseOptions(followRedirects: false));
-    _dio.interceptors.add(_chuck.getDioInterceptor());
+    _dio.interceptors.add(_chuck.dioInterceptor);
     _httpClient = HttpClient();
   }
 
@@ -53,6 +62,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(primaryColor: _primaryColor, useMaterial3: true),
       navigatorKey: _chuck.getNavigatorKey(),
+      builder: _chuck.builder,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(title: const Text('Chuck HTTP Inspector - Example')),

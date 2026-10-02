@@ -24,6 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "uz.shs.chuck_example"
+    ndkVersion = "28.2.13676358"
     compileSdk 36
 
     compileOptions {

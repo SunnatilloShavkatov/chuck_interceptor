@@ -10,7 +10,6 @@ import 'package:chuck_interceptor/ui/widget/chuck_call_overview_widget.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_call_request_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ChuckHiveCallDetailsScreen extends StatefulWidget {
   const ChuckHiveCallDetailsScreen(this.call, this.core, {super.key});
@@ -63,9 +62,7 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
           backgroundColor: ChuckConstants.lightRed,
           foregroundColor: Colors.white,
           key: const Key('share_key'),
-          onPressed: () async {
-            SharePlus.instance.share(ShareParams(text: await _getSharableResponseString(), title: 'Request Details'));
-          },
+          onPressed: () => ChuckSaveHelper.share(context, widget.core, ChuckSaveHelper.buildCallLog(widget.core, widget.call)),
           child: const Icon(Icons.share),
         ),
         appBar: AppBar(
@@ -97,9 +94,5 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
 
   Widget _buildErrorWidget() {
     return const Center(child: Text("Failed to load data"));
-  }
-
-  Future<String> _getSharableResponseString() async {
-    return ChuckSaveHelper.buildCallLog(widget.call);
   }
 }
