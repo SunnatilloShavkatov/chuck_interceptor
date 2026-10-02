@@ -7,7 +7,7 @@ ChuckInterceptor is an HTTP Inspector tool for Flutter which helps debugging htt
 
 - Dio
 - HttpClient from dart:io package
-- Http from http/http package
+- Any other client (http/http package, chopper, retrofit, ...) through the client agnostic API
 
 **Features:**  
 ✔️ Detailed logs for each HTTP calls (HTTP Request, HTTP Response)  
@@ -114,12 +114,30 @@ httpClient
  });
 ```
 
-If you're using http from http/http package:
+Chuck doesn't depend on http/http package. If you're using it (or any other client), log the call
+with plain values:
 
 ```dart
-http.get('https://jsonplaceholder.typicode.com/posts').then((response) {
-    chuck.onHttpResponse(response);
-});
+final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+chuck.logHttpCall(
+  method: response.request!.method,
+  uri: response.request!.url,
+  statusCode: response.statusCode,
+  requestHeaders: response.request?.headers,
+  responseHeaders: response.headers,
+  responseBody: response.body,
+  client: 'http package',
+);
+```
+
+For clients where the response arrives later, log the request first and complete it by id:
+
+```dart
+final id = chuck.logRequest(method: 'POST', uri: uri, headers: headers, body: body);
+// ...
+chuck.logResponse(id, statusCode: 201, headers: responseHeaders, body: responseBody);
+// or, if it failed:
+chuck.logError(id, error, stackTrace: stackTrace);
 ```
 
 If you're using Chopper. you need to add interceptor:
@@ -149,21 +167,14 @@ chuck.showInspector();
 Chuck supports saving logs to your app's storage directory. No extra permissions are required.
 
 ## Extensions
-You can use extensions to shorten your http and http client code. This is optional, but may improve your codebase.
+You can use extensions to shorten your HttpClient code. This is optional, but may improve your codebase.
 Example:
 1. Import:
 ```dart
 import 'package:chuck_interceptor/core/chuck_http_client_extensions.dart';
-import 'package:chuck_interceptor/core/chuck_http_extensions.dart';
 ```
 
 2. Use extensions:
-```dart
-http
-    .post('https://jsonplaceholder.typicode.com/posts', body: body)
-    .interceptWithChuck(Chuck, body: body);
-```
-
 ```dart
 httpClient
     .postUrl(Uri.parse("https://jsonplaceholder.typicode.com/posts"))

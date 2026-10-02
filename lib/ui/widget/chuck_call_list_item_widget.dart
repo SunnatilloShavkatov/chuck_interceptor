@@ -5,10 +5,10 @@ import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:flutter/material.dart';
 
 class ChuckCallListItemWidget extends StatelessWidget {
+  const ChuckCallListItemWidget(this.call, this.itemClickAction, {super.key});
+
   final ChuckHttpCall call;
   final Function itemClickAction;
-
-  const ChuckCallListItemWidget(this.call, this.itemClickAction);
 
   @override
   Widget build(BuildContext context) {

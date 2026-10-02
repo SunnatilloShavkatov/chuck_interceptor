@@ -13,13 +13,13 @@ import 'package:hive/hive.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ChuckHiveCallDetailsScreen extends StatefulWidget {
+  const ChuckHiveCallDetailsScreen(this.call, this.core, {super.key});
+
   final ChuckHttpCall call;
   final ChuckCore core;
 
-  const ChuckHiveCallDetailsScreen(this.call, this.core);
-
   @override
-  _ChuckHiveCallDetailsScreenState createState() => _ChuckHiveCallDetailsScreenState();
+  State<ChuckHiveCallDetailsScreen> createState() => _ChuckHiveCallDetailsScreenState();
 }
 
 class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen> with SingleTickerProviderStateMixin {
@@ -41,7 +41,7 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
         data: ThemeData(brightness: widget.core.brightness),
         child: ValueListenableBuilder<Box<dynamic>>(
           valueListenable: widget.core.cacheBox!.listenable(),
-          builder: (_, callsSnapshot, __) {
+          builder: (_, callsSnapshot, _) {
             final List<ChuckHttpCall> calls = widget.core.cacheDecoder.decodeCalls(callsSnapshot);
             final bool callExists = calls.any((snapshotCall) => snapshotCall.id == widget.call.id);
             if (callExists) {
@@ -73,11 +73,11 @@ class _ChuckHiveCallDetailsScreenState extends State<ChuckHiveCallDetailsScreen>
           bottom: TabBar(
             indicatorColor: ChuckConstants.lightRed,
             tabs: const [
-              const Tab(icon: Icon(Icons.info_outline), text: "Overview"),
-              const Tab(icon: Icon(Icons.arrow_upward), text: "Request"),
-              const Tab(icon: Icon(Icons.arrow_downward), text: "Response"),
-              const Tab(icon: Icon(Icons.preview), text: "Preview"),
-              const Tab(icon: Icon(Icons.warning), text: "Error"),
+              Tab(icon: Icon(Icons.info_outline), text: "Overview"),
+              Tab(icon: Icon(Icons.arrow_upward), text: "Request"),
+              Tab(icon: Icon(Icons.arrow_downward), text: "Response"),
+              Tab(icon: Icon(Icons.preview), text: "Preview"),
+              Tab(icon: Icon(Icons.warning), text: "Error"),
             ],
           ),
           title: const Text('Chuck - HTTP Call Details'),

@@ -3,9 +3,9 @@ import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart'
 import 'package:flutter/material.dart';
 
 class ChuckCallRequestWidget extends StatefulWidget {
-  final ChuckHttpCall call;
+  const ChuckCallRequestWidget(this.call, {super.key});
 
-  const ChuckCallRequestWidget(this.call);
+  final ChuckHttpCall call;
 
   @override
   State<StatefulWidget> createState() => _ChuckCallRequestWidget();

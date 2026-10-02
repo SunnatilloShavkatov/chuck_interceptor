@@ -14,12 +14,12 @@ import 'chuck_hive_call_details_screen.dart';
 import 'chuck_stats_screen.dart';
 
 class ChuckCallsListScreen extends StatefulWidget {
+  const ChuckCallsListScreen(this._chuckCore, {super.key});
+
   final ChuckCore _chuckCore;
 
-  const ChuckCallsListScreen(this._chuckCore);
-
   @override
-  _ChuckCallsListScreenState createState() => _ChuckCallsListScreenState();
+  State<ChuckCallsListScreen> createState() => _ChuckCallsListScreenState();
 }
 
 class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> with SingleTickerProviderStateMixin {
@@ -170,14 +170,14 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> with Single
     }
     return ValueListenableBuilder<int>(
       valueListenable: chuckCore.maxCacheCountNotifier,
-      builder: (_, int maxCacheCount, __) => maxCacheCount > 0 ? _buildHiveCallsList() : _buildCacheDisabledWidget(),
+      builder: (_, int maxCacheCount, _) => maxCacheCount > 0 ? _buildHiveCallsList() : _buildCacheDisabledWidget(),
     );
   }
 
   Widget _buildHiveCallsList() {
     return ValueListenableBuilder<Box<dynamic>>(
       valueListenable: chuckCore.cacheBox!.listenable(),
-      builder: (_, snapshot, __) {
+      builder: (_, snapshot, _) {
         // Final ordering is applied by _buildCallsListWidget from _sortOption.
         List<ChuckHttpCall> calls = chuckCore.cacheDecoder.decodeCalls(snapshot);
         final String query = _queryTextEditingController.text.trim();
@@ -274,7 +274,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> with Single
       itemBuilder: (context, index) {
         return ChuckCallListItemWidget(callsSorted[index], _onListItemClicked);
       },
-      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
+      separatorBuilder: (_, _) => const Divider(height: 1, thickness: 1, color: ChuckConstants.grey),
     );
   }
 

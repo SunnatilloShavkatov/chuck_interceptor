@@ -4,7 +4,7 @@ import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart'
 import 'package:flutter/material.dart';
 
 class ChuckCallResponseWidget extends StatefulWidget {
-  const ChuckCallResponseWidget(this.call);
+  const ChuckCallResponseWidget(this.call, {super.key});
 
   final ChuckHttpCall call;
 
@@ -22,14 +22,17 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
   bool _showLargeBody = false;
   bool _showUnsupportedBody = false;
 
+  final ScrollController _scrollController = ScrollController();
+
   ChuckHttpCall get _call => widget.call;
 
   @override
   Widget build(BuildContext context) {
     if (!_call.loading) {
       return Scrollbar(
-        controller: PrimaryScrollController.of(context),
+        controller: _scrollController,
         child: CustomScrollView(
+          controller: _scrollController,
           slivers: [
             SliverSafeArea(
               minimum: const EdgeInsets.all(6),
@@ -52,6 +55,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
 
   @override
   void dispose() {
+    _scrollController.dispose();
     super.dispose();
   }
 

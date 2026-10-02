@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_json_viewer.dart';
 import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
 import 'package:flutter/material.dart';
 
 class ChuckCallResponsePreviewWidget extends StatefulWidget {
-  const ChuckCallResponsePreviewWidget(this.call);
+  const ChuckCallResponsePreviewWidget(this.call, {super.key});
 
   final ChuckHttpCall call;
 
@@ -25,19 +26,23 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
   bool _showLargeBody = false;
   bool _showUnsupportedBody = false;
 
+  final ScrollController _scrollController = ScrollController();
+  ChuckHttpResponse? _parsedResponse;
+  String _bodyContent = '';
+  bool _isJson = false;
+  Object? _jsonData;
+
   ChuckHttpCall get _call => widget.call;
 
   @override
   Widget build(BuildContext context) {
-    if (!_call.loading) {
+    if (!_call.loading && _call.response != null) {
       return Scrollbar(
-        controller: PrimaryScrollController.of(context),
+        controller: _scrollController,
         child: CustomScrollView(
+          controller: _scrollController,
           slivers: [
-            SliverSafeArea(
-              minimum: const EdgeInsets.all(6),
-              sliver: SliverList.list(children: _buildBodyRows()),
-            ),
+            SliverSafeArea(minimum: const EdgeInsets.all(6), sliver: _buildBodySliver()),
           ],
         ),
       );
@@ -53,23 +58,20 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
 
   @override
   void dispose() {
+    _scrollController.dispose();
     super.dispose();
   }
 
-  List<Widget> _buildBodyRows() {
-    final List<Widget> rows = [];
+  Widget _buildBodySliver() {
     if (_isImageResponse()) {
-      rows.addAll(_buildImageBodyRows());
+      return SliverList.list(children: _buildImageBodyRows());
     } else if (_isTextResponse()) {
-      if (_isLargeResponseBody()) {
-        rows.addAll(_buildLargeBodyTextRows());
-      } else {
-        rows.addAll(_buildTextBodyRows());
+      if (_isLargeResponseBody() && !_showLargeBody) {
+        return SliverList.list(children: _buildLargeBodyTextRows());
       }
-    } else {
-      rows.addAll(_buildUnknownBodyRows());
+      return _buildTextBodySliver();
     }
-    return rows;
+    return SliverList.list(children: _buildUnknownBodyRows());
   }
 
   List<Widget> _buildImageBodyRows() {
@@ -104,43 +106,56 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
   }
 
   List<Widget> _buildLargeBodyTextRows() {
-    final List<Widget> rows = [];
-    if (_showLargeBody) {
-      return _buildTextBodyRows();
-    } else {
-      rows.add(getListRow("Body:", "Too large to show (${_call.response!.body.toString().length} Bytes)"));
-      rows.add(const SizedBox(height: 8));
-      rows.add(
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll<Color>(ChuckConstants.lightRed),
-            foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
-          ),
-          onPressed: () {
-            setState(() {
-              _showLargeBody = true;
-            });
-          },
-          child: const Text("Show body"),
+    return [
+      getListRow("Body:", "Too large to show (${_call.response!.body.toString().length} Bytes)"),
+      const SizedBox(height: 8),
+      ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll<Color>(ChuckConstants.lightRed),
+          foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
         ),
-      );
-      rows.add(const SizedBox(height: 8));
-      rows.add(const Text("Warning! It will take some time to render output."));
-    }
-    return rows;
+        onPressed: () {
+          setState(() {
+            _showLargeBody = true;
+          });
+        },
+        child: const Text("Show body"),
+      ),
+      const SizedBox(height: 8),
+      const Text("Warning! It will take some time to render output."),
+    ];
   }
 
-  List<Widget> _buildTextBodyRows() {
-    final List<Widget> rows = [];
-    final headers = _call.response!.headers;
-    final bodyContent = formatBody(_call.response!.body, getContentType(headers));
-    if (bodyContent.contains("{") && bodyContent.contains("}")) {
-      rows.add(JsonViewer(jsonDecode(bodyContent)));
-    } else {
-      rows.add(getListRow("Body:", bodyContent));
+  Widget _buildTextBodySliver() {
+    _parseResponse(_call.response!);
+    if (_isJson) {
+      // Lazy, interactive JSON tree: only rows on screen are built
+      return SliverJsonViewer(_jsonData);
     }
+    return SliverToBoxAdapter(child: getListRow("Body:", _bodyContent));
+  }
 
-    return rows;
+  /// Formats and decodes the body once per response instead of on every rebuild.
+  void _parseResponse(ChuckHttpResponse response) {
+    if (identical(_parsedResponse, response)) {
+      return;
+    }
+    _parsedResponse = response;
+    final contentType = getContentType(response.headers);
+    _bodyContent = formatBody(response.body, contentType);
+    _jsonData = null;
+    _isJson = false;
+    final trimmed = _bodyContent.trim();
+    final looksLikeJson =
+        (trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'));
+    if (looksLikeJson || (contentType?.toLowerCase().contains(_jsonContentType) ?? false)) {
+      try {
+        _jsonData = jsonDecode(_bodyContent);
+        _isJson = true;
+      } on FormatException {
+        // Not valid JSON, fall back to plain text
+      }
+    }
   }
 
   List<Widget> _buildUnknownBodyRows() {

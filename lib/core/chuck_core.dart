@@ -173,10 +173,10 @@ class ChuckCore {
   }
 
   /// Add Chuck http call to calls subject
-  void addHttpCall(ChuckHttpCall ChuckHttpCall) {
-    assert(ChuckHttpCall.request != null, "Http call request can't be null");
-    assert(ChuckHttpCall.response != null, "Http call response can't be null");
-    callsSubject.add([...callsSubject.value, ChuckHttpCall]);
+  void addHttpCall(ChuckHttpCall chuckHttpCall) {
+    assert(chuckHttpCall.request != null, "Http call request can't be null");
+    assert(chuckHttpCall.response != null, "Http call response can't be null");
+    callsSubject.add([...callsSubject.value, chuckHttpCall]);
   }
 
   /// Remove all calls from calls subject
@@ -287,7 +287,7 @@ class ChuckCore {
     );
   }
 
-  ChuckHttpCall? _selectCall(int requestId) => callsSubject.value.firstWhere((call) => call.id == requestId);
+  ChuckHttpCall? _selectCall(int requestId) => callsSubject.value.where((call) => call.id == requestId).firstOrNull;
 
   /// Save all calls to file
   void saveHttpRequests(BuildContext context) {

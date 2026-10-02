@@ -4,9 +4,9 @@ import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:flutter/material.dart';
 
 class ChuckStatsScreen extends StatelessWidget {
-  final ChuckCore chuckCore;
+  const ChuckStatsScreen(this.chuckCore, {super.key});
 
-  const ChuckStatsScreen(this.chuckCore);
+  final ChuckCore chuckCore;
 
   @override
   Widget build(BuildContext context) {

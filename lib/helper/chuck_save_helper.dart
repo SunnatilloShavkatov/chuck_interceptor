@@ -39,17 +39,21 @@ class ChuckSaveHelper {
       });
       await sink.flush();
       await sink.close();
-      ChuckAlertHelper.showAlert(
-        context,
-        "Success",
-        "Successfully saved logs in ${file.path}",
-        secondButtonTitle: isAndroid ? "View file" : null,
-        secondButtonAction: () => null,
-        brightness: brightness,
-      );
+      if (context.mounted) {
+        ChuckAlertHelper.showAlert(
+          context,
+          "Success",
+          "Successfully saved logs in ${file.path}",
+          secondButtonTitle: isAndroid ? "View file" : null,
+          secondButtonAction: () => null,
+          brightness: brightness,
+        );
+      }
       return file.path;
     } catch (exception) {
-      ChuckAlertHelper.showAlert(context, "Error", "Failed to save http calls to file", brightness: brightness);
+      if (context.mounted) {
+        ChuckAlertHelper.showAlert(context, "Error", "Failed to save http calls to file", brightness: brightness);
+      }
       ChuckUtils.log(exception.toString());
     }
 
