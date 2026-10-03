@@ -1,6 +1,5 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+import 'dart:convert' show JsonEncoder;
+import 'dart:io' show Directory, File, FileMode, IOSink;
 
 import 'package:chuck_interceptor/src/core/chuck_utils.dart';
 import 'package:chuck_interceptor/src/helper/chuck_alert_helper.dart';

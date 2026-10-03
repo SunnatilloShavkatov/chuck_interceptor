@@ -36,7 +36,7 @@ and [Chucker](https://github.com/ChuckerTeam/chucker).
 
 ```yaml
 dependencies:
-  chuck_interceptor: ^3.1.2
+  chuck_interceptor: ^3.1.3
 ```
 
 2. Install it
