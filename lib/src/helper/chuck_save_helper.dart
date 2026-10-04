@@ -5,11 +5,11 @@ import 'package:chuck_interceptor/src/core/chuck_utils.dart';
 import 'package:chuck_interceptor/src/helper/chuck_alert_helper.dart';
 import 'package:chuck_interceptor/src/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/model/chuck_package_info.dart';
+import 'package:chuck_interceptor/src/model/chuck_share_content.dart';
 import 'package:chuck_interceptor/src/utils/chuck_parser.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 final class ChuckSaveHelper {
   const new _();
@@ -18,11 +18,23 @@ final class ChuckSaveHelper {
   static const JsonEncoder _encoder = JsonEncoder.withIndent('  ');
 
   /// Top level method used to save calls to file
-  static Future<void> saveCalls(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
-    await _saveToFile(context, calls, brightness);
+  static Future<void> saveCalls(
+    BuildContext context,
+    List<ChuckHttpCall> calls,
+    Brightness brightness, {
+    ChuckPackageInfo? packageInfo,
+    ChuckShareCallback? onShare,
+  }) async {
+    await _saveToFile(context, calls, brightness, packageInfo, onShare);
   }
 
-  static Future<String> _saveToFile(BuildContext context, List<ChuckHttpCall> calls, Brightness brightness) async {
+  static Future<String> _saveToFile(
+    BuildContext context,
+    List<ChuckHttpCall> calls,
+    Brightness brightness,
+    ChuckPackageInfo? packageInfo,
+    ChuckShareCallback? onShare,
+  ) async {
     try {
       if (calls.isEmpty) {
         ChuckAlertHelper.showAlert(context, 'Error', 'There are no logs to save', brightness: brightness);
@@ -34,7 +46,7 @@ final class ChuckSaveHelper {
       final File file = File('${dir.path}/$fileName')..createSync(recursive: true);
       final IOSink sink = file.openWrite(mode: FileMode.append)
         // Write header log
-        ..write(await _buildChuckLog());
+        ..write(_buildChuckLog(packageInfo));
 
       // Write all call logs efficiently
       for (final call in calls) {
@@ -50,12 +62,12 @@ final class ChuckSaveHelper {
           'Success',
           'Successfully saved logs in ${file.path}',
           firstButtonTitle: 'OK',
-          secondButtonTitle: 'Share',
-          secondButtonAction: () async {
-            await SharePlus.instance.share(
-              ShareParams(files: [XFile(file.path)], subject: 'Chuck HTTP Inspector Logs'),
-            );
-          },
+          secondButtonTitle: onShare == null ? null : 'Share',
+          secondButtonAction: onShare == null
+              ? null
+              : () async {
+                  await onShare(ChuckShareContent(subject: 'Chuck HTTP Inspector Logs', filePath: file.path));
+                },
           brightness: brightness,
         );
       }
@@ -75,23 +87,18 @@ final class ChuckSaveHelper {
     return '';
   }
 
-  static Future<String> _buildChuckLog() async {
-    final StringBuffer stringBuffer = StringBuffer();
-    try {
-      final packageInfo = await PackageInfo.fromPlatform();
+  static String _buildChuckLog(ChuckPackageInfo? packageInfo) {
+    final StringBuffer stringBuffer = StringBuffer()..write('Chuck - HTTP Inspector\n');
+    if (packageInfo != null) {
       stringBuffer
-        ..write('Chuck - HTTP Inspector\n')
         ..write('App name:  ${packageInfo.appName}\n')
         ..write('Package: ${packageInfo.packageName}\n')
         ..write('Version: ${packageInfo.version}\n')
-        ..write('Build number: ${packageInfo.buildNumber}\n')
-        ..write('Generated: ${DateTime.now().toIso8601String()}\n')
-        ..write('\n');
-    } catch (_) {
-      stringBuffer
-        ..write('Chuck - HTTP Inspector\n')
-        ..write('Generated: ${DateTime.now().toIso8601String()}\n\n');
+        ..write('Build number: ${packageInfo.buildNumber}\n');
     }
+    stringBuffer
+      ..write('Generated: ${DateTime.now().toIso8601String()}\n')
+      ..write('\n');
     return stringBuffer.toString();
   }
 
@@ -163,9 +170,9 @@ final class ChuckSaveHelper {
     return stringBuffer.toString();
   }
 
-  static Future<String> buildCallLog(ChuckHttpCall call) async {
+  static String buildCallLog(ChuckHttpCall call, {ChuckPackageInfo? packageInfo}) {
     try {
-      return await _buildChuckLog() + _buildCallLog(call);
+      return _buildChuckLog(packageInfo) + _buildCallLog(call);
     } catch (exception) {
       return 'Failed to generate call log: $exception';
     }

@@ -2,6 +2,7 @@ import 'package:chuck_interceptor/src/core/chuck_core.dart';
 import 'package:chuck_interceptor/src/helper/chuck_copy_helper.dart';
 import 'package:chuck_interceptor/src/helper/chuck_save_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/model/chuck_share_content.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 import 'package:chuck_interceptor/src/theme/chuck_theme_data.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_error_widget.dart';
@@ -10,7 +11,6 @@ import 'package:chuck_interceptor/src/ui/widget/chuck_call_request_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_response_preview_widget.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_call_response_widget.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ChuckCallDetailsScreen extends StatefulWidget {
   const new(this.call, this.core, {super.key});
@@ -52,17 +52,19 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
     child: ScaffoldMessenger(
       child: Scaffold(
         backgroundColor: context.chuckTheme.background,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: context.chuckTheme.accent,
-          foregroundColor: context.chuckTheme.onAccent,
-          key: const Key('share_key'),
-          onPressed: () async {
-            await SharePlus.instance.share(
-              ShareParams(subject: 'Request Details', text: await _getSharableResponseString(call)),
-            );
-          },
-          child: const Icon(Icons.share),
-        ),
+        floatingActionButton: widget.core.onShare == null
+            ? null
+            : FloatingActionButton(
+                backgroundColor: context.chuckTheme.accent,
+                foregroundColor: context.chuckTheme.onAccent,
+                key: const Key('share_key'),
+                onPressed: () async {
+                  await widget.core.onShare!(
+                    ChuckShareContent(subject: 'Request Details', text: await _getSharableResponseString(call)),
+                  );
+                },
+                child: const Icon(Icons.share),
+              ),
         appBar: AppBar(
           centerTitle: false,
           backgroundColor: context.chuckTheme.background,
@@ -118,5 +120,6 @@ class _ChuckCallDetailsScreenState extends State<ChuckCallDetailsScreen> with Si
     ),
   );
 
-  Future<String> _getSharableResponseString(ChuckHttpCall call) => ChuckSaveHelper.buildCallLog(call);
+  Future<String> _getSharableResponseString(ChuckHttpCall call) async =>
+      ChuckSaveHelper.buildCallLog(call, packageInfo: await widget.core.getPackageInfo());
 }

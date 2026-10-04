@@ -1,3 +1,13 @@
+## 3.2.0
+
+* Removed the `package_info_plus` dependency. App details in exported logs now come from `ChuckCore.getPackageInfo()`,
+  which awaits an optional `packageInfoProvider` passed to `Chuck` (returns the new `ChuckPackageInfo`). Without a
+  provider the log header simply omits the app details.
+* Removed the `share_plus` dependency. `Chuck` takes a single optional `onShare` callback (`ChuckShareContent` with
+  `subject`, `text` or `filePath`). Without it the share button on the call details screen and the "Share" action after
+  saving logs are hidden.
+* `ChuckCore.saveHttpRequests` now returns `Future<void>`.
+
 ## 3.1.3
 
 * Bumped `material_ui` to `^1.5.0`, `share_plus` to `^13.3.1` and `package_info_plus` to `^10.2.2`.

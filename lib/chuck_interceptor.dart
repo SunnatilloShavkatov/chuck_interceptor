@@ -5,6 +5,8 @@ import 'package:chuck_interceptor/src/core/chuck_dio_interceptor.dart';
 import 'package:chuck_interceptor/src/core/chuck_generic_adapter.dart';
 import 'package:chuck_interceptor/src/core/chuck_http_client_adapter.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
+import 'package:chuck_interceptor/src/model/chuck_package_info.dart';
+import 'package:chuck_interceptor/src/model/chuck_share_content.dart';
 import 'package:chuck_interceptor/src/ui/widget/chuck_button.dart';
 import 'package:flutter/widgets.dart';
 
@@ -16,6 +18,8 @@ export 'package:chuck_interceptor/src/core/chuck_http_client_extensions.dart';
 export 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 export 'package:chuck_interceptor/src/model/chuck_http_request.dart';
 export 'package:chuck_interceptor/src/model/chuck_http_response.dart';
+export 'package:chuck_interceptor/src/model/chuck_package_info.dart';
+export 'package:chuck_interceptor/src/model/chuck_share_content.dart';
 export 'package:chuck_interceptor/src/theme/chuck_theme.dart';
 export 'package:chuck_interceptor/src/theme/chuck_theme_data.dart';
 export 'package:chuck_interceptor/src/ui/widget/chuck_button.dart';
@@ -28,6 +32,8 @@ final class Chuck {
     this.maxCallsCount = 1000,
     this.maxBodySize = 1024 * 1024,
     this.showInspectorOnShake = false,
+    this.packageInfoProvider,
+    this.onShare,
   }) {
     _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
     _chuckCore = ChuckCore(
@@ -36,6 +42,8 @@ final class Chuck {
       maxBodySize: maxBodySize,
       maxCallsCount: maxCallsCount,
       showInspectorOnShake: showInspectorOnShake,
+      packageInfoProvider: packageInfoProvider,
+      onShare: onShare,
     );
     _httpClientAdapter = ChuckHttpClientAdapter(_chuckCore);
     _genericAdapter = ChuckGenericAdapter(_chuckCore);
@@ -54,6 +62,13 @@ final class Chuck {
   ///Max number of calls that are stored in memory. When count is reached, FIFO
   ///method queue will be used to remove elements.
   final int maxCallsCount;
+
+  /// Supplies host app info (name, version, ...) for the header of exported logs. See [ChuckPackageInfo].
+  final Future<ChuckPackageInfo?> Function()? packageInfoProvider;
+
+  /// Shares logs through the host app (Chuck has no share plugin dependency). When `null`, share buttons are hidden.
+  /// See [ChuckShareContent].
+  final ChuckShareCallback? onShare;
 
   GlobalKey<NavigatorState>? _navigatorKey;
   late ChuckCore _chuckCore;

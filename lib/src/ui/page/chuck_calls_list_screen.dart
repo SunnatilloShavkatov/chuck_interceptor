@@ -340,7 +340,7 @@ class _ChuckCallsListScreenState extends State<ChuckCallsListScreen> {
   }
 
   Future<void> _saveToFile() async {
-    chuckCore.saveHttpRequests(context);
+    await chuckCore.saveHttpRequests(context);
   }
 
   void _updateSearchQuery(String query) {

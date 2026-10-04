@@ -6,7 +6,9 @@ import 'dart:io';
 import 'package:chuck_interceptor/chuck_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 void main() => runApp(const MyApp());
 
@@ -26,7 +28,27 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    _chuck = Chuck(showInspectorOnShake: true);
+    _chuck = Chuck(
+      showInspectorOnShake: true,
+      packageInfoProvider: () async {
+        final info = await PackageInfo.fromPlatform();
+        return ChuckPackageInfo(
+          appName: info.appName,
+          packageName: info.packageName,
+          version: info.version,
+          buildNumber: info.buildNumber,
+        );
+      },
+      onShare: (content) async {
+        await SharePlus.instance.share(
+          ShareParams(
+            subject: content.subject,
+            text: content.text,
+            files: content.filePath == null ? null : [XFile(content.filePath!)],
+          ),
+        );
+      },
+    );
     _dio = Dio(BaseOptions(followRedirects: false));
     _dio.interceptors.add(_chuck.dioInterceptor);
     _httpClient = HttpClient();

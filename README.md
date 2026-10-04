@@ -289,7 +289,50 @@ chuck.showInspector();
 
 ## Saving and Sharing calls
 
-Chuck supports saving and sharing HTTP call logs directly via the system share sheet (`share_plus`). No storage permissions (`WRITE_EXTERNAL_STORAGE`) are required.
+Chuck saves HTTP call logs to a file in the app documents directory, so no storage permissions
+(`WRITE_EXTERNAL_STORAGE`) are required.
+
+Chuck has no share plugin dependency. To enable sharing, pass a single `onShare` callback and forward it to the plugin
+you prefer (for example `share_plus`). It is used both for a single call's details (`content.text`) and for a saved log
+file (`content.filePath`):
+
+```dart
+Chuck chuck = Chuck(
+  onShare: (content) async {
+    await SharePlus.instance.share(
+      ShareParams(
+        subject: content.subject,
+        text: content.text,
+        files: content.filePath == null ? null : [XFile(content.filePath!)],
+      ),
+    );
+  },
+);
+```
+
+Without `onShare`, the share button on the call details screen and the "Share" action after saving logs are hidden.
+
+### App info in exported logs
+
+Chuck does not depend on `package_info_plus`. To print your app's name, package, version and build number in the
+header of saved and shared logs, pass a `packageInfoProvider` (using `package_info_plus` in your own app):
+
+```dart
+Chuck chuck = Chuck(
+  packageInfoProvider: () async {
+    final info = await PackageInfo.fromPlatform();
+    return ChuckPackageInfo(
+      appName: info.appName,
+      packageName: info.packageName,
+      version: info.version,
+      buildNumber: info.buildNumber,
+    );
+  },
+);
+```
+
+The provider is awaited once and the result is cached (`chuck.core.getPackageInfo()`). Without a provider, the log
+header simply omits the app details.
 
 ## Extensions
 

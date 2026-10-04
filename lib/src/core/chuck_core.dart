@@ -1,10 +1,12 @@
-import 'dart:async';
+import 'dart:async' show unawaited;
 
 import 'package:chuck_interceptor/src/core/chuck_utils.dart';
 import 'package:chuck_interceptor/src/helper/chuck_save_helper.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_error.dart';
 import 'package:chuck_interceptor/src/model/chuck_http_response.dart';
+import 'package:chuck_interceptor/src/model/chuck_package_info.dart';
+import 'package:chuck_interceptor/src/model/chuck_share_content.dart';
 import 'package:chuck_interceptor/src/ui/page/chuck_calls_list_screen.dart';
 import 'package:chuck_interceptor/src/utils/shake_detector.dart';
 import 'package:material_ui/material_ui.dart';
@@ -28,6 +30,8 @@ class ChuckCore {
     required this.maxCallsCount,
     this.enabled = true,
     this.maxBodySize = 1024 * 1024,
+    this.packageInfoProvider,
+    this.onShare,
   }) {
     if (enabled && showInspectorOnShake) {
       _shakeDetector = ShakeDetector.autoStart(
@@ -44,6 +48,12 @@ class ChuckCore {
 
   /// Maximum size of request/response body in bytes to store in memory (default: 256 KB)
   final int maxBodySize;
+
+  /// Supplies [ChuckPackageInfo] for the header of exported logs. Optional: logs omit app details without it.
+  final Future<ChuckPackageInfo?> Function()? packageInfoProvider;
+
+  /// Shares logs through the host app. Share actions are hidden when `null`.
+  final ChuckShareCallback? onShare;
 
   /// Whether to open the inspector when the device is shaken (physical devices only)
   final bool showInspectorOnShake;
@@ -66,6 +76,21 @@ class ChuckCore {
 
   /// Reactive stream of all intercepted HTTP calls.
   Stream<List<ChuckHttpCall>> get callsStream => callsSubject.stream;
+
+  Future<ChuckPackageInfo?>? _packageInfo;
+
+  /// Host application info from [packageInfoProvider], resolved once and cached. Returns `null` when no provider
+  /// is set or it throws.
+  Future<ChuckPackageInfo?> getPackageInfo() => _packageInfo ??= _loadPackageInfo();
+
+  Future<ChuckPackageInfo?> _loadPackageInfo() async {
+    try {
+      return await packageInfoProvider?.call();
+    } catch (e) {
+      ChuckUtils.log('Error loading package info: $e');
+      return null;
+    }
+  }
 
   /// Dispose subjects and subscriptions
   void dispose() {
@@ -198,7 +223,18 @@ class ChuckCore {
   }
 
   /// Save all calls to file
-  void saveHttpRequests(BuildContext context) {
-    ChuckSaveHelper.saveCalls(context, callsSubject.value, Theme.of(context).brightness);
+  Future<void> saveHttpRequests(BuildContext context) async {
+    final brightness = Theme.of(context).brightness;
+    final packageInfo = await getPackageInfo();
+    if (!context.mounted) {
+      return;
+    }
+    await ChuckSaveHelper.saveCalls(
+      context,
+      callsSubject.value,
+      brightness,
+      packageInfo: packageInfo,
+      onShare: onShare,
+    );
   }
 }
