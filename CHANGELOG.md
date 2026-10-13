@@ -1,3 +1,7 @@
+## 3.2.1
+
+* Bumped `material_ui` to `^1.6.0`.
+
 ## 3.2.0
 
 * Removed the `package_info_plus` dependency. App details in exported logs now come from `ChuckCore.getPackageInfo()`,
