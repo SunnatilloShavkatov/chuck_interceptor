@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   dio: ^5.11.1
-  material_ui: ^1.6.0
+  material_ui: ^1.7.0
   package_info_plus: ^10.2.2
   path_provider: ^2.1.6
   share_plus: ^13.3.1

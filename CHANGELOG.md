@@ -1,3 +1,7 @@
+## 3.2.2
+
+* Bumped `material_ui` to `^1.7.0`.
+
 ## 3.2.1
 
 * Bumped `material_ui` to `^1.6.0`.
