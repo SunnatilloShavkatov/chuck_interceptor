@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:chuck_interceptor/ui/widget/chuck_json_viewer.dart';
 import 'package:flutter/gestures.dart' show kDoubleTapTimeout;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('SliverJsonViewer Tests', () {

@@ -1,6 +1,6 @@
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChuckCallErrorWidget extends StatefulWidget {
   const ChuckCallErrorWidget(this.call, {super.key});

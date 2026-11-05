@@ -7,7 +7,7 @@ import 'package:chuck_interceptor/ui/page/chuck_call_details_screen.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_call_list_item_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hive/hive.dart';
 
 import 'chuck_hive_call_details_screen.dart';

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:chuck_interceptor/core/chuck_generic_adapter.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 
@@ -7,7 +8,7 @@ import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/core/chuck_dio_interceptor.dart';
 import 'package:chuck_interceptor/core/chuck_http_client_adapter.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_button.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 

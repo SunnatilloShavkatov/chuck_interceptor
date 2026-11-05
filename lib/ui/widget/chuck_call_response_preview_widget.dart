@@ -5,7 +5,7 @@ import 'package:chuck_interceptor/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_json_viewer.dart';
 import 'package:chuck_interceptor/utils/chuck_constants.dart';
 import 'package:chuck_interceptor/ui/widget/chuck_base_call_details_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChuckCallResponsePreviewWidget extends StatefulWidget {
   const ChuckCallResponsePreviewWidget(this.call, {super.key});
@@ -41,9 +41,7 @@ class _ChuckCallResponseWidgetState extends ChuckBaseCallDetailsWidgetState<Chuc
         controller: _scrollController,
         child: CustomScrollView(
           controller: _scrollController,
-          slivers: [
-            SliverSafeArea(minimum: const EdgeInsets.all(6), sliver: _buildBodySliver()),
-          ],
+          slivers: [SliverSafeArea(minimum: const EdgeInsets.all(6), sliver: _buildBodySliver())],
         ),
       );
     } else {

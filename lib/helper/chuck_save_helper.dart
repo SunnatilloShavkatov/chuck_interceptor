@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/core/chuck_utils.dart';
 import 'package:chuck_interceptor/helper/chuck_alert_helper.dart';
 import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/utils/chuck_parser.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:path_provider/path_provider.dart';
 

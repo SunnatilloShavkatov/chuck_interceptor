@@ -1,7 +1,7 @@
 import 'dart:collection' show HashSet;
 import 'dart:convert' show jsonEncode;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 
 /// Interactive JSON tree rendered as a lazy sliver.
@@ -132,10 +132,18 @@ class _SliverJsonViewerState extends State<SliverJsonViewer> {
 
   Widget _buildValue(Object? value) {
     return switch (value) {
-      null => Expanded(child: _selectable('undefined', style: const TextStyle(color: Colors.grey))),
-      num() => Expanded(child: _selectable(value.toString(), style: const TextStyle(color: _numberColor))),
-      String() => Expanded(child: _selectable('"$value"', style: const TextStyle(color: _stringColor))),
-      bool() => Expanded(child: _selectable(value.toString(), style: const TextStyle(color: _boolColor))),
+      null => Expanded(
+        child: _selectable('undefined', style: const TextStyle(color: Colors.grey)),
+      ),
+      num() => Expanded(
+        child: _selectable(value.toString(), style: const TextStyle(color: _numberColor)),
+      ),
+      String() => Expanded(
+        child: _selectable('"$value"', style: const TextStyle(color: _stringColor)),
+      ),
+      bool() => Expanded(
+        child: _selectable(value.toString(), style: const TextStyle(color: _boolColor)),
+      ),
       List() || Map() => InkWell(
         onTap: () => _toggle(value),
         onDoubleTap: () => _copy(value),

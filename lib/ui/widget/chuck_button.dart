@@ -1,6 +1,6 @@
 import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Floating, draggable button which opens the Chuck inspector.
 ///

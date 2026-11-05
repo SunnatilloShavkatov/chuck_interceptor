@@ -2,7 +2,7 @@ import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/utils/chuck_constants.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChuckCallListItemWidget extends StatelessWidget {
   const ChuckCallListItemWidget(this.call, this.itemClickAction, {super.key});

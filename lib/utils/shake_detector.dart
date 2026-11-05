@@ -1,4 +1,3 @@
-
 import 'dart:async' show StreamSubscription;
 
 /// Callback for phone shakes

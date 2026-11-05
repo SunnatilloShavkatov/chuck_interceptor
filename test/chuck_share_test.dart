@@ -3,7 +3,7 @@ import 'package:chuck_interceptor/helper/chuck_save_helper.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/model/chuck_http_request.dart';
 import 'package:chuck_interceptor/model/chuck_http_response.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 

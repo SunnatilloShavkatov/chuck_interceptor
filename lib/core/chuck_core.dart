@@ -9,7 +9,7 @@ import 'package:chuck_interceptor/model/chuck_http_call.dart';
 import 'package:chuck_interceptor/model/chuck_http_response.dart';
 import 'package:chuck_interceptor/ui/page/chuck_calls_list_screen.dart';
 import 'package:chuck_interceptor/utils/shake_detector.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hive/hive.dart';
 import 'package:rxdart/rxdart.dart';
 

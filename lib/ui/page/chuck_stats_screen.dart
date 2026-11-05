@@ -1,7 +1,7 @@
 import 'package:chuck_interceptor/core/chuck_core.dart';
 import 'package:chuck_interceptor/helper/chuck_conversion_helper.dart';
 import 'package:chuck_interceptor/model/chuck_http_call.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChuckStatsScreen extends StatelessWidget {
   const ChuckStatsScreen(this.chuckCore, {super.key});
